@@ -4,10 +4,12 @@
  * and open the template in the editor.
  */
 package model;
-import exceptions.ConnectionNotAvailableException;
-import exceptions.LoginExistException;
-import exceptions.LoginNotFoundException;
-import exceptions.PasswordNotFoundException;
+
+import exception.ConnectionNotAvailableException;
+import exception.LoginExistException;
+import exception.LoginNotFoundException;
+import exception.PasswordNotFoundException;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

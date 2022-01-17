@@ -5,7 +5,7 @@
  */
 package controller;
 
-import exceptions.*;
+import exception.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -24,7 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Signable;
-import model.SignableFactory;
+import static model.SignableFactory.getClientImplementation;
 import model.User;
 
 /**
@@ -34,7 +34,7 @@ public class SignInController {
 
     //Hasta que este la BD Lista de usuarios de prueba para ejercicios
     private ArrayList<User> usuarios = new ArrayList<User>();
-
+   
     // un logger que nos informara mediante la terminal
     private static final Logger LOG = Logger.getLogger(SignInController.class.getName());
     //declaramos los componentes de la ventana  que manipularemos a continuacion
@@ -84,13 +84,13 @@ public class SignInController {
     @FXML
     private void signIN(ActionEvent event) {
         //usario ficticio hasta tener bd
-        Signable signable = SignableFactory.getClientImplementation();
+       
         User user = new User();
         user.setLogin(tfUser.getText());
         user.setPassword(tfPassword.getText());
         try {
-            User usuario_servidor = signable.signIn(user);
-            //user = getClientImplementation().signIn(user);
+            //User usuario_servidor = Signable.signIn(user);
+            user = getClientImplementation().signIn(user);
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader signIn = new FXMLLoader(getClass().getResource("/view/UserView.fxml"));
             Parent root;
@@ -105,14 +105,15 @@ public class SignInController {
             signInStage.setScene(UserViewScene);
             //por defecto no podra redimensionarse
             signInStage.setResizable(false);
+                        ///LLAMAR A LA VENTANA DE JON(employee.fxml)
             //mostramos la ventana modal mientras la actual se queda esperando
-            LogOutController controler = (LogOutController) signIn.getController();
-            controler.initStage(root);
+            //LogOutController controler = (LogOutController) signIn.getController();
+            //controler.initStage(root);
             //enviamos el usuario devuelto por nuestro servidor para llevarlo
             // a la ventana UserView
-             controler.initUser(usuario_servidor);
-            signInStage.show();
-            panelSignIN.getScene().getWindow().hide();
+            // controler.initUser(usuario_servidor);
+            //signInStage.show();
+           // panelSignIN.getScene().getWindow().hide();
             
         } catch (ConnectionNotAvailableException ex) {
             lblError.setText(ex.getMessage());
