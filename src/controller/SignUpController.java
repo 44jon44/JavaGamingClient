@@ -5,8 +5,8 @@
  */
 package controller;
 
-import exceptions.ConnectionNotAvailableException;
-import exceptions.LoginExistException;
+import exception.ConnectionNotAvailableException;
+import exception.LoginExistException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
