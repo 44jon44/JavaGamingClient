@@ -5,6 +5,7 @@
  */
 package model;
 
+import transferObjects.User;
 import exception.ConnectionNotAvailableException;
 import exception.LoginExistException;
 import exception.LoginNotFoundException;

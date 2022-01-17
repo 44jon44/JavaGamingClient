@@ -25,7 +25,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import model.Signable;
 import model.SignableFactory;
-import model.User;
+import transferObjects.User;
 
 /**
  *

@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package transferObjects;
 
 import java.io.Serializable;
 import java.security.Timestamp;
+import model.UserPrivilege;
+import model.UserStatus;
 
 /**
  * Java Bean User
