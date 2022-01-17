@@ -25,7 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Signable;
 import static model.SignableFactory.getClientImplementation;
-import model.User;
+import transferObjects.User;
 
 /**
  * @author ibai arriola
