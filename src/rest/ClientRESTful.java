@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package businessLogic;
+package rest;
 
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 /**
- * Jersey REST client generated for REST resource:UserFacadeREST [user]<br>
+ * Jersey REST client generated for REST resource:ClientFacadeREST [client]<br>
  * USAGE:
  * <pre>
- *        UserRESTful client = new UserRESTful();
+ *        ClientRESTful client = new ClientRESTful();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
@@ -21,15 +21,15 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author ibai Arriola
  */
-public class UserRESTful {
+public class ClientRESTful {
 
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = "http://localhost:9045/JavaGamingServer/webresources";
 
-    public UserRESTful() {
+    public ClientRESTful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("user");
+        webTarget = client.target(BASE_URI).path("client");
     }
 
     public String countREST() throws ClientErrorException {

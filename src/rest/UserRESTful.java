@@ -3,18 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package businessLogic;
+package rest;
 
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 /**
- * Jersey REST client generated for REST resource:EmployeeFacadeREST
- * [employee]<br>
+ * Jersey REST client generated for REST resource:UserFacadeREST [user]<br>
  * USAGE:
  * <pre>
- *        EmployeeRESTful client = new EmployeeRESTful();
+ *        UserRESTful client = new UserRESTful();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
@@ -22,21 +21,15 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author ibai Arriola
  */
-public class EmployeeRESTful {
+public class UserRESTful {
 
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = "http://localhost:9045/JavaGamingServer/webresources";
 
-    public EmployeeRESTful() {
+    public UserRESTful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("employee");
-    }
-
-    public <T> T employeesByName(Class<T> responseType, String fullName) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("fullName/{0}", new Object[]{fullName}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        webTarget = client.target(BASE_URI).path("user");
     }
 
     public String countREST() throws ClientErrorException {
@@ -58,12 +51,6 @@ public class EmployeeRESTful {
     public <T> T findRange(Class<T> responseType, String from, String to) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from, to}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    public <T> T orderEmployeeBySalary(Class<T> responseType, String salary) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("salario/{0}", new Object[]{salary}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
