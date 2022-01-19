@@ -29,7 +29,7 @@ public interface EmployeeManager {
      * @throws java.lang.Exception
      *
      */
-    public void createUser(Employee emp) throws Exception;
+    public void createEmployee(Employee emp) throws Exception;
 
     /**
      * Este metodo actualiza los datos de un Employee existente.
@@ -38,7 +38,7 @@ public interface EmployeeManager {
      * @throws java.lang.Exception
      *
      */
-    public void updateUser(Employee emp) throws Exception;
+    public void updateEmployee(Employee emp) throws Exception;
 
     /**
      * Este metodo borra los datos de un empleado existente
@@ -47,7 +47,7 @@ public interface EmployeeManager {
      * @throws java.lang.Exception
      *
      */
-    public void deleteUser(Employee emp) throws Exception;
+    public void deleteEmployee(Employee emp) throws Exception;
 
     /**
      * Este metod comprueba que si el login de un empleado existe
