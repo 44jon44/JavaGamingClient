@@ -9,7 +9,7 @@ import java.util.Collection;
 import transferObjects.Employee;
 
 /**
- *
+ *  Interfaz de logica con los metos de gestion de empleados
  * @author Jon Mayo
  */
 public interface EmployeeManager {
