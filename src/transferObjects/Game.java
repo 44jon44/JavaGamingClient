@@ -3,8 +3,6 @@ package transferObjects;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
-import javafx.application.Platform;
-import transferObjects.Purchase;
 
 /**
  * Java bean de la entidad Game.
