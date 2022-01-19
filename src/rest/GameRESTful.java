@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package businessLogic;
+package rest;
 
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 /**
- * Jersey REST client generated for REST resource:ClientFacadeREST [client]<br>
+ * Jersey REST client generated for REST resource:GameFacadeREST [game]<br>
  * USAGE:
  * <pre>
- *        ClientRESTful client = new ClientRESTful();
+ *        GameRESTful client = new GameRESTful();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
@@ -21,21 +21,33 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author ibai Arriola
  */
-public class ClientRESTful {
+public class GameRESTful {
 
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = "http://localhost:9045/JavaGamingServer/webresources";
 
-    public ClientRESTful() {
+    public GameRESTful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("client");
+        webTarget = client.target(BASE_URI).path("game");
     }
 
     public String countREST() throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("count");
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public <T> T findGamebyGenreAndPlat(Class<T> responseType, String genre, String name) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("genre/{0}/{1}", new Object[]{genre, name}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findGamebyGenre(Class<T> responseType, String genre) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("genre/{0}", new Object[]{genre}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
     public void edit(Object requestEntity, String id) throws ClientErrorException {
@@ -56,6 +68,12 @@ public class ClientRESTful {
 
     public void create(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    }
+
+    public <T> T findGamebyPegi(Class<T> responseType, String pegi) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("pegi/{0}", new Object[]{pegi}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
     public <T> T findAll(Class<T> responseType) throws ClientErrorException {
