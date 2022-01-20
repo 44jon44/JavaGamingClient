@@ -7,7 +7,10 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
 
 /**
  * FXML Controller class
@@ -19,9 +22,27 @@ public class EmployeeFormController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    /**
+     * Create user data button.
+     */
+    @FXML
+    private Button btnAdd;
+    /**
+     * Modify user data button.
+     */
+    @FXML
+    private Button btnModify;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
-    
+
+    public void initStageAdd(Parent root) {
+        btnModify.setDisable(true);
+    }
+
+    public void initStageModify() {
+        btnAdd.setDisable(true);
+    }
 }

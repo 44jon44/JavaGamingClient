@@ -23,7 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import static model.SignableFactory.getClientImplementation;
+
 import transferObjects.User;
 
 /**
@@ -32,7 +32,7 @@ import transferObjects.User;
 public class SignInController {
 
     //Hasta que este la BD Lista de usuarios de prueba para ejercicios
-    private ArrayList<User> usuarios = new ArrayList<User>();
+    
    
     // un logger que nos informara mediante la terminal
     private static final Logger LOG = Logger.getLogger(SignInController.class.getName());
@@ -55,6 +55,7 @@ public class SignInController {
     //un hyperlink que llama a la ventana modal viewSingUP
     @FXML
     private Hyperlink hyperSignUP;
+    
 
     //getter y setter del state SingIN
     public Stage getSignInStage() {
@@ -82,49 +83,37 @@ public class SignInController {
      */
     @FXML
     private void signIN(ActionEvent event) {
-        User user = new User();
-        user.setLogin(tfUser.getText());
-        user.setPassword(tfPassword.getText());
         try {
-            //User usuario_servidor = Signable.signIn(user);
-            user = getClientImplementation().signIn(user);
-            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader signIn = new FXMLLoader(getClass().getResource("/view/UserView.fxml"));
-            Parent root;
-            root = (Parent) signIn.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene UserViewScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            signInStage = new Stage();
-            //definimos como modal la nueva ventana
-            signInStage.initModality(Modality.NONE);
-            //añadimos la escena en el stage
-            signInStage.setScene(UserViewScene);
-            //por defecto no podra redimensionarse
-            signInStage.setResizable(false);
-                        ///LLAMAR A LA VENTANA DE JON(employee.fxml)
-            //mostramos la ventana modal mientras la actual se queda esperando
-            //LogOutController controler = (LogOutController) signIn.getController();
-            //controler.initStage(root);
-            //enviamos el usuario devuelto por nuestro servidor para llevarlo
-            // a la ventana UserView
-            // controler.initUser(usuario_servidor);
-            //signInStage.show();
-           // panelSignIN.getScene().getWindow().hide();
             
-        } catch (ConnectionNotAvailableException ex) {
-            lblError.setText(ex.getMessage());
-            LOG.log(Level.SEVERE, "no hay conexiones");
-        } catch (LoginNotFoundException ex) {
-            lblError.setText(ex.getMessage());
-            LOG.log(Level.SEVERE, "error ,el login no coincide con el de la bd");
-        } catch (PasswordNotFoundException ex) {
-            lblError.setText(ex.getMessage());
-            LOG.log(Level.SEVERE, "Error,  el password no coincide con el de la bd");
-        } catch (Exception ex) {
-            lblError.setText("No se ha podido establecer conexión");
-            LOG.log(Level.SEVERE, "No se ha podido establecer conexión");
+            
+            
+            
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+            Parent root;
+            root = (Parent) employee.load();
+            //Creamos una nueva escena para la ventana SignIn
+            Scene EmployeeScene = new Scene(root);
+            //creamos un nuevo escenario para la nueva ventana
+            Stage employeeStage = new Stage();
+            //definimos como modal la nueva ventana
+            employeeStage.initModality(Modality.WINDOW_MODAL);
+            //añadimos la escena en el stage
+            employeeStage.setScene(EmployeeScene);
+            //por defecto no podra redimensionarse
+            employeeStage.setResizable(false);
+             //cargamos el controlador de la ventana
+            EmployeeController controller = employee.getController();
+            controller.initStage(root);
+            
+            employeeStage.show();
+            
+            panelSignIN.getScene().getWindow().hide();
+        } catch (IOException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
+            
+        
     }
 
     /**
