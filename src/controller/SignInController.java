@@ -23,7 +23,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Signable;
 import static model.SignableFactory.getClientImplementation;
 import transferObjects.User;
 
@@ -83,8 +82,6 @@ public class SignInController {
      */
     @FXML
     private void signIN(ActionEvent event) {
-        //usario ficticio hasta tener bd
-       
         User user = new User();
         user.setLogin(tfUser.getText());
         user.setPassword(tfPassword.getText());

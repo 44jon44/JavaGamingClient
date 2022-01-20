@@ -10,49 +10,49 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.EmployeeController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
-      <TableView layoutX="50.0" layoutY="181.0" prefHeight="480.0" prefWidth="924.0">
+      <TableView id="tblEmployees" fx:id="tblEmployees" layoutX="50.0" layoutY="181.0" prefHeight="480.0" prefWidth="924.0">
         <columns>
-          <TableColumn prefWidth="192.80001831054688" text="NOMBRE" />
-          <TableColumn prefWidth="242.39999389648438" text="EMAIL" />
-            <TableColumn prefWidth="219.20001220703125" text="LOGIN" />
-            <TableColumn prefWidth="158.39996337890625" text="FECHA CONTRATO" />
-            <TableColumn minWidth="7.2000732421875" prefWidth="127.199951171875" text="SALARIO" />
+          <TableColumn id="tcName" fx:id="tcName" prefWidth="192.80001831054688" text="NOMBRE" />
+          <TableColumn id="tcEmail" fx:id="tcEmail" prefWidth="242.39999389648438" text="EMAIL" />
+            <TableColumn id="tcLogin" fx:id="tcLogin" prefWidth="219.20001220703125" text="LOGIN" />
+            <TableColumn id="tcHiringDate" fx:id="tcHiringDate" prefWidth="158.39996337890625" text="FECHA CONTRATO" />
+            <TableColumn id="tcSalary" fx:id="tcSalary" minWidth="7.2000732421875" prefWidth="127.199951171875" text="SALARIO" />
         </columns>
       </TableView>
-      <Button layoutX="57.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #2b8b57;" text="AÑADIR EMPLEADO" textFill="WHITE">
+      <Button id="btnAdd" fx:id="btnAdd" layoutX="57.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #2b8b57;" text="AÑADIR EMPLEADO" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button layoutX="397.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #4169e1;" text="MODIFICAR EMPLEADO" textFill="WHITE">
+      <Button id="btnModify" fx:id="btnModify" layoutX="397.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #4169e1;" text="MODIFICAR EMPLEADO" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button layoutX="724.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #ff3333;" text="BORRAR EMPLEADO" textFill="WHITE">
+      <Button fx:id="btnDelete" layoutX="724.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #ff3333;" text="BORRAR EMPLEADO" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Label layoutX="60.0" layoutY="88.0" prefHeight="30.0" text="Filtrar por:">
+      <Label id="lblFilter" fx:id="lblFilter" layoutX="60.0" layoutY="88.0" prefHeight="30.0" text="Filtrar por:">
          <font>
             <Font size="16.0" />
          </font></Label>
-      <Label layoutX="420.0" layoutY="89.0" prefHeight="30.0" text="Valor:">
+      <Label id="lblValue" fx:id="lblValue" layoutX="420.0" layoutY="89.0" prefHeight="30.0" text="Valor:">
          <font>
             <Font size="16.0" />
          </font></Label>
-      <Button layoutX="814.0" layoutY="89.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" text="BUSCAR">
+      <Button id="btnFind" fx:id="btnFind" layoutX="814.0" layoutY="89.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" text="BUSCAR">
          <font>
             <Font size="14.0" />
          </font></Button>
-      <ComboBox layoutX="140.0" layoutY="89.0" prefWidth="200.0" />
-      <Label layoutX="60.0" layoutY="724.0" prefHeight="30.0" prefWidth="924.0" text="Esto es un mensaje de error" textFill="#ff3333">
+      <ComboBox id="cmbFilter" fx:id="cmbFilter" layoutX="140.0" layoutY="89.0" prefWidth="200.0" />
+      <Label id="lblError" fx:id="lblError" layoutX="60.0" layoutY="724.0" prefHeight="30.0" prefWidth="924.0" text="Esto es un mensaje de error" textFill="#ff3333">
          <font>
             <Font name="System Bold" size="16.0" />
          </font></Label>
-      <TextField layoutX="470.0" layoutY="88.0" prefHeight="25.0" prefWidth="200.0" promptText="Introduce el valor de busqueda" />
-      <Label layoutX="60.0" layoutY="41.0" prefHeight="30.0" text="EMPLEADOS">
+      <TextField id="tfValue" fx:id="tfValue" layoutX="470.0" layoutY="88.0" prefHeight="25.0" prefWidth="200.0" promptText="Introduce el valor de busqueda" />
+      <Label id="lblTitle" fx:id="lblTitle" layoutX="60.0" layoutY="41.0" prefHeight="30.0" text="EMPLEADOS">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
