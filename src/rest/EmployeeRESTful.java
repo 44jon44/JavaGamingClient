@@ -11,16 +11,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 /**
- * Jersey REST client generated for REST resource:EmployeeFacadeREST
- * [employee]<br>
- * USAGE:
- * <pre>
- *        EmployeeRESTful1 client = new EmployeeRESTful1();
- *        Object response = client.XXX(...);
- *        // do whatever with response
- *        client.close();
- * </pre>
- *
+ * 
  * @author jonma
  */
 public class EmployeeRESTful {

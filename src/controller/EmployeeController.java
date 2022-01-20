@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
@@ -19,7 +20,7 @@ import javafx.stage.Stage;
  * @author ibai Arriola
  */
 public class EmployeeController implements Initializable {
-    private Stage stageEmployee;
+    private Stage employeeStage;
     /**
      * Create user data button.
      */
@@ -38,24 +39,26 @@ public class EmployeeController implements Initializable {
 
     /**
      * Quit application button.
+     * @return 
      */
-    public Stage getStageEmployee() {
-        return stageEmployee;
+    public Stage employeeStage() {
+        return employeeStage;
     }
 
     //setter de 
-    public void setStageSignUp(Stage stageSignUp) {
-        this.stageEmployee = stageSignUp;
+    public void setStageSignUp(Stage employeeStage) {
+        this.employeeStage = employeeStage;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
-    public void initStage(){}
 
-    void initStage(Parent root) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void initStage(Parent root) {
+        
     }
+
+
 
 }

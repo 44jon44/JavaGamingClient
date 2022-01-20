@@ -5,22 +5,38 @@
  */
 package businessLogic;
 
+import exception.BusinessLogicException;
+import exception.LoginExistException;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.GenericType;
 import rest.EmployeeRESTful;
 import transferObjects.Employee;
 
+/**
+ * Esta clase implementa la interfaz de la capa logica EmployeeManager
+ * @author 2dam
+ */
 public class EmployeeManagerImplementation implements EmployeeManager {
 
     private EmployeeRESTful webClient;
     private static final Logger LOGGER=Logger.getLogger("javaGaming");
+    /**
+     * Crea un objeto EmployeeMAnagerImplementation.Crea un cliente web para acceder
+     * al servicio RESTful
+     */
     public EmployeeManagerImplementation() {
         webClient = new EmployeeRESTful();
     }
-
+    /**
+     * Este metodo devuelve una Collection de Employee, conteniendo todos los datos
+     * @return Collection con con todos los empleados
+     * @throws BusinessLogicException si algun error
+     */
     @Override
     public Collection<Employee> getAllEmployees() throws Exception {
         List<Employee> employees =null;
@@ -32,11 +48,16 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Excepcon buscando todos los empleados, {0}",
                     ex.getMessage());
-           // throw new BusinessLogicException("Error finding all users:\n"+ex.getMessage());
+            throw new BusinessLogicException("Error finding all users:\n"+ex.getMessage());
         }
         return employees;   
     }
-
+    /**
+     * Este metodo crea un nuevoEmployee. Se hace medianteuna peticion POST al 
+     * servicio RESTful
+     * @param emp el Employee a añadir
+     * @throws BusinessLogicException si algun error
+     */
     @Override
     public void createEmployee(Employee emp) throws Exception {
         
@@ -48,10 +69,14 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception creating user, {0}",
                     ex.getMessage());
-            //throw new BusinessLogicException("Error creating user:\n"+ex.getMessage());
+            throw new BusinessLogicException("Error creating user:\n"+ex.getMessage());
         }
     }
-    
+    /**
+     * Este metodo actualiza los datos de un empleado
+     * @param emp el EMployee a actualizar
+     * @throws BusinessLogicException si algun error
+     */
 
     @Override
     public void updateEmployee(Employee emp) throws Exception {
@@ -62,10 +87,15 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception updating user, {0}",
                     ex.getMessage());
-            //throw new BusinessLogicException("Error updating user:\n"+ex.getMessage());
+            throw new BusinessLogicException("Error updating user:\n"+ex.getMessage());
         }
     }
-    
+    /**
+     * Este metodo elimina los datos de un Employee
+     * 
+     * @param emp el Employee a eliminar
+     * @throws Exception 
+     */
 
     @Override
     public void deleteEmployee(Employee emp) throws Exception {
@@ -76,24 +106,28 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception deleting user, {0}",
                     ex.getMessage());
-            //throw new BusinessLogicException("Error deleting user:\n"+ex.getMessage());
+            throw new BusinessLogicException("Error deleting user:\n"+ex.getMessage());
         }
     }
-
+    /**
+     * Este metodo comprueba si un Empleado ya existe
+     * @param login Parametro del Employee
+     * @throws LoginExistException se lanza en el caso de que el login ya exista
+     */
     @Override
     public void isLoginExisting(String login) throws Exception {
-        /*try{
+        try{
             if(this.webClient.find(Employee.class, login)!=null)
-                //throw new LoginExistsException("Ya existe un usuario con ese login");
-       /* }catch(NotFoundException ex){
+                throw new LoginExistException();
+        }catch(NotFoundException ex){
             //If there is a NotFoundException 404,that is,
             //the login does not exist, we catch the exception and do nothing. 
-        }catch(ClientErrorException ex){
+        }catch(Exception ex){
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception checking login exixtence, {0}",
                     ex.getMessage());
             throw new BusinessLogicException("Error finding user:\n"+ex.getMessage());
-        }catch(Exception ex){}*/
+        }
     }
 
     @Override
@@ -104,17 +138,19 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             webClient.employeesByName(Employee.class, name);
         }catch(Exception ex){
             LOGGER.log(Level.SEVERE,
-                    "UsersManager: Exception deleting user, {0}",
+                    "EMployeeManager: Exception finding employee by name, {0}",
                     ex.getMessage());
-            //throw new BusinessLogicException("Error deleting user:\n"+ex.getMessage());
+            throw new BusinessLogicException("Error deleting user:\n"+ex.getMessage());
         }
     }
-        
+      /**
+       * 
+       * @param salary
+       * @throws Exception 
+       */  
     
-
     @Override
     public void employeesBySalary(Float salary) throws Exception {
-
         try{
             LOGGER.log(Level.INFO,"EmployeeManager: buscando empleados con el salario: {0}.",salary);
             webClient.employeeBySalary(Employee.class, salary);
@@ -122,7 +158,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception deleting user, {0}",
                     ex.getMessage());
-            //throw new BusinessLogicException("Error deleting user:\n"+ex.getMessage());
+            throw new BusinessLogicException("Error deleting user:\n"+ex.getMessage());
         }
     }
 

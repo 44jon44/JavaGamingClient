@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.EmployeeFormController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.EmployeeFormController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
       <Label id="lblName" fx:id="lblName" layoutX="287.0" layoutY="154.0" text="Nombre:">
@@ -41,20 +41,20 @@
       <TextField id="tfLogin" fx:id="tfLogin" layoutX="272.0" layoutY="312.0" prefHeight="25.0" prefWidth="486.0" promptText="example" />
       <TextField id="tfSalary" fx:id="tfSalary" layoutX="272.0" layoutY="443.0" prefHeight="25.0" prefWidth="486.0" promptText="1000" />
       <DatePicker id="dpHiringDate" fx:id="dpHiringDate" layoutX="272.0" layoutY="384.0" prefHeight="25.0" prefWidth="486.0" promptText="dd/mm/yyyy" />
-      <Label layoutX="657.0" layoutY="141.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label layoutX="657.0" layoutY="201.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label layoutX="657.0" layoutY="264.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label layoutX="657.0" layoutY="329.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label layoutX="657.0" layoutY="391.0" prefHeight="34.0" prefWidth="136.0" />
-      <Button layoutX="280.0" layoutY="516.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="147.0" style="-fx-background-color: #72a2ca;" text="Modificar">
+      <Label layoutX="773.0" layoutY="185.0" prefHeight="34.0" prefWidth="136.0" />
+      <Label layoutX="773.0" layoutY="247.0" prefHeight="34.0" prefWidth="136.0" />
+      <Label layoutX="773.0" layoutY="308.0" prefHeight="34.0" prefWidth="136.0" />
+      <Label layoutX="773.0" layoutY="380.0" prefHeight="34.0" prefWidth="136.0" />
+      <Label layoutX="779.0" layoutY="439.0" prefHeight="34.0" prefWidth="136.0" />
+      <Button layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Modificar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Button>
-      <Button layoutX="611.0" layoutY="516.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="147.0" style="-fx-background-color: #72a2ca;" text="Añadir">
+      <Button layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Añadir" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Button>
-      <Hyperlink id="hpReturn" fx:id="hpReturn" layoutX="452.0" layoutY="480.0" prefHeight="45.0" prefWidth="147.0" text="Volver atrás" textAlignment="JUSTIFY" underline="true">
+      <Hyperlink id="hpReturn" fx:id="hpReturn" layoutX="452.0" layoutY="480.0" prefHeight="45.0" prefWidth="147.0" text="Volver atrás" textAlignment="JUSTIFY">
          <font>
             <Font size="24.0" />
          </font></Hyperlink>
