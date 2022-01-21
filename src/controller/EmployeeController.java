@@ -19,6 +19,8 @@ import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -27,9 +29,13 @@ import javafx.stage.Stage;
  *
  * @author ibai Arriola
  */
-public class EmployeeController implements Initializable {
+public class EmployeeController{
 
-    private Stage employeeStage;
+    private static final Logger LOG = Logger.getLogger(EmployeeController.class.getName());
+    
+    @FXML
+    private Pane employeePane;
+    
     /**
      * Create user data button.
      */
@@ -45,29 +51,28 @@ public class EmployeeController implements Initializable {
      */
     @FXML
     private Button btnDelete;
+    
     @FXML
     private Label lblError;
 
-    /**
-     * Quit application button.
-     *
-     * @return
-     */
-    public Stage employeeStage() {
-        return employeeStage;
-    }
+    
+    private Stage stage;
 
-    //setter de 
-    public void employeeStage(Stage employeeStage) {
-        this.employeeStage = employeeStage;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public void initStage(Parent root) {
+        Scene EmployeeScene = new Scene(root);
+       
+            //definimos como modal la nueva ventana
+            stage.initModality(Modality.NONE);
+            //añadimos la escena en el stage
+            stage.setScene(EmployeeScene);
+            //por defecto no podra redimensionarse
+            stage.setResizable(false);
+
+       // menuController.setStage(stage);
         btnAdd.setOnAction(this::create);
         btnDelete.setOnAction(this::delete);
         btnModify.setOnAction(this::modify);
@@ -76,6 +81,7 @@ public class EmployeeController implements Initializable {
         //Se deshabilitan los botones btnDelete y bntModify
         btnDelete.setDisable(true);
         btnModify.setDisable(true);
+        stage.showAndWait();
     }
 
     private void create(ActionEvent event) {
@@ -83,25 +89,26 @@ public class EmployeeController implements Initializable {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
-            Parent root;
-            root = (Parent) employeeForm.load();
+            Parent root = (Parent) employeeForm.load();
             //Creamos una nueva escena para la ventana SignIn
-            Scene EmployeeFormScene = new Scene(root);
+            Scene employeeFormScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
             Stage employeeFormStage = new Stage();
 
             //definimos como modal la nueva ventana
             employeeFormStage.initModality(Modality.NONE);
             //añadimos la escena en el stage
-            employeeFormStage.setScene(EmployeeFormScene);
+            employeeFormStage.setScene(employeeFormScene);
             //por defecto no podra redimensionarse
             employeeFormStage.setResizable(false);
             //cargamos el controlador de la ventana
-            EmployeeController controller = employeeForm.getController();
+            EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
             controller.initStage(root);
             employeeFormStage.show();
+            employeePane.getScene().getWindow().hide();
         } catch (IOException ex) {
-            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.INFO,"Ha saltado este error");
+            LOG.log(Level.SEVERE, null, ex);
         }
 
     }

@@ -56,7 +56,6 @@ public class SignInController {
     @FXML
     private Hyperlink hyperSignUP;
     
-
     //getter y setter del state SingIN
     public Stage getSignInStage() {
         return signInStage;
@@ -84,31 +83,18 @@ public class SignInController {
     @FXML
     private void signIN(ActionEvent event) {
         try {
-            
-            
-            
-            
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
             Parent root;
             root = (Parent) employee.load();
+            panelSignIN.getScene().getWindow().hide();
             //Creamos una nueva escena para la ventana SignIn
-            Scene EmployeeScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage employeeStage = new Stage();
-            //definimos como modal la nueva ventana
-            employeeStage.initModality(Modality.WINDOW_MODAL);
-            //añadimos la escena en el stage
-            employeeStage.setScene(EmployeeScene);
-            //por defecto no podra redimensionarse
-            employeeStage.setResizable(false);
              //cargamos el controlador de la ventana
             EmployeeController controller = employee.getController();
+            controller.setStage(new Stage());
             controller.initStage(root);
             
-            employeeStage.show();
-            
-            panelSignIN.getScene().getWindow().hide();
+
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -25,7 +25,9 @@ import javafx.stage.Stage;
  *
  * @author ibai Arriola
  */
-public class HbMenuAdmController implements Initializable {
+public class HbMenuAdmController{
+
+    private static final Logger LOG = Logger.getLogger(HbMenuAdmController.class.getName());
 
     @FXML
     private HBox hbMenuAdm;
@@ -49,64 +51,59 @@ public class HbMenuAdmController implements Initializable {
     private Menu mbExit;
     @FXML
     private Menu mbSignOut;
+    
+    private Stage stage;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-
-    }
-
-    public void initStage(Parent root) {
-
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
     
-    private Stage stageToClose=null;
-
-    public void windowClose() {
-        stageToClose.close();
+    public void initStage(Parent root) throws IOException {
+        LOG.info("Init Stage del menú hbMenuAdm");
+        //llamar al método que abre la ventana de empleado
+        miManageUsers.setOnAction(this::employeesClicked);
+        //llamar al método que abre la ventana de juegos
+        miManageGames.setOnAction(this::gamesClicked);
+        //llamar al método que abre la ventana de compras
+        miManagePurchases.setOnAction(this::purchasesClicked);
+        //llamar al método que abre la ventana del formulario
+        miPrint.setOnAction(this::printClicked);
+        //llamar al método que abre la ventana para cambiar la contraseña
+        miChangePasswd.setOnAction(this::passwordClicked);
     }
-    public void chargeController(){
     
-    }
-
     @FXML
     private void employeesClicked(ActionEvent event) {
         try {
-            if(stageToClose!=null){
-                System.out.println("Pajin");
-                windowClose();
-            }
+           // if(stageToClose!=null){
+            //    System.out.println("Pajin");
+             //   windowClose();
+           // }
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
             root = (Parent) employee.load();
             //Creamos una nueva escena para la ventana SignIn
-            Scene EmployeeScene = new Scene(root);
+            Scene employeeScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage employeeStage = new Stage();
+            Stage employeeStage = stage;
             
             //definimos como modal la nueva ventana
-            employeeStage.initModality(Modality.WINDOW_MODAL);
+            employeeStage.initModality(Modality.NONE);
             //añadimos la escena en el stage
-            employeeStage.setScene(EmployeeScene);
+            employeeStage.setScene(employeeScene);
             //por defecto no podra redimensionarse
             employeeStage.setResizable(false);
+            
             employeeStage.show();
-            stageToClose = employeeStage;
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
-        };
+        }
     }
 
     @FXML
     private void gamesClicked(ActionEvent event) {
         try {
-            if(stageToClose!=null){
-                System.out.println("Pajin");
-                windowClose();
-            }
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
@@ -114,28 +111,22 @@ public class HbMenuAdmController implements Initializable {
             //Creamos una nueva escena para la ventana SignIn
             Scene GameScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage gameStage = new Stage();
-            stageToClose = gameStage;
+            Stage gameStage = (Stage)hbMenuAdm.getScene().getWindow();
             //definimos como modal la nueva ventana
-            gameStage.initModality(Modality.WINDOW_MODAL);
+
             //añadimos la escena en el stage
             gameStage.setScene(GameScene);
             //por defecto no podra redimensionarse
-            gameStage.setResizable(false);
-            gameStage.show();
+
 
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
-        };
+        }
     }
 
     @FXML
     private void purchasesClicked(ActionEvent event) {
         try {
-            if(stageToClose!=null){
-                System.out.println("Pajin");
-                windowClose();
-            }
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
             Parent root;
@@ -144,26 +135,21 @@ public class HbMenuAdmController implements Initializable {
             Scene PurchaseScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
             Stage purchaseStage = new Stage();
-            stageToClose = purchaseStage;
             //definimos como modal la nueva ventana
-            purchaseStage.initModality(Modality.WINDOW_MODAL);
+            purchaseStage.initModality(Modality.NONE);
             //añadimos la escena en el stage
             purchaseStage.setScene(PurchaseScene);
             //por defecto no podra redimensionarse
             purchaseStage.setResizable(false);
             purchaseStage.show();
-
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
-        };
+        }
     }
 
     @FXML
     private void printClicked(ActionEvent event) {
         try {
-            if(stageToClose!=null){
-                windowClose();
-            }
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
@@ -172,7 +158,6 @@ public class HbMenuAdmController implements Initializable {
             Scene GameScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
             Stage gameStage = new Stage();
-            stageToClose = gameStage;
             //definimos como modal la nueva ventana
             gameStage.initModality(Modality.NONE);
             //añadimos la escena en el stage
@@ -183,7 +168,7 @@ public class HbMenuAdmController implements Initializable {
 
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
-        };
+        }
     }
 
     @FXML
@@ -207,7 +192,7 @@ public class HbMenuAdmController implements Initializable {
 
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
-        };
+        }
     }
 
     @FXML
@@ -219,4 +204,7 @@ public class HbMenuAdmController implements Initializable {
         System.out.println("Pajin");
     }
 
+    private void closePreviousStage(Stage stage) {
+        stage.getScene().getWindow().hide();
+    }
 }

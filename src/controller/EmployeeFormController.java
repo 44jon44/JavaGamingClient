@@ -36,7 +36,7 @@ public class EmployeeFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     public void initStageAdd(Parent root) {
         btnModify.setDisable(true);
@@ -44,5 +44,9 @@ public class EmployeeFormController implements Initializable {
 
     public void initStageModify() {
         btnAdd.setDisable(true);
+    }
+
+    void initStage(Parent root) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
