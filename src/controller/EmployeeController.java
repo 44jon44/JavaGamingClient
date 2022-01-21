@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +19,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -45,8 +48,18 @@ public class EmployeeController implements Initializable {
      */
     @FXML
     private Button btnDelete;
+    /**
+     * Delete user data button.
+     */
+    @FXML
+    private Button btnFind;
+    @FXML
+    private TextField tfValue;
     @FXML
     private Label lblError;
+
+    @FXML
+    private ComboBox cmbFilter;
 
     /**
      * Quit application button.
@@ -71,11 +84,14 @@ public class EmployeeController implements Initializable {
         btnAdd.setOnAction(this::create);
         btnDelete.setOnAction(this::delete);
         btnModify.setOnAction(this::modify);
+        btnFind.setOnAction(this::find);
         //lblError se inicializa vacio
         lblError.setText("");
         //Se deshabilitan los botones btnDelete y bntModify
         btnDelete.setDisable(true);
         btnModify.setDisable(true);
+
+        btnFind.focusedProperty().addListener(this::valueFocusChanged);
     }
 
     private void create(ActionEvent event) {
@@ -97,8 +113,8 @@ public class EmployeeController implements Initializable {
             //por defecto no podra redimensionarse
             employeeFormStage.setResizable(false);
             //cargamos el controlador de la ventana
-            EmployeeController controller = employeeForm.getController();
-            controller.initStage(root);
+            EmployeeFormController controller = employeeForm.getController();
+            controller.initStageAdd(root);
             employeeFormStage.show();
         } catch (IOException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
@@ -114,6 +130,22 @@ public class EmployeeController implements Initializable {
     @FXML
     private void modify(ActionEvent event) {
 
+    }
+
+    @FXML
+    private void find(ActionEvent event) {
+
+        if (tfValue.getText().equalsIgnoreCase("")) {
+            lblError.setText("Debes de introducir un valor en campo value");
+        }
+    }
+
+    @FXML
+    private void valueFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+        //lblErrorPassword.setTextFill(Paint.valueOf("RED"));
+        if (oldValue) {//foco perdido 
+            lblError.setText("");
+        }
     }
 
 }

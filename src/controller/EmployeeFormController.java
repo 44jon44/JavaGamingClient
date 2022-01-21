@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 /**
  * FXML Controller class
@@ -32,6 +33,17 @@ public class EmployeeFormController implements Initializable {
      */
     @FXML
     private Button btnModify;
+    @FXML
+    private Label lblErrorName;
+    @FXML
+    private Label lblErrorEmail;
+    @FXML
+    private Label lblErrorLogin;
+    @FXML
+    private Label lblErrorHiringDate;
+    @FXML
+    private Label lblErrorSalary;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -44,5 +56,13 @@ public class EmployeeFormController implements Initializable {
 
     public void initStageModify() {
         btnAdd.setDisable(true);
+    }
+
+    void initStage(Parent root) {
+        lblErrorName.setText("");
+        lblErrorEmail.setText("");
+        lblErrorLogin.setText("");
+        lblErrorHiringDate.setText("");
+        lblErrorSalary.setText("");
     }
 }
