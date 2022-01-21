@@ -75,27 +75,16 @@ public class HbMenuAdmController{
     @FXML
     private void employeesClicked(ActionEvent event) {
         try {
-           // if(stageToClose!=null){
-            //    System.out.println("Pajin");
-             //   windowClose();
-           // }
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/game.fxml"));
+            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
             Parent root;
             root = (Parent) employee.load();
             //Creamos una nueva escena para la ventana SignIn
             Scene employeeScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage employeeStage = stage;
-            
-            //definimos como modal la nueva ventana
-            employeeStage.initModality(Modality.NONE);
+            Stage employeeStage = (Stage)hbMenuAdm.getScene().getWindow();
             //añadimos la escena en el stage
             employeeStage.setScene(employeeScene);
-            //por defecto no podra redimensionarse
-            employeeStage.setResizable(false);
-            
-            employeeStage.show();
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -134,14 +123,9 @@ public class HbMenuAdmController{
             //Creamos una nueva escena para la ventana SignIn
             Scene PurchaseScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage purchaseStage = new Stage();
-            //definimos como modal la nueva ventana
-            purchaseStage.initModality(Modality.NONE);
+            Stage purchaseStage = (Stage)hbMenuAdm.getScene().getWindow();
             //añadimos la escena en el stage
             purchaseStage.setScene(PurchaseScene);
-            //por defecto no podra redimensionarse
-            purchaseStage.setResizable(false);
-            purchaseStage.show();
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
