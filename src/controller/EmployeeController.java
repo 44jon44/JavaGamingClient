@@ -6,23 +6,18 @@
 package controller;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -74,13 +69,6 @@ public class EmployeeController {
     }
 
     public void initStage1(Parent root) {
-        
-
-        //definimos como modal la nueva ventana
-        
-
-        
-
         // menuController.setStage(stage);
         btnAdd.setOnAction(this::create);
         btnDelete.setOnAction(this::delete);
