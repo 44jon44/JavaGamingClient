@@ -20,7 +20,7 @@ public class User implements Serializable {
     private int id;
     private String login;
     private String email;
-    private String fullName;
+    private String name;
     private UserStatus status;
     private UserPrivilege privilege;
     private String password;
@@ -46,13 +46,13 @@ public class User implements Serializable {
      * Constructor de la clase User que recibe 4 parámetros
      * @param login login del usuario
      * @param email email del usuario
-     * @param fullName  nombre completo del usuario
+     * @param name  nombre del usuario
      * @param password  contraseña del usuario
      */
-    public User(String login,String email, String fullName, String password){
+    public User(String login,String email, String name, String password){
         this.login = login;
         this.email = email;
-        this.fullName = fullName;
+        this.name = name;
         this.password = password;
     }
     
@@ -82,12 +82,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public UserStatus getStatus() {
@@ -124,6 +124,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", login=" + login + ", email=" + email + ", fullName=" + fullName + ", status=" + status + ", privilege=" + privilege + ", password=" + password + ", lastPasswordChange=" + lastPasswordChange + '}';
+        return "User{" + "id=" + id + ", login=" + login + ", email=" + email + ", name=" + name + ", status=" + status + ", privilege=" + privilege + ", password=" + password + ", lastPasswordChange=" + lastPasswordChange + '}';
     }
 }

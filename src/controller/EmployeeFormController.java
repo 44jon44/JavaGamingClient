@@ -5,9 +5,14 @@
  */
 package controller;
 
+import businessLogic.EmployeeManager;
+import static java.lang.Float.parseFloat;
 import java.net.URL;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
@@ -15,11 +20,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import transferObjects.Employee;
 
 /**
  * FXML Controller class
@@ -27,6 +35,9 @@ import javafx.scene.control.TextField;
  * @author ibai Arriola
  */
 public class EmployeeFormController implements Initializable {
+
+    ZoneId defaultZoneId = ZoneId.systemDefault();
+    private EmployeeManager employeesManager;
 
     //booleanos que indican si los campos son válidos tras las comprobaciones oportunas
     private boolean tfNameIsValid = false;
@@ -37,18 +48,10 @@ public class EmployeeFormController implements Initializable {
     //Logger del controlador de la ventana "ViewSignIn"
     private static final Logger LOG = Logger.getLogger(EmployeeFormController.class.getName());
     /**
-     * Initializes the controller class.
-     */
-    /**
      * Create user data button.
      */
     @FXML
-    private Button btnAdd;
-    /**
-     * Modify user data button.
-     */
-    @FXML
-    private Button btnModify;
+    private Button btnSave;
     @FXML
     private Label lblErrorName;
     @FXML
@@ -78,11 +81,11 @@ public class EmployeeFormController implements Initializable {
     }
 
     public void initStageAdd(Parent root) {
-        btnModify.setDisable(true);
+        btnSave.setOnAction(this::add);
     }
 
     public void initStageModify() {
-        btnAdd.setDisable(true);
+        btnSave.setOnAction(this::modify);
     }
 
     void initStage(Parent root) {
@@ -103,8 +106,6 @@ public class EmployeeFormController implements Initializable {
 
         hpReturn.setOnAction(this::hpClicked);
 
-        btnAdd.setOnAction(this::addClicked);
-        btnModify.setOnAction(this::modifyClicked);
     }
 
     @FXML
@@ -125,16 +126,13 @@ public class EmployeeFormController implements Initializable {
     private void tfEmailFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 
         LOG.info("Dentro de tfEmail FocusChanged");
-        if (oldValue)
-        {//foco perdido 
+        if (oldValue) {//foco perdido 
             tfEmailIsValid = validateTfEmail(tfEmail.getText());
-            if (!tfEmailIsValid)
-            {
+            if (!tfEmailIsValid) {
                 tfEmail.setStyle("-fx-text-inner-color: red;");
                 showlblErrorEmailMessages(tfEmail.getText());
             }
-        } else if (newValue)
-        {//foco ganado
+        } else if (newValue) {//foco ganado
 
         }
     }
@@ -143,16 +141,13 @@ public class EmployeeFormController implements Initializable {
     private void tfLoginFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 
         LOG.info("Dentro de tfLoginFocusChanged");
-        if (oldValue)
-        {//foco perdido 
+        if (oldValue) {//foco perdido 
             tfLoginIsValid = validateTfLogin(tfLogin.getText());
-            if (!tfLoginIsValid)
-            {
+            if (!tfLoginIsValid) {
                 tfLogin.setStyle("-fx-text-inner-color: red;");
                 showlblErrorLoginMessages(tfLogin.getText());
             }
-        } else if (newValue)
-        {//foco ganado
+        } else if (newValue) {//foco ganado
 
         }
     }
@@ -162,9 +157,8 @@ public class EmployeeFormController implements Initializable {
 
         LOG.info("Dentro de tfUserFocusChanged");
         if (oldValue) {//foco perdido 
-            tfSalaryIsValid=validateTfFSalary(tfSalary.getText());
-            if (!tfSalaryIsValid)
-            {
+            tfSalaryIsValid = validateTfFSalary(tfSalary.getText());
+            if (!tfSalaryIsValid) {
                 tfSalary.setStyle("-fx-text-inner-color: red;");
                 showlblErrorLoginMessages(tfSalary.getText());
             }
@@ -207,24 +201,54 @@ public class EmployeeFormController implements Initializable {
 
     @FXML
     private void hpClicked(ActionEvent event) {
-        if (fieldsInformed()) {
+        if (oneFieldInformed()) {
             //Informar que se descartaran los cambios
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Se descartarán los cambios\n"
+                    + "Esta operación no se puede deshacer.",
+                    ButtonType.OK, ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                
+            }else{
+                alert.close();
+            }
         } else {
             //Abrir ventana employee
         }
     }
 
     @FXML
-    private void addClicked(ActionEvent event) {
+    private void add(ActionEvent event) {
+
+        try {
+            employeesManager.isLoginExisting(tfName.getText());
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (fieldsInformed()) {
-            //Informar que se descartaran los cambios
+            try {
+                Employee emp = new Employee();
+
+                emp.setName(tfName.getText());
+                emp.setEmail(tfEmail.getText());
+                emp.setLogin(tfLogin.getText());
+                Date date = Date.from(dpHiringDate.getValue().atStartOfDay(defaultZoneId).toInstant());
+                emp.setHiringDate(date);
+                emp.setSalary(parseFloat(tfSalary.getText()));
+
+                employeesManager.createEmployee(emp);
+
+            } catch (Exception ex) {
+                Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else {
             //Abrir ventana employee
         }
     }
 
     @FXML
-    private void modifyClicked(ActionEvent event) {
+    private void modify(ActionEvent event) {
         if (fieldsInformed()) {
             //Informar que se descartaran los cambios
         } else {
@@ -239,6 +263,19 @@ public class EmployeeFormController implements Initializable {
                 && !tfLogin.getText().equalsIgnoreCase("")
                 && dpHiringDate.getValue() != null
                 && !tfSalary.getText().equalsIgnoreCase("")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean oneFieldInformed() {
+
+        if (!tfName.getText().equalsIgnoreCase("")
+                || !tfEmail.getText().equalsIgnoreCase("")
+                || !tfLogin.getText().equalsIgnoreCase("")
+                || dpHiringDate.getValue() != null
+                || !tfSalary.getText().equalsIgnoreCase("")) {
             return true;
         } else {
             return false;
@@ -317,14 +354,16 @@ public class EmployeeFormController implements Initializable {
             lblErrorLogin.setText("Nombre inválido");
         }
     }
+
     private void showlblErrorSalaryMessages(Float salary) {
-        if (salary<1000) {
+        if (salary < 1000) {
             lblErrorLogin.setText("El salario debe de ser mayor o igual a 1000");
         } else {
             lblErrorLogin.setText("Introduce un numero decimal");
         }
     }
+
     private void showlblErrorHiringDateMessages(Date hiringDate) {
-        
+
     }
 }
