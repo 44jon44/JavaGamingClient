@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.EmployeeFormController">
+<Pane fx:id="employeeFormPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeFormController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
       <Label id="lblName" fx:id="lblName" layoutX="287.0" layoutY="154.0" text="Nombre:">
@@ -41,16 +41,16 @@
       <TextField id="tfLogin" fx:id="tfLogin" layoutX="272.0" layoutY="312.0" prefHeight="25.0" prefWidth="486.0" promptText="example" />
       <TextField id="tfSalary" fx:id="tfSalary" layoutX="272.0" layoutY="443.0" prefHeight="25.0" prefWidth="486.0" promptText="1000" />
       <DatePicker id="dpHiringDate" fx:id="dpHiringDate" layoutX="272.0" layoutY="384.0" prefHeight="25.0" prefWidth="486.0" promptText="dd/mm/yyyy" />
-      <Label layoutX="773.0" layoutY="185.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label layoutX="773.0" layoutY="247.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label layoutX="773.0" layoutY="308.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label layoutX="773.0" layoutY="380.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label layoutX="779.0" layoutY="439.0" prefHeight="34.0" prefWidth="136.0" />
-      <Button layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Modificar" textFill="WHITE">
+      <Label fx:id="lblErrorName" layoutX="773.0" layoutY="185.0" prefHeight="34.0" prefWidth="136.0" />
+      <Label fx:id="lblErrorEmail" layoutX="773.0" layoutY="247.0" prefHeight="34.0" prefWidth="136.0" />
+      <Label fx:id="lblErrorLogin" layoutX="773.0" layoutY="308.0" prefHeight="34.0" prefWidth="136.0" />
+      <Label fx:id="lblErrorHiringDate" layoutX="773.0" layoutY="380.0" prefHeight="34.0" prefWidth="136.0" />
+      <Label fx:id="lblErrorSalary" layoutX="779.0" layoutY="439.0" prefHeight="34.0" prefWidth="136.0" />
+      <Button fx:id="btnModify" layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Modificar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Button>
-      <Button layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Añadir" textFill="WHITE">
+      <Button fx:id="btnAdd" layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Añadir" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Button>
