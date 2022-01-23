@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  *
  * @author ibai Arriola
  */
-public class HbMenuAdmController{
+public class HbMenuAdmController {
 
     private static final Logger LOG = Logger.getLogger(HbMenuAdmController.class.getName());
 
@@ -46,13 +46,13 @@ public class HbMenuAdmController{
     private Menu mbExit;
     @FXML
     private Menu mbSignOut;
-    
+
     private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     public void initStage(Parent root) throws IOException {
         LOG.info("Init Stage del menú hbMenuAdm");
         //llamar al método que abre la ventana de empleado
@@ -66,7 +66,7 @@ public class HbMenuAdmController{
         //llamar al método que abre la ventana para cambiar la contraseña
         miChangePasswd.setOnAction(this::passwordClicked);
     }
-    
+
     @FXML
     private void employeesClicked(ActionEvent event) {
         try {
@@ -77,12 +77,12 @@ public class HbMenuAdmController{
             //Creamos una nueva escena para la ventana SignIn
             Scene employeeScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage employeeStage = (Stage)hbMenuAdm.getScene().getWindow();
+            Stage employeeStage = (Stage) hbMenuAdm.getScene().getWindow();
             //añadimos la escena en el stage
             EmployeeController controller = employee.getController();
             controller.initStage1(root);
             employeeStage.setScene(employeeScene);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -91,22 +91,21 @@ public class HbMenuAdmController{
     @FXML
     private void gamesClicked(ActionEvent event) {
         try {
-            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
             root = (Parent) game.load();
             //Creamos una nueva escena para la ventana SignIn
             Scene GameScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage gameStage = (Stage)hbMenuAdm.getScene().getWindow();
-            //definimos como modal la nueva ventana
+            Stage gameStage = (Stage) hbMenuAdm.getScene().getWindow();
 
-            //añadimos la escena en el stage
+            //GameController controller = game.getController();
+            //controller.initStage(root);
             gameStage.setScene(GameScene);
-            //por defecto no podra redimensionarse
-
 
         } catch (IOException ex) {
+            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -121,7 +120,7 @@ public class HbMenuAdmController{
             //Creamos una nueva escena para la ventana SignIn
             Scene PurchaseScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage purchaseStage = (Stage)hbMenuAdm.getScene().getWindow();
+            Stage purchaseStage = (Stage) hbMenuAdm.getScene().getWindow();
             //añadimos la escena en el stage
             purchaseStage.setScene(PurchaseScene);
         } catch (IOException ex) {

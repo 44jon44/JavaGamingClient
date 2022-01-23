@@ -5,14 +5,19 @@
  */
 package controller;
 
+import businessLogic.GameManager;
+import businessLogic.GameManagerImplementation;
 import controller.EmployeeFormController;
 import controller.GameFormController;
 import controller.HbMenuAdmController;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import transferObjects.Game;
 
 /**
  * FXML Controller class
@@ -38,22 +44,25 @@ public class GameController {
 
     private static final Logger LOG = Logger.getLogger(GameController.class.getName());
 
+    private GameManager gameManager;
+    private ObservableList<Game> gameObservableList;
+    
     @FXML
-    private TableView<?> tvGames;
+    private TableView<Game> tvGames;
     @FXML
-    private TableColumn<?, ?> tcGameName;
+    private TableColumn tcGameName;
     @FXML
-    private TableColumn<?, ?> tcGameGenre;
+    private TableColumn tcGameGenre;
     @FXML
-    private TableColumn<?, ?> tcGamePegi;
+    private TableColumn tcGamePegi;
     @FXML
-    private TableColumn<?, ?> tcGameReleaseDate;
+    private TableColumn tcGameReleaseDate;
     @FXML
-    private TableColumn<?, ?> tcGamePrice;
+    private TableColumn tcGamePrice;
     @FXML
-    private ComboBox<?> cbSearchBy;
+    private ComboBox cbSearchBy;
     @FXML
-    private ComboBox<?> cbSearchValue;
+    private ComboBox cbSearchValue;
     @FXML
     private Button btnSearch;
     @FXML
@@ -73,7 +82,8 @@ public class GameController {
         this.stage = stage;
     }
 
-    public void initStage(Parent root) {
+    public void initStage(Parent root) throws Exception {
+        LOG.info("init stage del controlador de juegos");
         Scene GameScene = new Scene(root);
         stage.setScene(GameScene);
         // menuController.setStage(stage);
@@ -88,14 +98,16 @@ public class GameController {
 
         //COLUMNAS DE LA TABLA GAME
         tcGameName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("gerne"));
+        tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
         tcGamePegi.setCellValueFactory(new PropertyValueFactory<>("pegi"));
         tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         tcGameReleaseDate.setCellValueFactory(new PropertyValueFactory<>("relaseData"));
+        gameManager = new GameManagerImplementation();
+        loadGamesOnTable();
         
         
         
-
+       
     }
 
     private void createGame(ActionEvent event) {
@@ -124,5 +136,14 @@ public class GameController {
 
     private void deleteGame(ActionEvent event) {
         LOG.info("No implementado");
+    }
+    
+    public void loadGamesOnTable() throws Exception{
+        Collection games;
+        games = gameManager.getAllGames();
+        gameObservableList = FXCollections.observableArrayList(games);
+        tvGames.setItems(gameObservableList);
+        LOG.info("juegos cargados" + games );
+       
     }
 }

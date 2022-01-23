@@ -133,5 +133,6 @@ public class Game implements Serializable {
     public String toString() {
         return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';
     }
+    
 
 }
