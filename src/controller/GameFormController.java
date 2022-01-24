@@ -27,7 +27,6 @@ public class GameFormController{
     void initStage(Parent root) {
         Scene gameFormScene = new Scene(root);
         stage.setScene(gameFormScene);
-        stage.showAndWait();
     }
     
     

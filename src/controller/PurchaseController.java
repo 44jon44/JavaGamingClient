@@ -9,18 +9,21 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author ibai Arriola
  */
-public class PurchaseController implements Initializable {
+public class PurchaseController{
 
     @FXML
     private Pane clientPane;
@@ -34,13 +37,17 @@ public class PurchaseController implements Initializable {
     private DatePicker dpPurchaseDate;
     @FXML
     private ComboBox<?> cbPrice;
+ 
+    private Stage stage;
+    
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+    public void initStage(Parent root) {
+        Scene purchaseScene = new Scene(root);
+        stage.setScene(purchaseScene);
+    }
+    
     
 }

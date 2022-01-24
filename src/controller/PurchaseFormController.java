@@ -21,7 +21,7 @@ import javafx.scene.control.TextField;
  *
  * @author ibai Arriola
  */
-public class PurchaseFormController implements Initializable {
+public class PurchaseFormController{
 
     @FXML
     private Button btnSave;
@@ -46,12 +46,4 @@ public class PurchaseFormController implements Initializable {
     @FXML
     private Label lblErrorGame;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
 }

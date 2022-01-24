@@ -66,8 +66,8 @@ public class GameController{
     }
     
     public void initStage(Parent root) {
-        Scene GameScene = new Scene(root);   
-        stage.setScene(GameScene);
+        Scene gameScene = new Scene(root);   
+        stage.setScene(gameScene);
        // menuController.setStage(stage);
         btnAddGame.setOnAction(this::createGame);
         btnDeleteGame.setOnAction(this::deleteGame);
@@ -78,13 +78,13 @@ public class GameController{
         btnDeleteGame.setDisable(true);
         btnModifyGame.setDisable(true);
     }
-     private void createGame(ActionEvent event) {
+    
+    private void createGame(ActionEvent event) {
        try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader gameForm = new FXMLLoader(getClass().getResource("/view/gameForm.fxml"));
             Parent root;
             root = (Parent) gameForm.load();
-            hbMenuAdm.getScene().getWindow().hide();
             GameFormController controller = gameForm.getController();
             controller.setStage(stage);
             controller.initStage(root);

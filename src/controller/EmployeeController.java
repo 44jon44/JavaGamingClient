@@ -61,14 +61,16 @@ public class EmployeeController{
     }
 
     public void initStage(Parent root) {
-        Scene employeeScene = new Scene(root);   
-        //definimos como modal la nueva ventana
-        stage.initModality(Modality.NONE);
+        Scene employeeScene = new Scene(root);  
         //añadimos la escena en el stage
         stage.setScene(employeeScene);
+        //definimos como modal la nueva ventana
+        if(stage.getModality() != Modality.NONE)
+            stage.initModality(Modality.NONE);
         //por defecto no podra redimensionarse
-        stage.setResizable(false);
-       // menuController.setStage(stage);
+        if(stage.isResizable())
+            stage.setResizable(false);
+        // menuController.setStage(stage);
         btnAdd.setOnAction(this::create);
         btnDelete.setOnAction(this::delete);
         btnModify.setOnAction(this::modify);
@@ -77,7 +79,9 @@ public class EmployeeController{
         //Se deshabilitan los botones btnDelete y bntModify
         btnDelete.setDisable(true);
         btnModify.setDisable(true);
-        stage.showAndWait();
+        //hacemos visible la ventana
+        if(!stage.isShowing())
+            stage.showAndWait();
     }
 
     private void create(ActionEvent event) {
@@ -107,5 +111,4 @@ public class EmployeeController{
     private void modify(ActionEvent event) {
 
     }
-
 }
