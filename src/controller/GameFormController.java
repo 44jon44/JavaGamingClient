@@ -5,13 +5,18 @@
  */
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -39,7 +44,7 @@ public class GameFormController {
     @FXML
     private ComboBox cbGameGenre;
     @FXML
-    private TextField tfGameGenre;
+    private TextField tfGameName;
     @FXML
     private TextField tfGamePrice;
     @FXML
@@ -68,16 +73,63 @@ public class GameFormController {
 
         //ComboBox
         defaultComboValue();
-        //
+        //Textfield
+        tfGameName.requestFocus();
+        tfGameName.textProperty().addListener(this::tfGameNameTextChanged);
+        
+        tfGamePrice.textProperty().addListener(this::tfGamePriceTextChanged);
+        //Botones y hyperlinks
+        hlBack.setOnAction(this::backtoGameTable);
+        btnAdd.setOnAction(this::addGame);
+        btnModify.setOnAction(this::modifyGame);
+        //datePicker
+        dpReleaseDate.setValue(LocalDate.now());
+        dpReleaseDate.setEditable(false);
     }
 
     public void defaultComboValue() {
         ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
         cbGameGenre.setItems(genrefilterValue);
         cbGameGenre.getSelectionModel().selectFirst();
-        
-        ObservableList<Integer> pegiValuefilter = FXCollections.observableArrayList(18,16,12,8,3);
+        cbGameGenre.setEditable(false);
+
+        ObservableList<Integer> pegiValuefilter = FXCollections.observableArrayList(18, 16, 12, 8, 3);
         cbGamePegi.setItems(pegiValuefilter);
         cbGamePegi.getSelectionModel().selectFirst();
+        cbGamePegi.setEditable(false);
+    }
+
+    public void backtoGameTable(ActionEvent event) {
+        try {
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+            FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
+            Parent root;
+            root = (Parent) game.load();
+            GameController controller = game.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void tfGameNameTextChanged(ObservableValue observable, String oldValue, String newValue) {
+        
+
+    }
+    private void tfGamePriceTextChanged(ObservableValue observable, String oldValue, String newValue) {
+          if (newValue != null) {
+        //  if (tfGamePrice.get>=200) {
+        } else {
+              }
+
+    }
+    private void addGame(ActionEvent event){
+        
+    }
+    private void modifyGame(ActionEvent event){
+        
     }
 }

@@ -104,8 +104,8 @@ public class GameController {
         tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         tcGameReleaseDate.setCellValueFactory(new PropertyValueFactory<>("relaseData"));
         gameManager = new GameManagerImplementation();
-        loadGamesOnTable();
-        stage.showAndWait();
+        //loadGamesOnTable();
+        stage.show();
     }
 
   private void createGame(ActionEvent event) {

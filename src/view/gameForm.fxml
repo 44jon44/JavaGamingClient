@@ -10,59 +10,60 @@
 <?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameFormController">
-   <children>
-    <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
-      <Label layoutX="332.0" layoutY="151.0" prefHeight="37.0" prefWidth="75.0" text="Nombre: ">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="339.0" layoutY="213.0" prefHeight="37.0" prefWidth="63.0" text="Género:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="362.0" layoutY="279.0" prefHeight="37.0" prefWidth="40.0" text="Pegi:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="220.0" layoutY="342.0" prefHeight="37.0" prefWidth="182.0" text="Fecha de Lanzamiento:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Label layoutX="347.0" layoutY="396.0" prefHeight="37.0" prefWidth="55.0" text="Precio:">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="cbGamePegi" layoutX="443.0" layoutY="285.0" prefWidth="150.0" />
-      <DatePicker fx:id="dpReleaseDate" layoutX="443.0" layoutY="345.0" prefHeight="25.0" prefWidth="160.0" />
-      <ComboBox fx:id="cbGameGenre" layoutX="443.0" layoutY="219.0" prefWidth="150.0" />
-      <TextField fx:id="tfGameGenre" layoutX="443.0" layoutY="157.0" prefHeight="25.0" prefWidth="239.0" promptText="Introduce el nombre del juego..." />
-      <TextField fx:id="tfGamePrice" layoutX="443.0" layoutY="402.0" prefHeight="25.0" prefWidth="239.0" promptText="Precio (20/500€)......." />
-      <Button fx:id="btnAdd" layoutX="203.0" layoutY="552.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" style="-fx-background-color: #72a2ca;" text="AÑADIR" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Button>
-      <Button fx:id="btnModify" layoutX="600.0" layoutY="552.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" style="-fx-background-color: #72a2ca;" text="MODIFICAR" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Button>
-      <Label fx:id="lblErrorGamePrice" layoutX="721.0" layoutY="402.0" prefHeight="25.0" prefWidth="187.0" text="Longitud maxima superada" textFill="RED" />
-      <Label layoutX="402.0" layoutY="53.0" prefHeight="86.0" prefWidth="311.0" text="GESTIÓN  DE JUEGOS">
-         <font>
-            <Font name="System Bold" size="30.0" />
-         </font>
-      </Label>
-      <Hyperlink fx:id="hlBack" layoutX="476.0" layoutY="470.0" prefHeight="23.0" prefWidth="139.0" text="Volver atrás" textAlignment="CENTER">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Hyperlink>
-      <Label fx:id="lblErrorGameName" layoutX="711.0" layoutY="157.0" prefHeight="25.0" prefWidth="206.0" text=" El precio tiene que ser entre (20/500) " textFill="#fc0808" />
-   </children>
+    <children>
+        <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
+        <Label layoutX="332.0" layoutY="151.0" prefHeight="37.0" prefWidth="75.0" text="Nombre: ">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="339.0" layoutY="213.0" prefHeight="37.0" prefWidth="63.0" text="Género:">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="362.0" layoutY="279.0" prefHeight="37.0" prefWidth="40.0" text="Pegi:">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="220.0" layoutY="342.0" prefHeight="37.0" prefWidth="182.0" text="Fecha de Lanzamiento:">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="347.0" layoutY="396.0" prefHeight="37.0" prefWidth="55.0" text="Precio:">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <TextField fx:id="tfGameName"  focusTraversable="true" layoutX="443.0" layoutY="157.0" prefHeight="25.0" prefWidth="239.0" promptText="Introduce el nombre del juego..." />
+        <ComboBox fx:id="cbGameGenre"  focusTraversable="true" layoutX="443.0" layoutY="219.0" prefWidth="150.0" />  
+        <ComboBox fx:id="cbGamePegi" focusTraversable="true" layoutX="443.0" layoutY="285.0" prefWidth="150.0" />
+        <DatePicker fx:id="dpReleaseDate" focusTraversable="true" layoutX="443.0" layoutY="345.0" prefHeight="25.0" prefWidth="160.0" />
+        <TextField fx:id="tfGamePrice"  focusTraversable="true" layoutX="443.0" layoutY="402.0" prefHeight="25.0" prefWidth="239.0" promptText="Precio (20/500€)......." />
+         <Hyperlink fx:id="hlBack" focusTraversable="true" layoutX="476.0" layoutY="470.0" prefHeight="23.0" prefWidth="139.0" text="Volver atrás" textAlignment="CENTER">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Hyperlink>
+        <Button fx:id="btnAdd" focusTraversable="true" layoutX="203.0" layoutY="552.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" style="-fx-background-color: #72a2ca;" text="AÑADIR" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Button>
+        <Button fx:id="btnModify" focusTraversable="true" layoutX="600.0" layoutY="552.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" style="-fx-background-color: #72a2ca;" text="MODIFICAR" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Button>
+        <Label fx:id="lblErrorGamePrice" layoutX="721.0" layoutY="402.0" prefHeight="25.0" prefWidth="187.0" text="Longitud maxima superada" textFill="RED" />
+        <Label layoutX="402.0" layoutY="53.0" prefHeight="86.0" prefWidth="311.0" text="GESTIÓN  DE JUEGOS">
+            <font>
+                <Font name="System Bold" size="30.0" />
+            </font>
+        </Label>
+      
+        <Label fx:id="lblErrorGameName" layoutX="711.0" layoutY="157.0" prefHeight="25.0" prefWidth="206.0" text=" El precio tiene que ser entre (20/500) " textFill="#fc0808" />
+    </children>
 </Pane>
