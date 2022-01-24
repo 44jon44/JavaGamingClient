@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controller;
 
 import businessLogic.GameManager;
@@ -11,11 +7,14 @@ import controller.EmployeeFormController;
 import controller.GameFormController;
 import controller.HbMenuAdmController;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import transferObjects.Game;
+import transferObjects.Genre;
 
 /**
  * FXML Controller class
@@ -46,7 +46,6 @@ public class GameController {
 
     private GameManager gameManager;
     private ObservableList<Game> gameObservableList;
-    
     @FXML
     private TableView<Game> tvGames;
     @FXML
@@ -60,7 +59,7 @@ public class GameController {
     @FXML
     private TableColumn tcGamePrice;
     @FXML
-    private ComboBox cbSearchBy;
+    private ComboBox<String> cbSearchBy;
     @FXML
     private ComboBox cbSearchValue;
     @FXML
@@ -96,6 +95,12 @@ public class GameController {
         btnDeleteGame.setDisable(true);
         btnModifyGame.setDisable(true);
 
+        //COMBOBOX DE LOS FILTRADOS
+        ObservableList<String> filter = FXCollections.observableArrayList("GENERO", "PEGI");
+        cbSearchBy.setItems(filter);
+        defaultComboValue();
+        cbSearchBy.getSelectionModel().selectedItemProperty().addListener(this::selectedFilter);
+        btnSearch.setOnAction(this::searchOnTable);
         //COLUMNAS DE LA TABLA GAME
         tcGameName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
@@ -103,11 +108,8 @@ public class GameController {
         tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         tcGameReleaseDate.setCellValueFactory(new PropertyValueFactory<>("relaseData"));
         gameManager = new GameManagerImplementation();
-        loadGamesOnTable();
-        
-        
-        
-       
+        //loadGamesOnTable();
+        stage.showAndWait();
     }
 
     private void createGame(ActionEvent event) {
@@ -137,13 +139,60 @@ public class GameController {
     private void deleteGame(ActionEvent event) {
         LOG.info("No implementado");
     }
-    
-    public void loadGamesOnTable() throws Exception{
+
+    public void loadGamesOnTable() throws Exception {
         Collection games;
         games = gameManager.getAllGames();
         gameObservableList = FXCollections.observableArrayList(games);
         tvGames.setItems(gameObservableList);
-        LOG.info("juegos cargados" + games );
-       
+        LOG.info("juegos cargados" + games);
+
+    }
+
+    @FXML
+    public void selectedFilter(ObservableValue ov, String oldValue, String newValue) {
+        if (newValue != null) {
+            String searchFilter = cbSearchBy.getValue();
+
+            if (searchFilter.equalsIgnoreCase("GENERO")) {
+                ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
+                cbSearchValue.setItems(genrefilterValue);
+                cbSearchValue.getSelectionModel().selectFirst();
+            } else {
+                ObservableList<Integer> pegiValuefilter = FXCollections.observableArrayList(3, 8, 12, 16, 18);
+                cbSearchValue.setItems(pegiValuefilter);
+                cbSearchValue.getSelectionModel().selectFirst();
+            }
+        }
+    }
+
+    public void defaultComboValue() {
+        cbSearchBy.getSelectionModel().selectFirst();
+        ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
+        cbSearchValue.setItems(genrefilterValue);
+        cbSearchValue.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    public void searchOnTable(ActionEvent event) {
+        String searchFilter = (String) cbSearchBy.getValue();
+        String genre;
+        Integer pegi;
+        Collection<Game> games = null;
+        try {
+            if (searchFilter.equalsIgnoreCase("GENERO")) {
+                genre = cbSearchValue.getValue().toString();
+                games = gameManager.getAllGamesbyGenre(genre);
+                loadGamesOnTable();
+
+            } else {
+                pegi = (Integer) cbSearchValue.getValue();
+                games = gameManager.getAllGamesbyPegi(pegi);
+                loadGamesOnTable();
+            }
+        } catch (Exception ex) {
+            LOG.info("error al  filtrar la busqueda de juegos al pulsar btbSearh");
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

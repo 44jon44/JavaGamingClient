@@ -84,18 +84,19 @@ public class SignInController {
     private void signIN(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
             root = (Parent) employee.load();
             panelSignIN.getScene().getWindow().hide();
             //Creamos una nueva escena para la ventana SignIn
              //cargamos el controlador de la ventana
-            EmployeeController controller = employee.getController();
+            GameController controller = employee.getController();
             controller.setStage(new Stage());
-            controller.initStage(root);
-            
+            controller.initStage(root);            
 
         } catch (IOException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
             

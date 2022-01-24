@@ -45,7 +45,7 @@ public class GameRESTful {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findGamebyGenre(Class<T> responseType, String genre) throws ClientErrorException {
+    public <T> T findGamebyGenre(GenericType<T> responseType, String genre) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("genre/{0}", new Object[]{genre}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -74,7 +74,7 @@ public class GameRESTful {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    public <T> T findGamebyPegi(Class<T> responseType, String pegi) throws ClientErrorException {
+    public <T> T findGamebyPegi(GenericType<T> responseType, Integer pegi) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("pegi/{0}", new Object[]{pegi}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

@@ -134,4 +134,36 @@ public class GameManagerImplementation implements GameManager {
                     ex.getMessage());
         }
     }
+
+    @Override
+    public Collection<Game> getAllGamesbyGenre(String genre) throws Exception {
+       List<Game> games = null;
+        try {
+            LOGGER.info("UsersManager: Finding all users from REST service (XML).");
+            //Ask webClient for all users' data.
+            games = webClient.findGamebyGenre(new GenericType<List<Game>>() {
+            },genre);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "GameManager: Exception finding all users, {0}",
+                    ex.getMessage());
+        }
+        return games;
+    }
+
+    @Override
+    public Collection<Game> getAllGamesbyPegi(Integer pegi) throws Exception {
+      List<Game> games = null;
+        try {
+            LOGGER.info("UsersManager: Finding all users from REST service (XML).");
+            //Ask webClient for all users' data.
+            games = webClient.findGamebyPegi(new GenericType<List<Game>>() {
+            },pegi);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "GameManager: Exception finding all users, {0}",
+                    ex.getMessage());
+        }
+        return games;
+    }
 }
