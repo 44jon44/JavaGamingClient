@@ -5,9 +5,8 @@
  */
 package controller;
 
-import exception.*;
+import businessLogic.EmployeeManager;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -21,19 +20,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import transferObjects.User;
 
 /**
  * @author ibai arriola
  */
 public class SignInController {
 
-    //Hasta que este la BD Lista de usuarios de prueba para ejercicios
     
-   
+    private EmployeeManager employeesManager;
     // un logger que nos informara mediante la terminal
     private static final Logger LOG = Logger.getLogger(SignInController.class.getName());
     //declaramos los componentes de la ventana  que manipularemos a continuacion
@@ -55,16 +50,16 @@ public class SignInController {
     //un hyperlink que llama a la ventana modal viewSingUP
     @FXML
     private Hyperlink hyperSignUP;
-    
+
     //getter y setter del state SingIN
     public Stage getSignInStage() {
         return signInStage;
     }
-    
+
     public void setSignInStage(Stage signInStage) {
         this.signInStage = signInStage;
     }
-    
+
     public void initStage(Parent root) throws IOException {
         LOG.info("Init Stage de la VentanaSignIN");
         //Llamamos al metodo que se encarga del comportamiento del boton
@@ -89,17 +84,16 @@ public class SignInController {
             root = (Parent) employee.load();
             panelSignIN.getScene().getWindow().hide();
             //Creamos una nueva escena para la ventana SignIn
-             //cargamos el controlador de la ventana
+            //cargamos el controlador de la ventana
             EmployeeController controller = employee.getController();
             controller.setStage(new Stage());
+            controller.setEmployeeManager(employeesManager);
             controller.initStage(root);
-            
 
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-        
+
     }
 
     /**

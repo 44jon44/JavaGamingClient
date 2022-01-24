@@ -1,5 +1,6 @@
 package controller;
 
+import businessLogic.EmployeeManager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +24,7 @@ import javafx.stage.Stage;
 public class HbMenuAdmController{
 
     private static final Logger LOG = Logger.getLogger(HbMenuAdmController.class.getName());
-
+    private EmployeeManager employeesManager;
     @FXML
     private HBox hbMenuAdm;
     @FXML
@@ -81,6 +82,7 @@ public class HbMenuAdmController{
             //añadimos la escena en el stage
             EmployeeController controller = employee.getController();
             controller.initStage1(root);
+            controller.setEmployeeManager(employeesManager);
             employeeStage.setScene(employeeScene);
             
         } catch (IOException ex) {

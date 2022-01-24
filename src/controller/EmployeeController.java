@@ -6,7 +6,6 @@
 package controller;
 
 import businessLogic.EmployeeManager;
-import businessLogic.UserManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -291,6 +290,9 @@ public class EmployeeController {
             btnModify.setDisable(true);
         }
 
+    }
+    public void setEmployeeManager(EmployeeManager employeesManager) {
+        this.employeesManager = employeesManager;
     }
 
 }
