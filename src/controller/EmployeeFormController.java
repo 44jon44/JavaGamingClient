@@ -53,6 +53,8 @@ public class EmployeeFormController implements Initializable {
     @FXML
     private Button btnSave;
     @FXML
+    private Button btnDelete;
+    @FXML
     private Label lblErrorName;
     @FXML
     private Label lblErrorEmail;
@@ -80,14 +82,6 @@ public class EmployeeFormController implements Initializable {
         // TODO
     }
 
-    public void initStageAdd(Parent root) {
-        btnSave.setOnAction(this::add);
-    }
-
-    public void initStageModify() {
-        btnSave.setOnAction(this::modify);
-    }
-
     void initStage(Parent root) {
         lblErrorName.setText("");
         lblErrorEmail.setText("");
@@ -103,6 +97,8 @@ public class EmployeeFormController implements Initializable {
         tfLogin.textProperty().addListener(this::tfLoginTextChanged);
         tfSalary.focusedProperty().addListener(this::tfSalaryFocusChanged);
         tfSalary.textProperty().addListener(this::tfSalaryTextChanged);
+
+        btnSave.setOnAction(this::add);
 
         hpReturn.setOnAction(this::hpClicked);
 
@@ -209,8 +205,8 @@ public class EmployeeFormController implements Initializable {
                     ButtonType.OK, ButtonType.CANCEL);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                
-            }else{
+
+            } else {
                 alert.close();
             }
         } else {
@@ -247,15 +243,6 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
-    @FXML
-    private void modify(ActionEvent event) {
-        if (fieldsInformed()) {
-            //Informar que se descartaran los cambios
-        } else {
-            //Abrir ventana employee
-        }
-    }
-
     private boolean fieldsInformed() {
 
         if (!tfName.getText().equalsIgnoreCase("")
@@ -268,7 +255,7 @@ public class EmployeeFormController implements Initializable {
             return false;
         }
     }
-    
+
     private boolean oneFieldInformed() {
 
         if (!tfName.getText().equalsIgnoreCase("")
@@ -304,7 +291,7 @@ public class EmployeeFormController implements Initializable {
     }
 
     private boolean validateHiringDate() {
-        return false;
+        return true;
     }
 
     private void showFieldErrors() {
@@ -356,6 +343,9 @@ public class EmployeeFormController implements Initializable {
     }
 
     private void showlblErrorSalaryMessages(Float salary) {
+        if (salary == null) {
+            lblErrorLogin.setText("Campo obligatorio");
+        }
         if (salary < 1000) {
             lblErrorLogin.setText("El salario debe de ser mayor o igual a 1000");
         } else {

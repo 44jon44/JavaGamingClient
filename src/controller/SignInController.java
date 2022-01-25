@@ -6,6 +6,7 @@
 package controller;
 
 import businessLogic.EmployeeManager;
+import factories.EmployeeManagerFactory;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +22,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javax.naming.OperationNotSupportedException;
 
 /**
  * @author ibai arriola
@@ -88,9 +90,12 @@ public class SignInController {
             EmployeeController controller = employee.getController();
             controller.setStage(new Stage());
             controller.setEmployeeManager(employeesManager);
+            controller.setEmployeeManager(EmployeeManagerFactory.createEmployeeManager(EmployeeManagerFactory.REST_WEB_CLIENT_TYPE));
             controller.initStage(root);
 
         } catch (IOException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (OperationNotSupportedException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
 

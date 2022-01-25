@@ -8,55 +8,58 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="employeeFormPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeFormController">
-   <children>
-	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
-      <Label id="lblName" fx:id="lblName" layoutX="287.0" layoutY="154.0" text="Nombre:">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <Label id="lblEmail" fx:id="lblEmail" layoutX="286.0" layoutY="218.0" text="Email:">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <Label id="lblLogin" fx:id="lblLogin" layoutX="288.0" layoutY="277.0" text="Login:">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <Label id="lblHiringDate" fx:id="lblhiringDate" layoutX="290.0" layoutY="346.0" text="Fecha de contrato:">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <Label id="lblSalary" fx:id="lblSalary" layoutX="295.0" layoutY="408.0" text="Salario:">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <TextField id="tfName" fx:id="tfName" layoutX="272.0" layoutY="189.0" prefHeight="25.0" prefWidth="486.0" promptText="Example" />
-      <TextField id="tfEmail" fx:id="tfEmail" layoutX="272.0" layoutY="252.0" prefHeight="25.0" prefWidth="486.0" promptText="example@example.com" />
-      <TextField id="tfLogin" fx:id="tfLogin" layoutX="272.0" layoutY="312.0" prefHeight="25.0" prefWidth="486.0" promptText="example" />
-      <TextField id="tfSalary" fx:id="tfSalary" layoutX="272.0" layoutY="443.0" prefHeight="25.0" prefWidth="486.0" promptText="1000" />
-      <DatePicker id="dpHiringDate" fx:id="dpHiringDate" layoutX="272.0" layoutY="384.0" prefHeight="25.0" prefWidth="486.0" promptText="dd/mm/yyyy" />
-      <Label fx:id="lblErrorName" layoutX="773.0" layoutY="185.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label fx:id="lblErrorEmail" layoutX="773.0" layoutY="247.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label fx:id="lblErrorLogin" layoutX="773.0" layoutY="308.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label fx:id="lblErrorHiringDate" layoutX="773.0" layoutY="380.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label fx:id="lblErrorSalary" layoutX="779.0" layoutY="439.0" prefHeight="34.0" prefWidth="136.0" />
-      <Button fx:id="btnModify" layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Guardar" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font></Button>
-      <Button fx:id="btnSave" layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #ff3333;" text="Borrar" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font></Button>
-      <Hyperlink id="hpReturn" fx:id="hpReturn" layoutX="452.0" layoutY="480.0" prefHeight="45.0" prefWidth="147.0" text="Volver atrás" textAlignment="JUSTIFY">
-         <font>
-            <Font size="24.0" />
-         </font></Hyperlink>
-   </children>
+<Pane fx:id="employeeFormPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeFormController">
+    <children>
+        <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
+        <Label id="lblName" fx:id="lblName" layoutX="287.0" layoutY="154.0" text="Nombre:">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+        <Label id="lblEmail" fx:id="lblEmail" layoutX="286.0" layoutY="218.0" text="Email:">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+        <Label id="lblLogin" fx:id="lblLogin" layoutX="288.0" layoutY="277.0" text="Login:">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+        <Label id="lblHiringDate" fx:id="lblhiringDate" layoutX="290.0" layoutY="346.0" text="Fecha de contrato:">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+        <Label id="lblSalary" fx:id="lblSalary" layoutX="295.0" layoutY="408.0" text="Salario:">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+        <TextField id="tfName" fx:id="tfName" layoutX="272.0" layoutY="189.0" prefHeight="25.0" prefWidth="486.0" promptText="Example" />
+        <TextField id="tfEmail" fx:id="tfEmail" layoutX="272.0" layoutY="252.0" prefHeight="25.0" prefWidth="486.0" promptText="example@example.com" />
+        <TextField id="tfLogin" fx:id="tfLogin" layoutX="272.0" layoutY="312.0" prefHeight="25.0" prefWidth="486.0" promptText="example" />
+        <TextField id="tfSalary" fx:id="tfSalary" layoutX="272.0" layoutY="443.0" prefHeight="25.0" prefWidth="486.0" promptText="1000" />
+        <DatePicker id="dpHiringDate" fx:id="dpHiringDate" layoutX="272.0" layoutY="384.0" prefHeight="25.0" prefWidth="486.0" promptText="dd/mm/yyyy" />
+        <Label fx:id="lblErrorName" layoutX="773.0" layoutY="185.0" prefHeight="34.0" prefWidth="136.0" />
+        <Label fx:id="lblErrorEmail" layoutX="773.0" layoutY="247.0" prefHeight="34.0" prefWidth="136.0" />
+        <Label fx:id="lblErrorLogin" layoutX="773.0" layoutY="308.0" prefHeight="34.0" prefWidth="136.0" />
+        <Label fx:id="lblErrorHiringDate" layoutX="773.0" layoutY="380.0" prefHeight="34.0" prefWidth="136.0" />
+        <Label fx:id="lblErrorSalary" layoutX="779.0" layoutY="439.0" prefHeight="34.0" prefWidth="136.0" />
+        <Button fx:id="btnSave" layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Guardar" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Button>
+        <Button fx:id="btnDelete" layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #ff3333;" text="Borrar" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Button>
+        <Hyperlink id="hpReturn" fx:id="hpReturn" layoutX="452.0" layoutY="480.0" prefHeight="45.0" prefWidth="147.0" text="Volver atrás" textAlignment="JUSTIFY">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Hyperlink>
+    </children>
 </Pane>
