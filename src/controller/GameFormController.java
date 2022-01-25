@@ -5,9 +5,14 @@
  */
 package controller;
 
+import businessLogic.GameManager;
+import exception.GameExistExpception;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +31,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import transferObjects.Game;
 import transferObjects.Genre;
 
 /**
@@ -42,7 +48,7 @@ public class GameFormController {
     @FXML
     private DatePicker dpReleaseDate;
     @FXML
-    private ComboBox cbGameGenre;
+    private ComboBox<Genre> cbGameGenre;
     @FXML
     private TextField tfGameName;
     @FXML
@@ -58,6 +64,8 @@ public class GameFormController {
     @FXML
     private Label lblErrorGameName;
     Stage stage;
+
+    private GameManager gameManager;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -76,7 +84,7 @@ public class GameFormController {
         //Textfield
         tfGameName.requestFocus();
         tfGameName.textProperty().addListener(this::tfGameNameTextChanged);
-        
+
         tfGamePrice.textProperty().addListener(this::tfGamePriceTextChanged);
         //Botones y hyperlinks
         hlBack.setOnAction(this::backtoGameTable);
@@ -116,20 +124,36 @@ public class GameFormController {
     }
 
     private void tfGameNameTextChanged(ObservableValue observable, String oldValue, String newValue) {
-        
 
     }
+
     private void tfGamePriceTextChanged(ObservableValue observable, String oldValue, String newValue) {
-          if (newValue != null) {
-        //  if (tfGamePrice.get>=200) {
+        if (newValue != null) {
+
         } else {
-              }
+        }
 
     }
-    private void addGame(ActionEvent event){
-        
+
+    @FXML
+    private void addGame(ActionEvent event) {
+        try {
+            
+            gameManager.isNameExisting(tfGameName.getText().trim());
+            Game game = new Game();
+            game.setName(tfGameName.getText().trim());
+            game.setGenre(cbGameGenre.getSelectionModel().getSelectedItem().toString());
+            game.setPegi((Integer) cbGamePegi.getSelectionModel().getSelectedItem());
+            game.setRelaseData(Date.from(dpReleaseDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+            game.setPrice(Float.valueOf(tfGamePrice.getText()));
+            
+        } catch (GameExistExpception ex) {
+            Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
-    private void modifyGame(ActionEvent event){
-        
+
+    private void modifyGame(ActionEvent event) {
+
     }
 }

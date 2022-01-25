@@ -125,11 +125,11 @@ public class GameController {
     }
 
     private void modifyGame(ActionEvent event) {
-        LOG.info("No implementado");
+       
     }
 
     private void deleteGame(ActionEvent event) {
-        LOG.info("No implementado");
+      
     }
 
     public void loadGamesOnTable() throws Exception {
