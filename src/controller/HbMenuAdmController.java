@@ -1,11 +1,16 @@
 package controller;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -20,7 +25,7 @@ import javafx.stage.Stage;
  *
  * @author ibai Arriola
  */
-public class HbMenuAdmController {
+public class HbMenuAdmController{
 
     private static final Logger LOG = Logger.getLogger(HbMenuAdmController.class.getName());
 
@@ -46,13 +51,13 @@ public class HbMenuAdmController {
     private Menu mbExit;
     @FXML
     private Menu mbSignOut;
-
+    
     private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
+    
     public void initStage(Parent root) throws IOException {
         LOG.info("Init Stage del menú hbMenuAdm");
         //llamar al método que abre la ventana de empleado
@@ -66,47 +71,42 @@ public class HbMenuAdmController {
         //llamar al método que abre la ventana para cambiar la contraseña
         miChangePasswd.setOnAction(this::passwordClicked);
     }
-
+    
     @FXML
     private void employeesClicked(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
-            Parent root;
-            root = (Parent) employee.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene employeeScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage employeeStage = (Stage) hbMenuAdm.getScene().getWindow();
-            //añadimos la escena en el stage
+            Parent root = (Parent)employee.load();
             EmployeeController controller = employee.getController();
-            controller.initStage1(root);
-            employeeStage.setScene(employeeScene);
-
+            controller.setStage((Stage)hbMenuAdm.getScene().getWindow());
+            controller.initStage(root);
+            if(hbMenuAdm.getScene().getWindow()!=null)
+                hbMenuAdm.getScene().getWindow().hide();    
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+           LOG.log(Level.SEVERE, null, ex);
         }
     }
 
     @FXML
     private void gamesClicked(ActionEvent event) {
         try {
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
             root = (Parent) game.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene GameScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage gameStage = (Stage) hbMenuAdm.getScene().getWindow();
-
-            //GameController controller = game.getController();
-            //controller.initStage(root);
-            gameStage.setScene(GameScene);
-
+            stage = (Stage)hbMenuAdm.getScene().getWindow();
+            //controlador de la vista game
+            GameController controller = game.getController();
+            //establecemos el stage
+            controller.setStage(stage);
+            //lanzamos el initStage
+            controller.initStage(root);
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -117,14 +117,13 @@ public class HbMenuAdmController {
             FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
             Parent root;
             root = (Parent) purchase.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene PurchaseScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage purchaseStage = (Stage) hbMenuAdm.getScene().getWindow();
-            //añadimos la escena en el stage
-            purchaseStage.setScene(PurchaseScene);
+            stage = (Stage)hbMenuAdm.getScene().getWindow();
+            PurchaseController controller = purchase.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -148,7 +147,7 @@ public class HbMenuAdmController {
             gameStage.show();
 
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -172,16 +171,16 @@ public class HbMenuAdmController {
             gameStage.show();
 
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
     @FXML
     private void exitClicked(ActionEvent event) {
-        System.out.println("Pajin");
+        System.out.println("Salir");
     }
 
     private void logOutClicked(ActionEvent event) {
-        System.out.println("Pajin");
+        System.out.println("Cerrar Sesión");
     }
 }

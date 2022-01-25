@@ -14,10 +14,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -72,83 +70,47 @@ public class EmployeeController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    public void initStage1(Parent root) {
+    
+    //definimos como modal la nueva ventana
         
 
-        //definimos como modal la nueva ventana
-        
-
-        
-
-        // menuController.setStage(stage);
-        btnAdd.setOnAction(this::create);
-        btnDelete.setOnAction(this::delete);
-        btnModify.setOnAction(this::modify);
-        btnFind.setOnAction(this::find);
-        //lblError se inicializa vacio
-        lblError.setText("");
-        //Se deshabilitan los botones btnDelete y bntModify
-        btnDelete.setDisable(true);
-        btnModify.setDisable(true);
-
-        btnFind.focusedProperty().addListener(this::valueFocusChanged);
-        
-    }
-      public void initStage(Parent root) {
-        Scene EmployeeScene = new Scene(root);
-
-        //definimos como modal la nueva ventana
-        stage.initModality(Modality.NONE);
+    public void initStage(Parent root) {
+        Scene employeeScene = new Scene(root);  
         //añadimos la escena en el stage
-        stage.setScene(EmployeeScene);
+        stage.setScene(employeeScene);
+        //definimos como modal la nueva ventana
+        if(stage.getModality() != Modality.NONE)
+            stage.initModality(Modality.NONE);
         //por defecto no podra redimensionarse
-        stage.setResizable(false);
-
+        if(stage.isResizable())
+            stage.setResizable(false);
         // menuController.setStage(stage);
         btnAdd.setOnAction(this::create);
         btnDelete.setOnAction(this::delete);
         btnModify.setOnAction(this::modify);
-        btnFind.setOnAction(this::find);
         //lblError se inicializa vacio
         lblError.setText("");
         //Se deshabilitan los botones btnDelete y bntModify
         btnDelete.setDisable(true);
         btnModify.setDisable(true);
-
-        btnFind.focusedProperty().addListener(this::valueFocusChanged);
-        stage.showAndWait();
+        //hacemos visible la ventana
+        if(!stage.isShowing())
+            stage.showAndWait();
     }
 
     private void create(ActionEvent event) {
-
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
             Parent root = (Parent) employeeForm.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene employeeFormScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage employeeFormStage = new Stage();
-
-            //definimos como modal la nueva ventana
-            employeeFormStage.initModality(Modality.NONE);
-            //añadimos la escena en el stage
-            employeeFormStage.setScene(employeeFormScene);
-            //por defecto no podra redimensionarse
-            employeeFormStage.setResizable(false);
-            //cargamos el controlador de la ventana
-            EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
+            //controlador de la ventana
+            EmployeeFormController controller = employeeForm.getController();
+            controller.setStage(stage);
             controller.initStage(root);
-            controller = employeeForm.getController();
-            controller.initStageAdd(root);
-            employeeFormStage.show();
-            employeePane.getScene().getWindow().hide();
         } catch (IOException ex) {
-            LOG.log(Level.INFO, "Ha saltado este error");
+            LOG.log(Level.INFO,"Ha saltado este error");
             LOG.log(Level.SEVERE, null, ex);
         }
-
     }
 
     @FXML
@@ -160,21 +122,4 @@ public class EmployeeController {
     private void modify(ActionEvent event) {
 
     }
-
-    @FXML
-    private void find(ActionEvent event) {
-
-        if (tfValue.getText().equalsIgnoreCase("")) {
-            lblError.setText("Debes de introducir un valor en campo value");
-        }
-    }
-
-    @FXML
-    private void valueFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-        //lblErrorPassword.setTextFill(Paint.valueOf("RED"));
-        if (oldValue) {//foco perdido 
-            lblError.setText("");
-        }
-    }
-
 }

@@ -5,9 +5,7 @@
  */
 package controller;
 
-import exception.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -21,19 +19,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import transferObjects.User;
 
 /**
  * @author ibai arriola
  */
 public class SignInController {
-
-    //Hasta que este la BD Lista de usuarios de prueba para ejercicios
-    
-   
     // un logger que nos informara mediante la terminal
     private static final Logger LOG = Logger.getLogger(SignInController.class.getName());
     //declaramos los componentes de la ventana  que manipularemos a continuacion
@@ -72,7 +63,7 @@ public class SignInController {
         //llamar al metodo de iniciar sesion cuando pulsas el boton
         btnSignIN.setOnAction(this::signIN);
         //llamar al metodo de  resgistrarse cuando pulsas el hyperEnlace
-        // hyperSignUP.setOnAction(this::signUp);
+        hyperSignUP.setOnAction(this::signUp);
     }
 
     /**
@@ -84,19 +75,16 @@ public class SignInController {
     private void signIN(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/game.fxml"));
+            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
             Parent root;
             root = (Parent) employee.load();
             panelSignIN.getScene().getWindow().hide();
             //Creamos una nueva escena para la ventana SignIn
              //cargamos el controlador de la ventana
-            GameController controller = employee.getController();
+            EmployeeController controller = employee.getController();
             controller.setStage(new Stage());
-            controller.initStage(root);            
-
+            controller.initStage(root);
         } catch (IOException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
             

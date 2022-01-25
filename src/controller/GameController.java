@@ -32,7 +32,7 @@ import transferObjects.Genre;
 /**
  * FXML Controller class
  *
- * @author Alex Hurtado
+ * @author Ibai Arriola
  */
 public class GameController {
 
@@ -75,16 +75,14 @@ public class GameController {
         this.stage = stage;
     }
 
-    public void initStage(Parent root) throws Exception {
-        LOG.info("init stage del controlador de juegos");
-        Scene GameScene = new Scene(root);
-        stage.setScene(GameScene);
-        
-        // menuController.setStage(stage);
+ 
+
+    public void initStage(Parent root) {
+        Scene gameScene = new Scene(root);
+        stage.setScene(gameScene);
         btnAddGame.setOnAction(this::createGame);
         btnDeleteGame.setOnAction(this::deleteGame);
         btnModifyGame.setOnAction(this::modifyGame);
-
         //lblError se inicializa vacio
         lblGameError.setText("");
         //Se deshabilitan los botones btnDelete y bntModify
@@ -105,11 +103,10 @@ public class GameController {
         tcGameReleaseDate.setCellValueFactory(new PropertyValueFactory<>("relaseData"));
         gameManager = new GameManagerImplementation();
         //loadGamesOnTable();
-        stage.show();
     }
 
-  private void createGame(ActionEvent event) {
-       try {
+    private void createGame(ActionEvent event) {
+        try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader gameForm = new FXMLLoader(getClass().getResource("/view/gameForm.fxml"));
             Parent root;
@@ -118,20 +115,19 @@ public class GameController {
             controller.setStage(stage);
             controller.initStage(root);
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
-        }catch(Exception ex){
-            ex.printStackTrace();
+            LOG.log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
     private void modifyGame(ActionEvent event) {
-       
+        LOG.info("No implementado");
     }
 
     private void deleteGame(ActionEvent event) {
-      
+        LOG.info("No implementado");
     }
-
     public void loadGamesOnTable() throws Exception {
         Collection games;
         games = gameManager.getAllGames();
@@ -184,7 +180,7 @@ public class GameController {
             }
         } catch (Exception ex) {
             LOG.info("error al  filtrar la busqueda de juegos al pulsar btbSearh");
-            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
