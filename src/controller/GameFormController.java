@@ -15,8 +15,13 @@ import javafx.stage.Stage;
  *
  * @author ibai Arriola
  */
-public class GameFormController{   
-    private Stage stage;
-    
+public class GameFormController implements Initializable {
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {          
+    }    
     
 }

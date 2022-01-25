@@ -6,7 +6,9 @@
 package controller;
 
 import businessLogic.EmployeeManager;
+import factories.EmployeeManagerFactory;
 import java.io.IOException;
+import static java.nio.file.Files.list;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.naming.OperationNotSupportedException;
 import transferObjects.Employee;
 
 /**
@@ -45,7 +48,7 @@ public class EmployeeController {
 
     private EmployeeManager employeesManager;
 
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     @FXML
     private Pane employeePane;
 
@@ -133,9 +136,8 @@ public class EmployeeController {
             cmbFilter.setItems(observableList);
             cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
 
-            ObservableList<Employee> departments
-                    = FXCollections.observableArrayList(employeesManager.getAllEmployees());
-            tblEmployees.setItems(departments);
+            //ObservableList<Employee> emps= FXCollections.observableArrayList(employeesManager.getAllEmployees());
+            //tblEmployees.setItems(emps);
 
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
         } catch (Exception ex) {
@@ -174,8 +176,9 @@ public class EmployeeController {
             observableList.add("Salario");
             cmbFilter.setItems(observableList);
             cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
-
-            ObservableList<Employee> emps= FXCollections.observableArrayList(employeesManager.getAllEmployees());
+            
+            ObservableList<Employee> emps;
+            emps= FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
             tblEmployees.setItems(emps);
 
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
@@ -206,6 +209,7 @@ public class EmployeeController {
             EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
             controller.initStage(root);
             controller = employeeForm.getController();
+            setEmployeeManager(EmployeeManagerFactory.createEmployeeManager(EmployeeManagerFactory.REST_WEB_CLIENT_TYPE));
             controller.initStage(root);
 
             employeeFormStage.show();
@@ -213,6 +217,8 @@ public class EmployeeController {
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Ha saltado este error");
             LOG.log(Level.SEVERE, null, ex);
+        } catch (OperationNotSupportedException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

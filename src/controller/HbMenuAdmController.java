@@ -1,6 +1,7 @@
 package controller;
 
 import businessLogic.EmployeeManager;
+import factories.EmployeeManagerFactory;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +16,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.naming.OperationNotSupportedException;
 
 /**
  * FXML Controller class
@@ -82,10 +84,12 @@ public class HbMenuAdmController{
             //añadimos la escena en el stage
             EmployeeController controller = employee.getController();
             controller.initStage1(root);
-            controller.setEmployeeManager(employeesManager);
+            controller.setEmployeeManager(EmployeeManagerFactory.createEmployeeManager(EmployeeManagerFactory.REST_WEB_CLIENT_TYPE));
             employeeStage.setScene(employeeScene);
             
         } catch (IOException ex) {
+            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (OperationNotSupportedException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
