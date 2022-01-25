@@ -84,7 +84,7 @@ public class HbMenuAdmController{
             if(hbMenuAdm.getScene().getWindow()!=null)
                 hbMenuAdm.getScene().getWindow().hide();    
         } catch (IOException ex) {
-           Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+           LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -104,7 +104,9 @@ public class HbMenuAdmController{
             //lanzamos el initStage
             controller.initStage(root);
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -121,7 +123,7 @@ public class HbMenuAdmController{
             controller.setStage(stage);
             controller.initStage(root);
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -145,7 +147,7 @@ public class HbMenuAdmController{
             gameStage.show();
 
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -169,16 +171,16 @@ public class HbMenuAdmController{
             gameStage.show();
 
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
     @FXML
     private void exitClicked(ActionEvent event) {
-        System.out.println("Pajin");
+        System.out.println("Salir");
     }
 
     private void logOutClicked(ActionEvent event) {
-        System.out.println("Pajin");
+        System.out.println("Cerrar Sesión");
     }
 }

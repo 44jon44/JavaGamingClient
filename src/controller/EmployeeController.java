@@ -6,15 +6,20 @@
 package controller;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
@@ -25,13 +30,13 @@ import javafx.stage.Stage;
  *
  * @author ibai Arriola
  */
-public class EmployeeController{
+public class EmployeeController {
 
     private static final Logger LOG = Logger.getLogger(EmployeeController.class.getName());
-    
+
     @FXML
     private Pane employeePane;
-    
+
     /**
      * Create user data button.
      */
@@ -47,18 +52,27 @@ public class EmployeeController{
      */
     @FXML
     private Button btnDelete;
-    
+    /**
+     * Delete user data button.
+     */
+    @FXML
+    private Button btnFind;
+    @FXML
+    private TextField tfValue;
     @FXML
     private Label lblError;
-    
+
     @FXML
-    private HBox hbMenuAdm;
-    
+    private ComboBox cmbFilter;
+
     private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+    
+    //definimos como modal la nueva ventana
+        
 
     public void initStage(Parent root) {
         Scene employeeScene = new Scene(root);  
