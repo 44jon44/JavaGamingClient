@@ -40,11 +40,11 @@ public class GameManagerImplementation implements GameManager {
      */
     @Override
     public Collection<Game> getAllGames() throws Exception {
-        List<Game> games = null;
+        Collection<Game> games = null;
         try {
             LOGGER.info("UsersManager: Finding all users from REST service (XML).");
             //Ask webClient for all users' data.
-            games = webClient.findAll(new GenericType<List<Game>>() {
+            games = webClient.findAll(new GenericType<Collection<Game>>() {
             });
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -133,5 +133,50 @@ public class GameManagerImplementation implements GameManager {
                     "UsersManager: Exception checking login exixtence, {0}",
                     ex.getMessage());
         }
+    }
+
+    /**
+     * Este método devuelve una Colección de {@link Game}, que filtra la
+     * busqueda de juegos por los diferentes generos.
+     *
+     * @return Collection, La colección con todos los datos {@link Game} de los
+     * juegos filtrados por genero.
+     */
+    @Override
+    public Collection<Game> getAllGamesbyGenre(String genre) throws Exception {
+        List<Game> games = null;
+        try {
+            LOGGER.info("UsersManager: Finding all users from REST service (XML).");
+            //Ask webClient for all users' data.
+            games = webClient.findGamebyGenre(new GenericType<List<Game>>() {
+            }, genre);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "GameManager: Exception finding all users, {0}",
+                    ex.getMessage());
+        }
+        return games;
+    }
+/**
+     * Este método devuelve una Colección de {@link Game}, que filtra la
+     * busqueda de juegos por los diferentes pegis.
+     *
+     * @return Collection, La colección con todos los datos {@link Game} de los
+     * juegos filtrados por genero.
+     */
+    @Override
+    public Collection<Game> getAllGamesbyPegi(Integer pegi) throws Exception {
+        List<Game> games = null;
+        try {
+            LOGGER.info("UsersManager: Finding all users from REST service (XML).");
+            //Ask webClient for all users' data.
+            games = webClient.findGamebyPegi(new GenericType<List<Game>>() {
+            }, pegi);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "GameManager: Exception finding all users, {0}",
+                    ex.getMessage());
+        }
+        return games;
     }
 }

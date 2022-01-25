@@ -3,54 +3,59 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GameController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
    <children>
-    <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
-      <TableView fx:id="gametable" layoutX="131.0" layoutY="218.0" prefHeight="351.0" prefWidth="700.0">
+   <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
+      <TableView fx:id="tvGames" layoutX="50.0" layoutY="181.0" prefHeight="480.0" prefWidth="924.0">
         <columns>
-          <TableColumn prefWidth="236.79995727539062" text="JUEGO" />
-          <TableColumn prefWidth="121.60003662109375" text="GENERO" />
-            <TableColumn prefWidth="45.60003662109375" text="PEGI" />
-            <TableColumn prefWidth="191.20001220703125" text="FECHA DE LANZAMIENTO" />
-            <TableColumn prefWidth="102.39996337890625" text="PRECIO" />
+          <TableColumn fx:id="tcGameName" prefWidth="241.0" text="JUEGO" />
+          <TableColumn fx:id="tcGameGenre" prefWidth="168.0" text="GENERO" />
+            <TableColumn fx:id="tcGamePegi" prefWidth="160.0" text="PEGI" />
+            <TableColumn fx:id="tcGameReleaseDate" prefWidth="196.0" text="FECHA DE LANZAMIENTO" />
+            <TableColumn fx:id="tcGamePrice" prefWidth="158.0" text="PRECIO" />
         </columns>
       </TableView>
-      <Label layoutX="141.0" layoutY="66.0" text="Admin : ">
+      <Label layoutX="55.0" layoutY="45.0" prefHeight="30.0" text="JUEGOS">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+      <Label layoutX="138.0" layoutY="45.0" prefHeight="30.0" />
+      <Label layoutX="52.0" layoutY="89.0" prefHeight="30.0" text="Búsqueda por : ">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
+      <ComboBox fx:id="cbSearchBy" layoutX="168.0" layoutY="89.0" prefHeight="30.0" prefWidth="200.0" />
+      <ComboBox fx:id="cbSearchValue" layoutX="568.0" layoutY="89.0" prefHeight="30.0" prefWidth="200.0" />
+      <Label layoutX="418.0" layoutY="89.0" prefHeight="30.0" text="Valor de Búsqueda :">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
+      <Button fx:id="btnSearch" layoutX="811.0" layoutY="89.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" text="BUSCAR">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <Button fx:id="btnAddGame" layoutX="51.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #2b8b57;" text="AÑADIR JUEGO" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
-         </font></Label>
-      <Label layoutX="207.0" layoutY="67.0" text="Ramon Arias" />
-      <Label layoutX="118.0" layoutY="131.0" text="Busqueda por : ">
-         <font>
-            <Font name="Arial Black" size="12.0" />
-         </font></Label>
-      <ComboBox layoutX="226.0" layoutY="128.0" prefWidth="150.0" />
-      <ComboBox layoutX="539.0" layoutY="127.0" prefWidth="150.0" />
-      <Label layoutX="421.0" layoutY="131.0" text="Valor de Busqueda :">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font></Label>
-      <Button layoutX="748.0" layoutY="123.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="81.0" text="Buscar" />
-      <Button layoutX="91.0" layoutY="614.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="197.0" style="-fx-background-color: #72a2ca;" text="AÑADIR">
-         <font>
-            <Font name="System Bold" size="12.0" />
          </font></Button>
-      <Button layoutX="367.0" layoutY="614.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="197.0" style="-fx-background-color: #72a2ca;" text="Modificar">
+      <Button fx:id="btnModifyGame" layoutX="387.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #4169e1;" text="MODIFICAR JUEGO" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button layoutX="649.0" layoutY="614.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="197.0" style="-fx-background-color: #ff6172;" text="Borrar">
+      <Button fx:id="btnDeleteGame" layoutX="727.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #ff3333;" text="BORRAR JUEGO" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Label layoutX="98.0" layoutY="670.0" prefHeight="76.0" prefWidth="551.0" text="Mensaje Informativo" textFill="RED">
+      <Label fx:id="lblGameError" layoutX="47.0" layoutY="724.0" prefHeight="30.0" prefWidth="924.0" text="Este es un mensaje de error" textFill="#ff3333">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="System Bold" size="16.0" />
          </font></Label>
+      <Separator layoutY="143.0" prefHeight="10.0" prefWidth="1024.0" />
    </children>
 </Pane>

@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeController">
+<Pane fx:id="employeePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
       <TableView id="tblEmployees" fx:id="tblEmployees" layoutX="50.0" layoutY="181.0" prefHeight="480.0" prefWidth="924.0">
@@ -22,7 +22,7 @@
             <TableColumn id="tcSalary" fx:id="tcSalary" minWidth="7.2000732421875" prefWidth="127.199951171875" text="SALARIO" />
         </columns>
       </TableView>
-      <Button id="btnAdd" fx:id="btnAdd" layoutX="57.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #2b8b57;" text="AÑADIR EMPLEADO" textFill="WHITE">
+      <Button fx:id="btnAdd" layoutX="57.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #2b8b57;" text="AÑADIR EMPLEADO" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>

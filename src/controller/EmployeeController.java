@@ -5,13 +5,24 @@
  */
 package controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -19,46 +30,96 @@ import javafx.stage.Stage;
  *
  * @author ibai Arriola
  */
-public class EmployeeController implements Initializable {
-    private Stage employeeStage;
+public class EmployeeController {
+
+    private static final Logger LOG = Logger.getLogger(EmployeeController.class.getName());
+
+    @FXML
+    private Pane employeePane;
+
     /**
      * Create user data button.
      */
     @FXML
-    private Button btCrear;
+    private Button btnAdd;
     /**
      * Modify user data button.
      */
     @FXML
-    private Button btModificar;
+    private Button btnModify;
     /**
      * Delete user data button.
      */
     @FXML
-    private Button btEliminar;
-
+    private Button btnDelete;
     /**
-     * Quit application button.
-     * @return 
+     * Delete user data button.
      */
-    public Stage employeeStage() {
-        return employeeStage;
-    }
+    @FXML
+    private Button btnFind;
+    @FXML
+    private TextField tfValue;
+    @FXML
+    private Label lblError;
 
-    //setter de 
-    public void setStageSignUp(Stage employeeStage) {
-        this.employeeStage = employeeStage;
-    }
+    @FXML
+    private ComboBox cmbFilter;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    private Stage stage;
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
+    
+    //definimos como modal la nueva ventana
+        
 
     public void initStage(Parent root) {
-        
+        Scene employeeScene = new Scene(root);  
+        //añadimos la escena en el stage
+        stage.setScene(employeeScene);
+        //definimos como modal la nueva ventana
+        if(stage.getModality() != Modality.NONE)
+            stage.initModality(Modality.NONE);
+        //por defecto no podra redimensionarse
+        if(stage.isResizable())
+            stage.setResizable(false);
+        // menuController.setStage(stage);
+        btnAdd.setOnAction(this::create);
+        btnDelete.setOnAction(this::delete);
+        btnModify.setOnAction(this::modify);
+        //lblError se inicializa vacio
+        lblError.setText("");
+        //Se deshabilitan los botones btnDelete y bntModify
+        btnDelete.setDisable(true);
+        btnModify.setDisable(true);
+        //hacemos visible la ventana
+        if(!stage.isShowing())
+            stage.showAndWait();
     }
 
+    private void create(ActionEvent event) {
+        try {
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+            FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
+            Parent root = (Parent) employeeForm.load();
+            //controlador de la ventana
+            EmployeeFormController controller = employeeForm.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+        } catch (IOException ex) {
+            LOG.log(Level.INFO,"Ha saltado este error");
+            LOG.log(Level.SEVERE, null, ex);
+        }
+    }
 
+    @FXML
+    private void delete(ActionEvent event) {
 
+    }
+
+    @FXML
+    private void modify(ActionEvent event) {
+
+    }
 }

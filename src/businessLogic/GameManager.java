@@ -24,10 +24,15 @@ public interface GameManager {
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
     public Collection<Game> getAllGames() throws Exception;
-    
+
+    public Collection<Game> getAllGamesbyGenre(String genre) throws Exception;
+
+    public Collection<Game> getAllGamesbyPegi(Integer pegi) throws Exception;
+
     /**
-     * Este metodo comprueba si existe el nombre del juego y en el caso de existir 
-     * lanza la exception
+     * Este metodo comprueba si existe el nombre del juego y en el caso de
+     * existir lanza la exception
+     *
      * @param name el nombre del objeto Game
      * @throws exception.GameExistExpception si exise el juego
      */
@@ -56,4 +61,5 @@ public interface GameManager {
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
     public void deleteGame(Game game) throws Exception;
+
 }

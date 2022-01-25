@@ -24,7 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import model.Signable;
-import model.SignableFactory;
+
 import transferObjects.User;
 
 /**
@@ -165,34 +165,7 @@ public class SignUpController {
     }
 
     private void signUp(ActionEvent event) {
-        validateTfRepeatPassword(tfPassword.getText(), tfRepeatPassword.getText());
-        //comprobamos si todos los campos son correctos y si lo son registramos al usuario
-        if (validFields())
-        {
-            Signable signable = SignableFactory.getClientImplementation();
-            User userSignUp = new User(tfUser.getText(), tfEmail.getText(), tfFullName.getText(), tfPassword.getText());
-            try
-            {
-                boolean signUpCorrect = signable.signUp(userSignUp);
-                if (signUpCorrect)
-                {
-                    signIn(event);
-                }
-            } catch (LoginExistException ex)
-            {
-                lblError.setText(ex.getMessage());
-            } catch (ConnectionNotAvailableException ex)
-            {
-                lblError.setText(ex.getMessage());
-            } catch (Exception ex)
-            {
-                lblError.setText("Se ha producido un error");
-            }
-        } else
-        {
-            showFieldErrors();
-            transferFocusFirstInvalidField();
-        }
+        
     }
 
     private void tfPasswordFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {

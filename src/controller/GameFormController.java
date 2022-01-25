@@ -5,22 +5,36 @@
  */
 package controller;
 
+import businessLogic.GameManager;
+import exception.GameExistExpception;
+import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author ibai Arriola
  */
-public class GameFormController implements Initializable {
+public class GameFormController{   
+    private Stage stage;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {          
-    }    
+    public void setStage(Stage stage) {
+       this.stage = stage;
+    }
+
+    public void initStage(Parent root) {
+        Scene gameFormScene = new Scene(root);
+        stage.setScene(gameFormScene);
+    }
+    
     
 }

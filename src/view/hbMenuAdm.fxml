@@ -6,19 +6,22 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox fx:id="hbMenuAdm" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HbMenuAdmController">
+<HBox fx:id="hbMenuAdm" maxHeight="-Infinity" maxWidth="-Infinity" 
+      minHeight="-Infinity" minWidth="-Infinity" 
+      prefHeight="30.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" 
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HbMenuAdmController">
    <children>
       <MenuBar fx:id="mbLeft" prefHeight="30.0" prefWidth="512.0">
         <menus>
           <Menu fx:id="menuOptions" mnemonicParsing="false" text="Opciones">
             <items>
-              <MenuItem fx:id="miManageUsers" mnemonicParsing="false" text="Gestionar usuarios" />
-                  <MenuItem fx:id="miManageGames" mnemonicParsing="false" text="Gestionar juegos" />
-                  <MenuItem fx:id="miManagePurchases" mnemonicParsing="false" text="Gestionar compras" />
+              <MenuItem fx:id="miManageUsers" mnemonicParsing="false" onAction="#employeesClicked" text="Gestionar usuarios" />
+                  <MenuItem fx:id="miManageGames" mnemonicParsing="false" onAction="#gamesClicked" text="Gestionar juegos" />
+                  <MenuItem fx:id="miManagePurchases" mnemonicParsing="false" onAction="#purchasesClicked" text="Gestionar compras" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Imprimir" />
+                  <MenuItem mnemonicParsing="false" onAction="#printClicked" text="Imprimir" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="miChangePasswd" mnemonicParsing="false" text="Cambiar contraseña" />
+                  <MenuItem fx:id="miChangePasswd" mnemonicParsing="false" onAction="#passwordClicked" text="Cambiar contraseña" />
             </items>
           </Menu>
         </menus>

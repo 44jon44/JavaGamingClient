@@ -1,8 +1,10 @@
 package transferObjects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+import javafx.scene.control.DatePicker;
 
 /**
  * Java bean de la entidad Game.
@@ -99,7 +101,6 @@ public class Game implements Serializable {
         this.employees = employees;
     }
 
-
     public Set<Purchase> getPurchases() {
         return purchases;
     }
@@ -133,5 +134,4 @@ public class Game implements Serializable {
     public String toString() {
         return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';
     }
-
 }

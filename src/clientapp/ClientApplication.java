@@ -5,7 +5,6 @@
  */
 package clientapp;
 
-import controller.EmployeeController;
 import controller.SignInController;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -28,8 +27,8 @@ public class ClientApplication extends Application {
     public void start(Stage signInStage) throws Exception {
         LOG.info("Lanzando la ventana viewSignIn");
         //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-        FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
-        Parent root = (Parent) employee.load();
+        FXMLLoader signIn = new FXMLLoader(getClass().getResource("/view/ViewSignIn.fxml"));
+        Parent root = (Parent) signIn.load();
         //Creamos la escena para la ventana SignIn
         Scene signInScene = new Scene(root);
         //Despues Asociamos nuestra primaryStage con la escena 
@@ -37,7 +36,7 @@ public class ClientApplication extends Application {
        //La ventana no podra redimensioanar
         signInStage.setResizable(false);
         //un llamamiento a la clase SignIncontroler
-        EmployeeController controller = ((EmployeeController) employee.getController());
+        SignInController controller = ((SignInController) signIn.getController());
         //inicias el initStage
         controller.initStage(root);
         //Finalmente  mostramos nuestra ventana
