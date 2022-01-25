@@ -20,11 +20,11 @@ import javafx.stage.Stage;
 public class GameFormController{   
     private Stage stage;
 
-    void setStage(Stage stage) {
+    public void setStage(Stage stage) {
        this.stage = stage;
     }
 
-    void initStage(Parent root) {
+    public void initStage(Parent root) {
         Scene gameFormScene = new Scene(root);
         stage.setScene(gameFormScene);
     }

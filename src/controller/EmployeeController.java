@@ -85,12 +85,10 @@ public class EmployeeController{
     }
 
     private void create(ActionEvent event) {
-
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
             Parent root = (Parent) employeeForm.load();
-            hbMenuAdm.getScene().getWindow().hide();
             //controlador de la ventana
             EmployeeFormController controller = employeeForm.getController();
             controller.setStage(stage);
@@ -99,7 +97,6 @@ public class EmployeeController{
             LOG.log(Level.INFO,"Ha saltado este error");
             LOG.log(Level.SEVERE, null, ex);
         }
-
     }
 
     @FXML
