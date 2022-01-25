@@ -7,6 +7,7 @@ package transferObjects;
 
 import java.io.Serializable;
 import java.security.Timestamp;
+import javax.xml.bind.annotation.XmlRootElement;
 import model.UserPrivilege;
 import model.UserStatus;
 
@@ -15,6 +16,7 @@ import model.UserStatus;
  *
  * @author ibai , jon , alex , markel
  */
+@XmlRootElement(name="user")
 public class User implements Serializable {
 
     private int id;

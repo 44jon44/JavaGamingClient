@@ -10,6 +10,7 @@ import factories.EmployeeManagerFactory;
 import java.io.IOException;
 import static java.nio.file.Files.list;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -176,9 +177,12 @@ public class EmployeeController {
             observableList.add("Salario");
             cmbFilter.setItems(observableList);
             cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
-            
+           
             ObservableList<Employee> emps;
-            emps= FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
+            emps= FXCollections.observableArrayList(
+                    EmployeeManagerFactory
+                            .createEmployeeManager("REST_WEB_CLIENT")
+                            .getAllEmployees());
             tblEmployees.setItems(emps);
 
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);

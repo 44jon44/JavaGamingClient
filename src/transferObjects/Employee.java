@@ -7,14 +7,14 @@ package transferObjects;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *Entidad  Empleado que extiende de la entidad User
+ * Entidad Empleado que extiende de la entidad User
+ *
  * @author jon
  */
-
+@XmlRootElement(name = "employee")
 public class Employee extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,14 +22,12 @@ public class Employee extends User implements Serializable {
     /**
      * Fecha en la que el empleado fue contratado
      */
-    @Temporal(TemporalType.DATE)
     private Date hiringDate;
 
     /**
      * Salario que recibe el empleado
      */
     private Float salary;
-    
 
     /**
      * Método que devuelve la fecha en la que fue contratado el empleado
@@ -67,11 +65,8 @@ public class Employee extends User implements Serializable {
         this.salary = salary;
     }
 
-
-
     @Override
     public String toString() {
         return "Employee{" + super.toString() + "hiringDate=" + hiringDate + ", salary=" + salary + '}';
     }
 }
-

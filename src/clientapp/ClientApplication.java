@@ -14,10 +14,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * * @author ibai , jon , alex , markel
  */
+
 public class ClientApplication extends Application {
     private static final Logger LOG = Logger.getLogger(ClientApplication.class.getName());
     /**
