@@ -67,7 +67,8 @@ public class EmployeeManagerImplementation implements EmployeeManager {
     public void updateEmployee(Employee emp) throws Exception {
         try {
             LOGGER.log(Level.INFO, "EmployeeManager: Updating employee {0}.", emp.getLogin());
-            webClient.update(emp);
+            
+            webClient.edit(emp, String.valueOf(emp.getIdUser()));
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception updating user, {0}",
@@ -86,7 +87,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
     public void deleteEmployee(Employee emp) throws Exception {
         try {
             LOGGER.log(Level.INFO, "UsersManager: Deleting user {0}.", emp.getLogin());
-            webClient.remove(emp.getLogin());
+            webClient.remove(String.valueOf(emp.getIdUser()));
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception deleting user, {0}",
