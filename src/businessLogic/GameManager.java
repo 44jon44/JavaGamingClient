@@ -60,6 +60,6 @@ public interface GameManager {
      * @param user El objeto UserBean que se va a eliminar.
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
-    public void deleteGame(Game game) throws Exception;
+    public void deleteGame(Integer idgame) throws Exception;
 
 }

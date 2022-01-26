@@ -101,10 +101,10 @@ public class GameManagerImplementation implements GameManager {
      * @param game El objeto UserGame que se va a eliminar.
      */
     @Override
-    public void deleteGame(Game game) throws Exception {
+    public void deleteGame(Integer idgame) throws Exception {
         try {
-            LOGGER.log(Level.INFO, "UsersManager: Deleting user {0}.", game.getName());
-            webClient.remove(game.getName());
+           
+            webClient.remove(idgame);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception deleting user, {0}",

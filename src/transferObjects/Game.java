@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import javafx.scene.control.DatePicker;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Java bean de la entidad Game.
  *
  * @author ibai Arriola
  */
+@XmlRootElement
 public class Game implements Serializable {
 
     private static final long serialVersionUID = 1L;
