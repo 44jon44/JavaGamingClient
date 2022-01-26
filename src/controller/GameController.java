@@ -149,7 +149,7 @@ public class GameController {
             controller.setStage(stage);
             controller.initStage(root);
             controller.modifyGameData((Game)tvGames.getSelectionModel().getSelectedItem());
-            
+           
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         } catch (Exception ex) {

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +25,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
@@ -173,7 +176,8 @@ public class GameFormController {
     @FXML
     private void addGame(ActionEvent event) {
         try {
-            //gameManager.isNameExisting(tfGameName.getText().trim());
+            gameManager.isNameExisting(tfGameName.getText().trim());
+            
             LOG.info("Estamos creando el juego");
             game = new Game();
             game.setName(tfGameName.getText().trim());
@@ -183,9 +187,10 @@ public class GameFormController {
             game.setPrice(Float.valueOf(tfGamePrice.getText()));
 
             gameManager.createGame(game);
-
+            
             LOG.info("juego creado existosamente");
             cleanTextFields();
+            createGameAlert();
 
         } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -203,7 +208,8 @@ public class GameFormController {
             gameModify.setRelaseData(Date.from(dpReleaseDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
             gameModify.setPrice(Float.valueOf(tfGamePrice.getText()));
             gameManager.updateGame(gameModify);
-             LOG.info("juego modificado existosamente");
+            LOG.info("juego modificado existosamente");
+            modifyAlert();
         } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -254,5 +260,30 @@ public class GameFormController {
         tfGamePrice.setText(g.getPrice().toString());
         gameModify = g;
     }
-    
+
+    private void modifyAlert() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Modificar");
+        alert.setContentText("Se ha modificado correctamente el Juego");
+        Optional<ButtonType> result = alert.showAndWait();
+        try {
+            FXMLLoader gameForm = new FXMLLoader(getClass().getResource("/view/game.fxml"));
+            Parent root;
+            root = (Parent) gameForm.load();
+            GameController controller = gameForm.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+        } catch (Exception ex) {
+            Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+    }
+
+    private void createGameAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("AGregar");
+        alert.setContentText("Se ha agregado correctamente el Juego");
+        Optional<ButtonType> result = alert.showAndWait();
+    }
 }
