@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameFormController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameFormController">
     <children>
         <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
         <Label layoutX="332.0" layoutY="151.0" prefHeight="37.0" prefWidth="75.0" text="Nombre: ">
@@ -37,11 +37,11 @@
                 <Font size="18.0" />
             </font>
         </Label>
-        <TextField fx:id="tfGameName"  focusTraversable="true" layoutX="443.0" layoutY="157.0" prefHeight="25.0" prefWidth="239.0" promptText="Introduce el nombre del juego..." />
-        <ComboBox fx:id="cbGameGenre"  focusTraversable="true" layoutX="443.0" layoutY="219.0" prefWidth="150.0" />  
+        <TextField fx:id="tfGameName" focusTraversable="true" layoutX="443.0" layoutY="157.0" prefHeight="25.0" prefWidth="239.0" promptText="Introduce el nombre del juego..." />
+        <ComboBox fx:id="cbGameGenre" focusTraversable="true" layoutX="443.0" layoutY="219.0" prefWidth="150.0" />  
         <ComboBox fx:id="cbGamePegi" focusTraversable="true" layoutX="443.0" layoutY="285.0" prefWidth="150.0" />
         <DatePicker fx:id="dpReleaseDate" focusTraversable="true" layoutX="443.0" layoutY="345.0" prefHeight="25.0" prefWidth="160.0" />
-        <TextField fx:id="tfGamePrice"  focusTraversable="true" layoutX="443.0" layoutY="402.0" prefHeight="25.0" prefWidth="239.0" promptText="Precio (20/500€)......." />
+        <TextField fx:id="tfGamePrice" focusTraversable="true" layoutX="443.0" layoutY="402.0" prefHeight="25.0" prefWidth="239.0" promptText="Precio (20/500€)......." />
          <Hyperlink fx:id="hlBack" focusTraversable="true" layoutX="476.0" layoutY="470.0" prefHeight="23.0" prefWidth="139.0" text="Volver atrás" textAlignment="CENTER">
             <font>
                 <Font size="18.0" />
@@ -57,13 +57,13 @@
                 <Font name="System Bold" size="18.0" />
             </font>
         </Button>
-        <Label fx:id="lblErrorGamePrice" layoutX="721.0" layoutY="402.0" prefHeight="25.0" prefWidth="187.0" text="Longitud maxima superada" textFill="RED" />
+        <Label fx:id="lblErrorGamePrice" layoutX="721.0" layoutY="402.0" prefHeight="25.0" prefWidth="187.0" textFill="RED" />
         <Label layoutX="402.0" layoutY="53.0" prefHeight="86.0" prefWidth="311.0" text="GESTIÓN  DE JUEGOS">
             <font>
                 <Font name="System Bold" size="30.0" />
             </font>
         </Label>
       
-        <Label fx:id="lblErrorGameName" layoutX="711.0" layoutY="157.0" prefHeight="25.0" prefWidth="206.0" text=" El precio tiene que ser entre (20/500) " textFill="#fc0808" />
+        <Label fx:id="lblErrorGameName" layoutX="711.0" layoutY="157.0" prefHeight="25.0" prefWidth="206.0" text=" " textFill="#fc0808" />
     </children>
 </Pane>
