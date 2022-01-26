@@ -7,6 +7,7 @@ package transferObjects;
 
 import java.io.Serializable;
 import java.security.Timestamp;
+import javax.xml.bind.annotation.XmlRootElement;
 import model.UserPrivilege;
 import model.UserStatus;
 
@@ -15,12 +16,13 @@ import model.UserStatus;
  *
  * @author ibai , jon , alex , markel
  */
+@XmlRootElement(name="user")
 public class User implements Serializable {
 
-    private int id;
+    private int idUser;
     private String login;
     private String email;
-    private String name;
+    private String fullName;
     private UserStatus status;
     private UserPrivilege privilege;
     private String password;
@@ -46,24 +48,24 @@ public class User implements Serializable {
      * Constructor de la clase User que recibe 4 parámetros
      * @param login login del usuario
      * @param email email del usuario
-     * @param name  nombre del usuario
+     * @param fullName  nombre del usuario
      * @param password  contraseña del usuario
      */
-    public User(String login,String email, String name, String password){
+    public User(String login,String email, String fullName, String password){
         this.login = login;
         this.email = email;
-        this.name = name;
+        this.fullName = fullName;
         this.password = password;
     }
     
     //getters y setters de la clase User
     
-    public int getId() {
-        return id;
+    public int getIdUser() {
+        return idUser;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
     }
 
     public String getLogin() {
@@ -82,12 +84,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public UserStatus getStatus() {
@@ -124,6 +126,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", login=" + login + ", email=" + email + ", name=" + name + ", status=" + status + ", privilege=" + privilege + ", password=" + password + ", lastPasswordChange=" + lastPasswordChange + '}';
+        return "User{" + "id=" + idUser + ", login=" + login + ", email=" + email + ", fullName=" + fullName + ", status=" + status + ", privilege=" + privilege + ", password=" + password + ", lastPasswordChange=" + lastPasswordChange + '}';
     }
 }

@@ -1,14 +1,18 @@
 package transferObjects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+import javafx.scene.control.DatePicker;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Java bean de la entidad Game.
  *
  * @author ibai Arriola
  */
+@XmlRootElement
 public class Game implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,6 +45,18 @@ public class Game implements Serializable {
     private Set<Employee> employees;
     //lista de juegos comprados
     private Set<Purchase> purchases;
+
+    public Game(String name, String genre, Integer pegi, Date relaseData, Float price) {
+        this.name = name;
+        this.genre = genre;
+        this.pegi = pegi;
+        this.relaseData = relaseData;
+        this.price = price;
+    }
+
+    public Game() {
+       
+    }
 
     //Getter y Setter  de la clase Game
     public Integer getIdGame() {
@@ -99,7 +115,6 @@ public class Game implements Serializable {
         this.employees = employees;
     }
 
-
     public Set<Purchase> getPurchases() {
         return purchases;
     }
@@ -133,5 +148,4 @@ public class Game implements Serializable {
     public String toString() {
         return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';
     }
-
 }

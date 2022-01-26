@@ -3,13 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package transferObjects;
 
 /**
  *
  * @author ibai Arriola
  */
-public enum UserStatus {
-    ENABLED,
-    DISABLED
+public enum Genre {
+    MIEDO,
+    COOPERATIVO,
+    ACCION,
+    RPG,
+    LUCHA,
+    SHOOTER,
+    AVENTURA
 }

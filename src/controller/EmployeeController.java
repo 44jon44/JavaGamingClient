@@ -6,6 +6,7 @@
 package controller;
 
 import businessLogic.EmployeeManager;
+import factories.EmployeeManagerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,9 +29,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.naming.OperationNotSupportedException;
 import transferObjects.Employee;
 
 /**
@@ -113,60 +115,104 @@ public class EmployeeController {
     }
 
     public void initStage1(Parent root) {
-        // menuController.setStage(stage);
-        btnAdd.setOnAction(this::create);
-        btnDelete.setOnAction(this::delete);
-        btnModify.setOnAction(this::modify);
-        btnFind.setOnAction(this::find);
-        //lblError se inicializa vacio
-        lblError.setText("");
-        //Se deshabilitan los botones btnDelete y bntModify
-        btnDelete.setDisable(true);
-        btnModify.setDisable(true);
+        try {
+            // menuController.setStage(stage);
+            btnAdd.setOnAction(this::create);
+            btnDelete.setOnAction(this::delete);
+            btnModify.setOnAction(this::modify);
+            btnFind.setOnAction(this::find);
+            //lblError se inicializa vacio
+            lblError.setText("");
+            //Se deshabilitan los botones btnDelete y bntModify
+            btnDelete.setDisable(true);
+            btnModify.setDisable(true);
 
-        btnFind.focusedProperty().addListener(this::valueFocusChanged);
-        //Cargamos los metodos de filtrado en la combo box
-        ObservableList<String> observableList = FXCollections.observableList(list);
-        observableList.add("Nombre");
-        observableList.add("Salario");
-        cmbFilter.setItems(observableList);
-        cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
+            btnFind.focusedProperty().addListener(this::valueFocusChanged);
+            //Cargamos los metodos de filtrado en la combo box
+            ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
+            tblEmployees.setItems(emps);
 
-        tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
+            //Cargamos los metodos de filtrado en la combo box
+            ObservableList<String> observableList = FXCollections.observableList(list);
+            observableList.add("Nombre");
+            observableList.add("Salario");
+            cmbFilter.setItems(observableList);
+            cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
+
+            tcName.setCellValueFactory(
+                    new PropertyValueFactory<>("fullName"));
+            tcEmail.setCellValueFactory(
+                    new PropertyValueFactory<>("email"));
+            tcHiringDate.setCellValueFactory(
+                    new PropertyValueFactory<>("hiringDate"));
+            tcSalary.setCellValueFactory(
+                    new PropertyValueFactory<>("salary"));
+            tcLogin.setCellValueFactory(
+                    new PropertyValueFactory<>("login"));
+
+            tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
+
+        } catch (OperationNotSupportedException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
     public void initStage(Parent root) {
-        Scene EmployeeScene = new Scene(root);
+        try {
+            Scene EmployeeScene = new Scene(root);
 
-        //definimos como modal la nueva ventana
-        stage.initModality(Modality.NONE);
-        //aÃ±adimos la escena en el stage
-        stage.setScene(EmployeeScene);
-        //por defecto no podra redimensionarse
-        stage.setResizable(false);
+            //definimos como modal la nueva ventana
+            stage.initModality(Modality.NONE);
+            //aÃ±adimos la escena en el stage
+            stage.setScene(EmployeeScene);
+            //por defecto no podra redimensionarse
+            stage.setResizable(false);
 
-        // menuController.setStage(stage);
-        btnAdd.setOnAction(this::create);
-        btnDelete.setOnAction(this::delete);
-        btnModify.setOnAction(this::modify);
-        btnFind.setOnAction(this::find);
-        //lblError se inicializa vacio
-        lblError.setText("");
-        //Se deshabilitan los botones btnDelete y bntModify
-        btnDelete.setDisable(true);
-        btnModify.setDisable(true);
+            // menuController.setStage(stage);
+            btnAdd.setOnAction(this::create);
+            btnDelete.setOnAction(this::delete);
+            btnModify.setOnAction(this::modify);
+            btnFind.setOnAction(this::find);
+            //lblError se inicializa vacio
+            lblError.setText("");
+            //Se deshabilitan los botones btnDelete y bntModify
+            btnDelete.setDisable(true);
+            btnModify.setDisable(true);
 
-        btnFind.focusedProperty().addListener(this::valueFocusChanged);
+            btnFind.focusedProperty().addListener(this::valueFocusChanged);
 
-        //Cargamos los metodos de filtrado en la combo box
-        ObservableList<String> observableList = FXCollections.observableList(list);
-        observableList.add("Nombre");
-        observableList.add("Salario");
-        cmbFilter.setItems(observableList);
-        cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
+            ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
+            tblEmployees.setItems(emps);
 
-        stage.showAndWait();
+            //Cargamos los metodos de filtrado en la combo box
+            ObservableList<String> observableList = FXCollections.observableList(list);
+            observableList.add("Nombre");
+            observableList.add("Salario");
+            cmbFilter.setItems(observableList);
+            cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
+
+            tcName.setCellValueFactory(
+                    new PropertyValueFactory<>("fullName"));
+            tcEmail.setCellValueFactory(
+                    new PropertyValueFactory<>("email"));
+            tcHiringDate.setCellValueFactory(
+                    new PropertyValueFactory<>("hiringDate"));
+            tcSalary.setCellValueFactory(
+                    new PropertyValueFactory<>("salary"));
+            tcLogin.setCellValueFactory(
+                    new PropertyValueFactory<>("login"));
+
+            tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
+
+            stage.showAndWait();
+        } catch (OperationNotSupportedException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void create(ActionEvent event) {
@@ -189,9 +235,10 @@ public class EmployeeController {
             //cargamos el controlador de la ventana
             EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
             controller.initStage(root);
+            controller.initStageAdd();
             controller = employeeForm.getController();
             controller.initStage(root);
-            controller.initStageAdd(root);
+
             employeeFormStage.show();
             employeePane.getScene().getWindow().hide();
         } catch (IOException ex) {
@@ -203,7 +250,36 @@ public class EmployeeController {
 
     @FXML
     private void modify(ActionEvent event) {
+        try {
+            Employee emp= ((Employee) tblEmployees.getSelectionModel().getSelectedItem());
+            
+            //getResource tienes que aÃ±adir la ruta de la ventana que quieres iniciar.
+            FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
+            Parent root = (Parent) employeeForm.load();
+            //Creamos una nueva escena para la ventana SignIn
+            Scene employeeFormScene = new Scene(root);
+            //creamos un nuevo escenario para la nueva ventana
+            Stage employeeFormStage = new Stage();
 
+            //definimos como modal la nueva ventana
+            employeeFormStage.initModality(Modality.NONE);
+            //aÃ±adimos la escena en el stage
+            employeeFormStage.setScene(employeeFormScene);
+            //por defecto no podra redimensionarse
+            employeeFormStage.setResizable(false);
+            //cargamos el controlador de la ventana
+            EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
+            controller.initStage(root);
+            controller.initStageModify();
+            controller.empToModify(emp);
+            controller = employeeForm.getController();
+            controller.initStage(root);
+
+            employeeFormStage.show();
+            employeePane.getScene().getWindow().hide();
+        } catch (IOException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -217,7 +293,7 @@ public class EmployeeController {
                     ButtonType.OK, ButtonType.CANCEL);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                employeesManager.deleteEmployee(emp);
+                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").deleteEmployee(emp);
             }
             tblEmployees.getItems().remove(emp);
             tblEmployees.refresh();
@@ -240,19 +316,27 @@ public class EmployeeController {
         if (cmbFilter.getSelectionModel().isEmpty()) {
             lblError.setText("Debes de seleccionar un filtro de busqueda");
         }
-        if (cmbFilter.getValue().equals("Nombre")   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                && !cmbFilter.getSelectionModel().isEmpty()
-                && tfValue.getText().equalsIgnoreCase("")) {
+        if (cmbFilter.getValue().toString().equals("Salario")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+                && !tfValue.getText().equalsIgnoreCase("")) {
             try {
-                System.out.println("Pajin");
-                employeesManager.employeesByName(tfValue.getText());
+                ObservableList<Employee> empsS = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesBySalary(Float.parseFloat(tfValue.getText())));
+                tblEmployees.setItems(empsS);
 
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        } else  {
-            System.out.println("NoPajin");
+        }
+        if (cmbFilter.getValue().toString().equals("Nombre")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+                && !tfValue.getText().equalsIgnoreCase("")) {
+            try {
+                ObservableList<Employee> empsN = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesByName(tfValue.getText()));
+                tblEmployees.setItems(empsN);
+
+            } catch (Exception ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
         {
 
@@ -291,6 +375,7 @@ public class EmployeeController {
         }
 
     }
+
     public void setEmployeeManager(EmployeeManager employeesManager) {
         this.employeesManager = employeesManager;
     }

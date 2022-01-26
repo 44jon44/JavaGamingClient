@@ -6,8 +6,11 @@
 package controller;
 
 import businessLogic.EmployeeManager;
+import factories.EmployeeManagerFactory;
 import static java.lang.Float.parseFloat;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
@@ -16,6 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +32,11 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javax.naming.OperationNotSupportedException;
+import model.UserPrivilege;
+import model.UserStatus;
 import transferObjects.Employee;
+import transferObjects.User;
 
 /**
  * FXML Controller class
@@ -39,12 +48,15 @@ public class EmployeeFormController implements Initializable {
     ZoneId defaultZoneId = ZoneId.systemDefault();
     private EmployeeManager employeesManager;
 
+    private Employee employeeModify;
+
     //booleanos que indican si los campos son válidos tras las comprobaciones oportunas
     private boolean tfNameIsValid = false;
     private boolean tfEmailIsValid = false;
     private boolean tfLoginIsValid = false;
     private boolean dpHirngDateIsValid = false;
     private boolean tfSalaryIsValid = false;
+    private boolean exists = false;
     //Logger del controlador de la ventana "ViewSignIn"
     private static final Logger LOG = Logger.getLogger(EmployeeFormController.class.getName());
     /**
@@ -52,6 +64,8 @@ public class EmployeeFormController implements Initializable {
      */
     @FXML
     private Button btnSave;
+    @FXML
+    private Button btnDelete;
     @FXML
     private Label lblErrorName;
     @FXML
@@ -80,14 +94,6 @@ public class EmployeeFormController implements Initializable {
         // TODO
     }
 
-    public void initStageAdd(Parent root) {
-        btnSave.setOnAction(this::add);
-    }
-
-    public void initStageModify() {
-        btnSave.setOnAction(this::modify);
-    }
-
     void initStage(Parent root) {
         lblErrorName.setText("");
         lblErrorEmail.setText("");
@@ -104,8 +110,39 @@ public class EmployeeFormController implements Initializable {
         tfSalary.focusedProperty().addListener(this::tfSalaryFocusChanged);
         tfSalary.textProperty().addListener(this::tfSalaryTextChanged);
 
+        btnDelete.setOnAction(this::clean);
+
         hpReturn.setOnAction(this::hpClicked);
 
+    }
+
+    void initStageAdd() {
+        btnSave.setOnAction(this::save);
+    }
+
+    void initStageModify() {
+        btnSave.setOnAction(this::modify);
+    }
+
+    @FXML
+    private void modify(ActionEvent event) {
+        try {
+            
+            
+            employeeModify.setFullName(tfName.getText());
+            employeeModify.setLogin(tfLogin.getText().trim());
+            employeeModify.setEmail(tfEmail.getText().trim());
+            employeeModify.setHiringDate(Date.from(dpHiringDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+            employeeModify.setSalary(parseFloat(tfSalary.getText()));
+            
+            
+             EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
+        } catch (OperationNotSupportedException ex) {
+            Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     @FXML
@@ -209,8 +246,8 @@ public class EmployeeFormController implements Initializable {
                     ButtonType.OK, ButtonType.CANCEL);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                
-            }else{
+
+            } else {
                 alert.close();
             }
         } else {
@@ -219,25 +256,35 @@ public class EmployeeFormController implements Initializable {
     }
 
     @FXML
-    private void add(ActionEvent event) {
-
+    private void save(ActionEvent event) {
+        System.out.println("0");
         try {
-            employeesManager.isLoginExisting(tfName.getText());
+            if (tfLogin.getText().length() != 0) {
+                System.out.println("1");
+                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").isLoginExisting(tfLogin.getText());
+                exists = true;
+                System.out.println(exists);
+            }
         } catch (Exception ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (fieldsInformed()) {
+        if (validateFields() && !exists) {
+            System.out.println("2");
             try {
-                Employee emp = new Employee();
+                LocalDate localDate = dpHiringDate.getValue();
+                Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
 
-                emp.setName(tfName.getText());
+                Employee emp = new Employee();
+                emp.setFullName(tfName.getText());
                 emp.setEmail(tfEmail.getText());
                 emp.setLogin(tfLogin.getText());
-                Date date = Date.from(dpHiringDate.getValue().atStartOfDay(defaultZoneId).toInstant());
                 emp.setHiringDate(date);
+                emp.setPassword("abcd*1234");
+                emp.setPrivilege(UserPrivilege.EMPLOYEE);
+                emp.setStatus(UserStatus.ENABLED);
                 emp.setSalary(parseFloat(tfSalary.getText()));
 
-                employeesManager.createEmployee(emp);
+                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
 
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
@@ -248,12 +295,8 @@ public class EmployeeFormController implements Initializable {
     }
 
     @FXML
-    private void modify(ActionEvent event) {
-        if (fieldsInformed()) {
-            //Informar que se descartaran los cambios
-        } else {
-            //Abrir ventana employee
-        }
+    private void clean(ActionEvent event) {
+
     }
 
     private boolean fieldsInformed() {
@@ -262,13 +305,14 @@ public class EmployeeFormController implements Initializable {
                 && !tfEmail.getText().equalsIgnoreCase("")
                 && !tfLogin.getText().equalsIgnoreCase("")
                 && dpHiringDate.getValue() != null
-                && !tfSalary.getText().equalsIgnoreCase("")) {
+                && tfSalary.getText().equalsIgnoreCase("")) {
             return true;
         } else {
+            showFieldErrors();
             return false;
         }
     }
-    
+
     private boolean oneFieldInformed() {
 
         if (!tfName.getText().equalsIgnoreCase("")
@@ -296,15 +340,25 @@ public class EmployeeFormController implements Initializable {
     }
 
     private boolean validateTfLogin(String fullName) {
-        return Pattern.matches("\\b\\p{L}+[\\p{L}\\p{Z}\\p{P}]{0,}", fullName);
+        //return Pattern.matches("\\b\\p{L}+[\\p{L}\\p{Z}\\p{P}]{0,}", fullName);
+        return true;
     }
 
-    private boolean validateTfFSalary(String fullName) {
-        return Pattern.matches("[+-]?([0-9]*[.])?[0-9]+", fullName);
+    private boolean validateTfFSalary(String salary) {
+        return Pattern.matches("[+-]?([0-9]*[.])?[0-9]+", salary);
     }
 
     private boolean validateHiringDate() {
-        return false;
+        return true;
+    }
+
+    private boolean validateFields() {
+        tfEmailIsValid = validateTfEmail(tfEmail.getText());
+        tfNameIsValid = validateTfName(tfName.getText());
+        tfLoginIsValid = validateTfLogin(tfLogin.getText());
+        dpHirngDateIsValid = validateHiringDate();
+        tfSalaryIsValid = validateTfFSalary(tfSalary.getText());
+        return true;
     }
 
     private void showFieldErrors() {
@@ -356,14 +410,32 @@ public class EmployeeFormController implements Initializable {
     }
 
     private void showlblErrorSalaryMessages(Float salary) {
-        if (salary < 1000) {
-            lblErrorLogin.setText("El salario debe de ser mayor o igual a 1000");
+        if (salary != null) {
+
+            if (salary < 1000) {
+                lblErrorLogin.setText("El salario debe de ser mayor o igual a 1000");
+            } else {
+                lblErrorLogin.setText("Introduce un numero decimal");
+            }
         } else {
-            lblErrorLogin.setText("Introduce un numero decimal");
+            lblErrorSalary.setText("Campo Obligatorio");
         }
     }
 
     private void showlblErrorHiringDateMessages(Date hiringDate) {
 
+    }
+
+    public void empToModify(Employee emp) {
+
+        tfName.setText(emp.getFullName());
+        tfEmail.setText(emp.getEmail());
+        tfLogin.setText(emp.getLogin());
+        dpHiringDate.setValue(emp.getHiringDate().toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDate());
+        tfSalary.setText(emp.getSalary().toString());
+        
+        employeeModify=emp;
+        
     }
 }

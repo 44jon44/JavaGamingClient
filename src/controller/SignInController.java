@@ -67,7 +67,7 @@ public class SignInController {
         //llamar al metodo de iniciar sesion cuando pulsas el boton
         btnSignIN.setOnAction(this::signIN);
         //llamar al metodo de  resgistrarse cuando pulsas el hyperEnlace
-        // hyperSignUP.setOnAction(this::signUp);
+        hyperSignUP.setOnAction(this::signUp);
     }
 
     /**

@@ -14,13 +14,7 @@ import transferObjects.Employee;
  */
 public interface EmployeeManager {
 
-    /**
-     * Este recoje todos los empleados
-     *
-     * @return Collection con todos los empleados
-     * @throws java.lang.Exception
-     */
-    public Collection<Employee> getAllEmployees() throws Exception;
+    
 
     /**
      * Este metodo crea un empleado nuevo.
@@ -58,14 +52,24 @@ public interface EmployeeManager {
     /**
      * Este metodo busca empleados por nombre
      * @param name
+     * @return 
      * @throws Exception 
      */
-    public void employeesByName(String name) throws Exception;
+    public Collection<Employee> employeesByName(String name) throws Exception;
     /**
      * Este metodo busca empleados por salario
      * @param salary
+     * @return 
      * @throws Exception 
      */
-    public void employeesBySalary(Float salary) throws Exception;
+    public Collection<Employee> employeesBySalary(Float salary) throws Exception;
+    
+    /**
+     * Este recoje todos los empleados
+     *
+     * @return Collection con todos los empleados
+     * @throws java.lang.Exception
+     */
+    public Collection<Employee> getAllEmployees() throws Exception;
 
 }

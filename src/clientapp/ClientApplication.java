@@ -5,7 +5,6 @@
  */
 package clientapp;
 
-import controller.EmployeeController;
 import controller.SignInController;
 import java.util.logging.Logger;
 import javafx.application.Application;
