@@ -7,6 +7,7 @@ import controller.HbMenuAdmController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +19,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -35,9 +38,9 @@ import transferObjects.Genre;
  * @author Ibai Arriola
  */
 public class GameController {
-
+    
     private static final Logger LOG = Logger.getLogger(GameController.class.getName());
-
+    
     private GameManager gameManager;
     private ObservableList<Game> gameObservableList;
     @FXML
@@ -68,43 +71,55 @@ public class GameController {
     private Label lblGameError;
     @FXML
     private HBox hbMenuAdm;
-
+    
     private Stage stage;
-
+    
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
- 
-
+    
     public void initStage(Parent root) {
-        Scene gameScene = new Scene(root);
-        stage.setScene(gameScene);
-        btnAddGame.setOnAction(this::createGame);
-        btnDeleteGame.setOnAction(this::deleteGame);
-        btnModifyGame.setOnAction(this::modifyGame);
-        //lblError se inicializa vacio
-        lblGameError.setText("");
-        //Se deshabilitan los botones btnDelete y bntModify
-        btnDeleteGame.setDisable(true);
-        btnModifyGame.setDisable(true);
-        disableBtn();
-        //COMBOBOX DE LOS FILTRADOS
-        ObservableList<String> filter = FXCollections.observableArrayList("GENERO", "PEGI");
-        cbSearchBy.setItems(filter);
-        defaultComboValue();
-        cbSearchBy.getSelectionModel().selectedItemProperty().addListener(this::selectedFilter);
-        btnSearch.setOnAction(this::searchOnTable);
-        //COLUMNAS DE LA TABLA GAME
-        tcGameName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
-        tcGamePegi.setCellValueFactory(new PropertyValueFactory<>("pegi"));
-        tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-        tcGameReleaseDate.setCellValueFactory(new PropertyValueFactory<>("relaseData"));
-        gameManager = new GameManagerImplementation();
-        //loadGamesOnTable();
-    }
+        try {
+            Scene gameScene = new Scene(root);
+            stage.setScene(gameScene);
+            btnAddGame.setOnAction(this::createGame);
+            btnDeleteGame.setOnAction(this::deleteGame);
+            btnModifyGame.setOnAction(this::modifyGame);
+            //lblError se inicializa vacio
+            lblGameError.setText("");
+            //Se deshabilitan los botones btnDelete y bntModify
+            btnDeleteGame.setDisable(true);
+            btnModifyGame.setDisable(true);
 
+            //COMBOBOX DE LOS FILTRADOS
+            ObservableList<String> filter = FXCollections.observableArrayList("GENERO", "PEGI");
+            cbSearchBy.setItems(filter);
+            defaultComboValue();
+            cbSearchBy.getSelectionModel().selectedItemProperty().addListener(this::selectedFilter);
+            btnSearch.setOnAction(this::searchOnTable);
+            //COLUMNAS DE LA TABLA GAME
+            tcGameName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
+            tcGamePegi.setCellValueFactory(new PropertyValueFactory<>("pegi"));
+            tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
+            tcGameReleaseDate.setCellValueFactory(new PropertyValueFactory<>("relaseData"));
+            gameManager = new GameManagerImplementation();
+            loadGamesOnTable();
+            tvGames.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+                if (newValue != null) {
+                    btnDeleteGame.setDisable(false);
+                    btnModifyGame.setDisable(false);
+                } else {
+                    btnDeleteGame.setDisable(true);
+                    btnModifyGame.setDisable(true);
+                }
+            });
+        } catch (Exception ex) {
+            LOG.severe(ex.getLocalizedMessage());
+            
+        }
+    }
+    
     private void createGame(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
@@ -120,28 +135,74 @@ public class GameController {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private void modifyGame(ActionEvent event) {
-        LOG.info("No implementado");
-    }
+        try {
+            Game selectedGame = ((Game) tvGames.getSelectionModel()
+                    .getSelectedItem());
 
-    private void deleteGame(ActionEvent event) {
-        LOG.info("No implementado");
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+            FXMLLoader gameForm = new FXMLLoader(getClass().getResource("/view/gameForm.fxml"));
+            Parent root;
+            root = (Parent) gameForm.load();
+            GameFormController controller = gameForm.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
+            
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
     }
+    
+    private void deleteGame(ActionEvent event) {
+        try {
+            LOG.info("Deleting user...");
+            //Obtenemos los datos del juego seleccionado mediante el atributo selectedGame
+            Game selectedGame = ((Game) tvGames.getSelectionModel()
+                    .getSelectedItem());
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            //Se añaden los textos a la ventana alert
+            alert.setTitle("Borrar Juego");
+            alert.setHeaderText("Confirmacion");
+            alert.setContentText("¿Desea  borrar el juego?");
+            //La ventana se hace no redimensionable
+            alert.setResizable(false);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                //delete game from server side
+                gameManager.deleteGame(selectedGame.getIdGame());
+                //removes selected item from table
+                tvGames.getItems().remove(selectedGame);
+                tvGames.refresh();
+            }
+        } catch (Exception e) {
+            //If there is an error in the business logic tier show message and
+            //log it.
+            LOG.log(Level.SEVERE,
+                    "UI GestionUsuariosController: Error deleting user: {0}",
+                    e.getMessage());
+            
+            e.printStackTrace();
+        }
+        
+    }
+    
     public void loadGamesOnTable() throws Exception {
         Collection games;
         games = gameManager.getAllGames();
         gameObservableList = FXCollections.observableArrayList(games);
         tvGames.setItems(gameObservableList);
         LOG.info("juegos cargados" + games);
-
+        
     }
-
+    
     @FXML
     public void selectedFilter(ObservableValue ov, String oldValue, String newValue) {
         if (newValue != null) {
             String searchFilter = cbSearchBy.getValue();
-
+            
             if (searchFilter.equalsIgnoreCase("GENERO")) {
                 ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
                 cbSearchValue.setItems(genrefilterValue);
@@ -153,14 +214,14 @@ public class GameController {
             }
         }
     }
-
+    
     public void defaultComboValue() {
         cbSearchBy.getSelectionModel().selectFirst();
         ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
         cbSearchValue.setItems(genrefilterValue);
         cbSearchValue.getSelectionModel().selectFirst();
     }
-
+    
     @FXML
     public void searchOnTable(ActionEvent event) {
         String searchFilter = (String) cbSearchBy.getValue();
@@ -168,25 +229,32 @@ public class GameController {
         Integer pegi;
         Collection<Game> games = null;
         try {
+            lblGameError.setText("");
             if (searchFilter.equalsIgnoreCase("GENERO")) {
                 genre = cbSearchValue.getValue().toString();
                 games = gameManager.getAllGamesbyGenre(genre);
-                loadGamesOnTable();
-
+                if (games.isEmpty()) {
+                    lblGameError.setText("No hay juegos disponibles del genero seleccionado");
+                }
+                chargeFilters(games);
             } else {
                 pegi = (Integer) cbSearchValue.getValue();
                 games = gameManager.getAllGamesbyPegi(pegi);
-                loadGamesOnTable();
+                if (games.isEmpty()) {
+                    lblGameError.setText("No hay juegos disponibles del pegi seleccionado");
+                }
+                chargeFilters(games);
+                
             }
         } catch (Exception ex) {
             LOG.info("error al  filtrar la busqueda de juegos al pulsar btbSearh");
             LOG.log(Level.SEVERE, null, ex);
         }
     }
-
-    private void disableBtn() {
-        LOG.info("El boton esta desabilitado hasta selecionar los campos de la tabla");
-        btnModifyGame.disableProperty().bind(tvGames.selectionModelProperty().isNotNull());
-        btnDeleteGame.disableProperty().bind(tvGames.selectionModelProperty().isNotNull());
+    
+    public void chargeFilters(Collection<Game> games) {
+        games = FXCollections.observableArrayList(games);
+        tvGames.setItems((ObservableList<Game>) games);
     }
+    
 }
