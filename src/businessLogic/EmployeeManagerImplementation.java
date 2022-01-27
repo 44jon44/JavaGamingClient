@@ -135,7 +135,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception deleting user, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error deleting user:\n" + ex.getMessage());
+            throw new BusinessLogicException("Error finding user by salary:\n" + ex.getMessage());
         }
         return employees;
     }

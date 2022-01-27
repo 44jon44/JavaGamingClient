@@ -7,9 +7,9 @@ package controller;
 
 import businessLogic.EmployeeManager;
 import factories.EmployeeManagerFactory;
+import java.io.IOException;
 import static java.lang.Float.parseFloat;
 import java.net.URL;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -19,10 +19,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -32,11 +31,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javax.naming.OperationNotSupportedException;
 import model.UserPrivilege;
 import model.UserStatus;
 import transferObjects.Employee;
-import transferObjects.User;
 
 /**
  * FXML Controller class
@@ -88,6 +88,8 @@ public class EmployeeFormController implements Initializable {
     private DatePicker dpHiringDate;
     @FXML
     private TextField tfSalary;
+    @FXML
+    private Pane employeeFormPane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -127,22 +129,20 @@ public class EmployeeFormController implements Initializable {
     @FXML
     private void modify(ActionEvent event) {
         try {
-            
-            
+
             employeeModify.setFullName(tfName.getText());
             employeeModify.setLogin(tfLogin.getText().trim());
             employeeModify.setEmail(tfEmail.getText().trim());
             employeeModify.setHiringDate(Date.from(dpHiringDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
             employeeModify.setSalary(parseFloat(tfSalary.getText()));
-            
-            
-             EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
+
+            EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
         } catch (OperationNotSupportedException ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     @FXML
@@ -236,24 +236,7 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
-    @FXML
-    private void hpClicked(ActionEvent event) {
-        if (oneFieldInformed()) {
-            //Informar que se descartaran los cambios
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Se descartarán los cambios\n"
-                    + "Esta operación no se puede deshacer.",
-                    ButtonType.OK, ButtonType.CANCEL);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-
-            } else {
-                alert.close();
-            }
-        } else {
-            //Abrir ventana employee
-        }
-    }
+    
 
     @FXML
     private void save(ActionEvent event) {
@@ -268,7 +251,7 @@ public class EmployeeFormController implements Initializable {
         } catch (Exception ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (validateFields() && !exists) {
+        if ( true) {
             System.out.println("2");
             try {
                 LocalDate localDate = dpHiringDate.getValue();
@@ -294,10 +277,7 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
-    @FXML
-    private void clean(ActionEvent event) {
-
-    }
+    
 
     private boolean fieldsInformed() {
 
@@ -434,8 +414,73 @@ public class EmployeeFormController implements Initializable {
         dpHiringDate.setValue(emp.getHiringDate().toInstant()
                 .atZone(ZoneId.systemDefault()).toLocalDate());
         tfSalary.setText(emp.getSalary().toString());
-        
-        employeeModify=emp;
-        
+
+        employeeModify = emp;
+
+    }
+    @FXML
+    private void clean(ActionEvent event) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Se vaciarán los campos\n"
+                + "Esta operación no se puede deshacer.",
+                ButtonType.OK, ButtonType.CANCEL);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            tfName.setText("");
+            tfEmail.setText("");
+            tfLogin.setText("");
+            tfSalary.setText("");
+            dpHiringDate.setValue(null);
+        }else{
+            alert.close();
+        }
+    }
+    
+    @FXML
+    private void hpClicked(ActionEvent event) {
+        if (oneFieldInformed()) {
+            //Informar que se descartaran los cambios
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Se descartarán los cambios\n"
+                    + "Esta operación no se puede deshacer.",
+                    ButtonType.OK, ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+                    //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+                    FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+                    Parent root;
+                    root = (Parent) employee.load();
+                    employeeFormPane.getScene().getWindow().hide();
+                    //Creamos una nueva escena para la ventana SignIn
+                    //cargamos el controlador de la ventana
+                    EmployeeController controller = employee.getController();
+                    controller.setStage(new Stage());
+                    controller.setEmployeeManager(employeesManager);
+                    controller.initStage(root);
+                } catch (IOException ex) {
+                    Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                alert.close();
+            }
+        } else {
+            try {
+                //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+                FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+                Parent root;
+                root = (Parent) employee.load();
+                employeeFormPane.getScene().getWindow().hide();
+                //Creamos una nueva escena para la ventana SignIn
+                //cargamos el controlador de la ventana
+                EmployeeController controller = employee.getController();
+                controller.setStage(new Stage());
+                controller.setEmployeeManager(employeesManager);
+                controller.initStage(root);
+            } catch (IOException ex) {
+                Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
