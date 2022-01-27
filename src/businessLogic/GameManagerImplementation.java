@@ -28,6 +28,7 @@ public class GameManagerImplementation implements GameManager {
      */
     public GameManagerImplementation() {
         webClient = new GameRESTful();
+        
     }
 
     /**
@@ -64,7 +65,7 @@ public class GameManagerImplementation implements GameManager {
     @Override
     public void createGame(Game game) throws Exception {
         try {
-            LOGGER.log(Level.INFO, "UsersManager: Creating user {0}.", game.getName());
+            LOGGER.log(Level.INFO, "UsersManager: Creating Game {0}.", game.getName());
             //Send user data to web client for creation. 
             webClient.create(game);
         } catch (Exception ex) {
@@ -85,8 +86,8 @@ public class GameManagerImplementation implements GameManager {
     @Override
     public void updateGame(Game game) throws Exception {
         try {
-            LOGGER.log(Level.INFO, "UsersManager: Updating user {0}.", game.getName());
-            webClient.update(game);
+            LOGGER.log(Level.INFO, "UsersManager: Updating user {0}.", game.getIdGame());
+            webClient.edit(game,game.getIdGame().toString());
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception updating user, {0}",

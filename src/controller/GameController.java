@@ -128,7 +128,7 @@ public class GameController {
             root = (Parent) gameForm.load();
             GameFormController controller = gameForm.getController();
             controller.setStage(stage);
-            controller.initStage(root);
+            controller.initStage(root);   
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -148,7 +148,8 @@ public class GameController {
             GameFormController controller = gameForm.getController();
             controller.setStage(stage);
             controller.initStage(root);
-            
+            controller.modifyGameData((Game)tvGames.getSelectionModel().getSelectedItem());
+           
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
