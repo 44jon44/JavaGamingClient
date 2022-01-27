@@ -41,9 +41,9 @@ import transferObjects.Employee;
 /**
  * FXML Controller class
  *
- * @author Ibai Arriola
+ * @author ibai Arriola
  */
-public class EmployeeFormController{
+public class EmployeeFormController implements Initializable {
 
     ZoneId defaultZoneId = ZoneId.systemDefault();
     private EmployeeManager employeesManager;
@@ -67,13 +67,13 @@ public class EmployeeFormController{
     @FXML
     private Button btnDelete;
     @FXML
-    private Label lblEmail;
+    private Label lblErrorName;
     @FXML
-    private Label lblLogin;
+    private Label lblErrorEmail;
     @FXML
-    private Label lblhiringDate;
+    private Label lblErrorLogin;
     @FXML
-    private Label lblSalary;
+    private Label lblErrorHiringDate;
     @FXML
     private Label lblErrorSalary;
     @FXML
