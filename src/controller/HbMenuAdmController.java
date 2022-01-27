@@ -75,16 +75,12 @@ public class HbMenuAdmController{
             FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
             Parent root;
             root = (Parent) employee.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene employeeScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage employeeStage = (Stage)hbMenuAdm.getScene().getWindow();
+            stage = (Stage)hbMenuAdm.getScene().getWindow();
             //añadimos la escena en el stage
             EmployeeController controller = employee.getController();
-            controller.initStage1(root);
+            controller.setStage(stage);
             controller.setEmployeeManager(employeesManager);
-            employeeStage.setScene(employeeScene);
-            
+            controller.initStage1(root);
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -97,17 +93,14 @@ public class HbMenuAdmController{
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
             root = (Parent) game.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene GameScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage gameStage = (Stage)hbMenuAdm.getScene().getWindow();
-            //definimos como modal la nueva ventana
-
-            //añadimos la escena en el stage
-            gameStage.setScene(GameScene);
-            //por defecto no podra redimensionarse
-
-
+            stage = (Stage)hbMenuAdm.getScene().getWindow();
+            //controlador de la vista game
+            GameController controller = game.getController();
+            //establecemos el stage
+            controller.setStage(stage);
+            //lanzamos el initStage
+            controller.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,12 +113,11 @@ public class HbMenuAdmController{
             FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
             Parent root;
             root = (Parent) purchase.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene PurchaseScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage purchaseStage = (Stage)hbMenuAdm.getScene().getWindow();
-            //añadimos la escena en el stage
-            purchaseStage.setScene(PurchaseScene);
+            stage = (Stage)hbMenuAdm.getScene().getWindow();
+            PurchaseController controller = purchase.getController();
+            controller.setStage(stage);
+            controller.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -138,18 +130,14 @@ public class HbMenuAdmController{
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
             root = (Parent) game.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene GameScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage gameStage = new Stage();
-            //definimos como modal la nueva ventana
-            gameStage.initModality(Modality.NONE);
-            //añadimos la escena en el stage
-            gameStage.setScene(GameScene);
-            //por defecto no podra redimensionarse
-            gameStage.setResizable(false);
-            gameStage.show();
-
+            stage = (Stage)hbMenuAdm.getScene().getWindow();
+            //controlador de la vista game
+            GameController controller = game.getController();
+            //establecemos el stage
+            controller.setStage(stage);
+            //lanzamos el initStage
+            controller.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -162,18 +150,14 @@ public class HbMenuAdmController{
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
             root = (Parent) game.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene GameScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage gameStage = new Stage();
-            //definimos como modal la nueva ventana
-            gameStage.initModality(Modality.NONE);
-            //añadimos la escena en el stage
-            gameStage.setScene(GameScene);
-            //por defecto no podra redimensionarse
-            gameStage.setResizable(false);
-            gameStage.show();
-
+            stage = (Stage)hbMenuAdm.getScene().getWindow();
+            //controlador de la vista game
+            GameController controller = game.getController();
+            //establecemos el stage
+            controller.setStage(stage);
+            //lanzamos el initStage
+            controller.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
         }

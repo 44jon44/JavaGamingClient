@@ -168,15 +168,15 @@ public class EmployeeController {
 
     public void initStage(Parent root) {
         try {
-            
-            Scene EmployeeScene = new Scene(root);
-
+            Scene employeeScene = new Scene(root);  
+            //añadimos la escena en el stage
+            stage.setScene(employeeScene);
             //definimos como modal la nueva ventana
-            stage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
-            stage.setScene(EmployeeScene);
+            if(stage.getModality() != Modality.NONE)
+                stage.initModality(Modality.NONE);
             //por defecto no podra redimensionarse
-            stage.setResizable(false);
+            if(stage.isResizable())
+                stage.setResizable(false);
             
             tfValue.requestFocus();
 
@@ -220,7 +220,8 @@ public class EmployeeController {
 
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
-            stage.showAndWait();
+            if(!stage.isShowing())
+                stage.showAndWait();
         } catch (OperationNotSupportedException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -231,29 +232,13 @@ public class EmployeeController {
     private void create(ActionEvent event) {
 
         try {
-            //getResource tienes que aÃ±adir la ruta de la ventana que quieres iniciar.
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
             Parent root = (Parent) employeeForm.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene employeeFormScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage employeeFormStage = new Stage();
-
-            //definimos como modal la nueva ventana
-            employeeFormStage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
-            employeeFormStage.setScene(employeeFormScene);
-            //por defecto no podra redimensionarse
-            employeeFormStage.setResizable(false);
-            //cargamos el controlador de la ventana
-            EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
+            //controlador de la ventana
+            EmployeeFormController controller = employeeForm.getController();
+            controller.setStage(stage);
             controller.initStage(root);
-            controller.initStageAdd();
-            controller = employeeForm.getController();
-            controller.initStage(root);
-
-            employeeFormStage.show();
-            employeePane.getScene().getWindow().hide();
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Ha saltado este error");
             LOG.log(Level.SEVERE, null, ex);
@@ -265,31 +250,14 @@ public class EmployeeController {
     private void modify(ActionEvent event) {
         try {
             Employee emp = ((Employee) tblEmployees.getSelectionModel().getSelectedItem());
-
-            //getResource tienes que aÃ±adir la ruta de la ventana que quieres iniciar.
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
             Parent root = (Parent) employeeForm.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene employeeFormScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage employeeFormStage = new Stage();
-
-            //definimos como modal la nueva ventana
-            employeeFormStage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
-            employeeFormStage.setScene(employeeFormScene);
-            //por defecto no podra redimensionarse
-            employeeFormStage.setResizable(false);
             //cargamos el controlador de la ventana
-            EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
-            controller.initStage(root);
-            controller.initStageModify();
+            EmployeeFormController controller =  employeeForm.getController();
+            controller.setStage(stage);
             controller.empToModify(emp);
-            controller = employeeForm.getController();
             controller.initStage(root);
-
-            employeeFormStage.show();
-            employeePane.getScene().getWindow().hide();
         } catch (IOException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         }

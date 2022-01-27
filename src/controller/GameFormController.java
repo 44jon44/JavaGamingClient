@@ -83,6 +83,8 @@ public class GameFormController {
 
     /**
      * Initializes the controller class.
+     * @param root
+     * @throws java.lang.Exception
      */
     public void initStage(Parent root) throws Exception {
         LOG.info("init stage del controlador de juegos");

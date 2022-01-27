@@ -22,8 +22,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -31,6 +31,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javax.naming.OperationNotSupportedException;
@@ -43,7 +44,7 @@ import transferObjects.Employee;
  *
  * @author ibai Arriola
  */
-public class EmployeeFormController implements Initializable {
+public class EmployeeFormController{
 
     ZoneId defaultZoneId = ZoneId.systemDefault();
     private EmployeeManager employeesManager;
@@ -90,13 +91,19 @@ public class EmployeeFormController implements Initializable {
     private TextField tfSalary;
     @FXML
     private Pane employeeFormPane;
+    @FXML
+    private HBox hbMenuAdm;
+    private Stage stage;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     void initStage(Parent root) {
+        Scene gameFormScene = new Scene(root);
+        if(stage != null){
+            stage.setScene(gameFormScene);
+        }  
         lblErrorName.setText("");
         lblErrorEmail.setText("");
         lblErrorLogin.setText("");
@@ -116,14 +123,6 @@ public class EmployeeFormController implements Initializable {
 
         hpReturn.setOnAction(this::hpClicked);
 
-    }
-
-    void initStageAdd() {
-        btnSave.setOnAction(this::save);
-    }
-
-    void initStageModify() {
-        btnSave.setOnAction(this::modify);
     }
 
     @FXML
