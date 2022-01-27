@@ -9,6 +9,8 @@ package model;
  *
  * @author ibai Arriola
  */
-public class UserPrivilege {
-    
+public enum UserPrivilege {
+    ADMIN,
+    CLIENT,
+    EMPLOYEE
 }

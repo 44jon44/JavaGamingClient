@@ -11,7 +11,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 /**
- * 
+ *
  * @author jonma
  */
 public class EmployeeRESTful {
@@ -25,9 +25,15 @@ public class EmployeeRESTful {
         webTarget = client.target(BASE_URI).path("employee");
     }
 
-    public <T> T employeesByName(Class<T> responseType, String fullName) throws ClientErrorException {
+    public <T> T employeesByName(GenericType<T> responseType, String fullName) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("fullName/{0}", new Object[]{fullName}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T employeeBySalary(GenericType<T> responseType, Float salary) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("salary/{0}", new Object[]{salary}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
@@ -37,9 +43,8 @@ public class EmployeeRESTful {
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
-    public <T> T employeeBySalary(Class<T> responseType, Float salary) throws ClientErrorException {
+    public <T> T findAll(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("salary/{0}", new Object[]{salary}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
@@ -67,11 +72,6 @@ public class EmployeeRESTful {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    public <T> T findAll(GenericType<T> responseType) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
     public void remove(String id) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
@@ -79,5 +79,5 @@ public class EmployeeRESTful {
     public void close() {
         client.close();
     }
-    
+
 }

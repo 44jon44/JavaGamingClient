@@ -9,6 +9,7 @@ package model;
  *
  * @author ibai Arriola
  */
-public class UserStatus {
-    
+public enum UserStatus {
+    ENABLED,
+    DISABLED
 }

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="employeeFormPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeFormController">
+<Pane fx:id="employeeFormPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeFormController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
       <Label id="lblName" fx:id="lblName" layoutX="287.0" layoutY="154.0" text="Nombre:">
@@ -46,11 +46,11 @@
       <Label fx:id="lblErrorLogin" layoutX="773.0" layoutY="308.0" prefHeight="34.0" prefWidth="136.0" />
       <Label fx:id="lblErrorHiringDate" layoutX="773.0" layoutY="380.0" prefHeight="34.0" prefWidth="136.0" />
       <Label fx:id="lblErrorSalary" layoutX="779.0" layoutY="439.0" prefHeight="34.0" prefWidth="136.0" />
-      <Button fx:id="btnModify" layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Modificar" textFill="WHITE">
+      <Button fx:id="btnSave" layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Guardar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Button>
-      <Button fx:id="btnAdd" layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Añadir" textFill="WHITE">
+      <Button fx:id="btnDelete" layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #ff3333;" text="Borrar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Button>
@@ -60,3 +60,4 @@
          </font></Hyperlink>
    </children>
 </Pane>
+

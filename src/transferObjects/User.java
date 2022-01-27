@@ -7,6 +7,7 @@ package transferObjects;
 
 import java.io.Serializable;
 import java.security.Timestamp;
+import javax.xml.bind.annotation.XmlRootElement;
 import model.UserPrivilege;
 import model.UserStatus;
 
@@ -15,9 +16,10 @@ import model.UserStatus;
  *
  * @author ibai , jon , alex , markel
  */
+@XmlRootElement(name="user")
 public class User implements Serializable {
 
-    private int id;
+    private int idUser;
     private String login;
     private String email;
     private String fullName;
@@ -46,7 +48,7 @@ public class User implements Serializable {
      * Constructor de la clase User que recibe 4 parámetros
      * @param login login del usuario
      * @param email email del usuario
-     * @param fullName  nombre completo del usuario
+     * @param fullName  nombre del usuario
      * @param password  contraseña del usuario
      */
     public User(String login,String email, String fullName, String password){
@@ -58,12 +60,12 @@ public class User implements Serializable {
     
     //getters y setters de la clase User
     
-    public int getId() {
-        return id;
+    public int getIdUser() {
+        return idUser;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
     }
 
     public String getLogin() {
@@ -124,6 +126,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", login=" + login + ", email=" + email + ", fullName=" + fullName + ", status=" + status + ", privilege=" + privilege + ", password=" + password + ", lastPasswordChange=" + lastPasswordChange + '}';
+        return "User{" + "id=" + idUser + ", login=" + login + ", email=" + email + ", fullName=" + fullName + ", status=" + status + ", privilege=" + privilege + ", password=" + password + ", lastPasswordChange=" + lastPasswordChange + '}';
     }
 }
