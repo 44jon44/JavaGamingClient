@@ -1,6 +1,7 @@
 package businessLogic;
 
-import exception.GameExistExpception;
+
+import exception.GameExistsException;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,7 +29,7 @@ public class GameManagerImplementation implements GameManager {
      */
     public GameManagerImplementation() {
         webClient = new GameRESTful();
-        
+
     }
 
     /**
@@ -87,7 +88,7 @@ public class GameManagerImplementation implements GameManager {
     public void updateGame(Game game) throws Exception {
         try {
             LOGGER.log(Level.INFO, "UsersManager: Updating user {0}.", game.getIdGame());
-            webClient.edit(game,game.getIdGame().toString());
+            webClient.edit(game, game.getIdGame().toString());
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception updating user, {0}",
@@ -104,7 +105,7 @@ public class GameManagerImplementation implements GameManager {
     @Override
     public void deleteGame(Integer idgame) throws Exception {
         try {
-           
+
             webClient.remove(idgame);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -117,23 +118,16 @@ public class GameManagerImplementation implements GameManager {
      * Este método comprueba si el nombre de un juego ya existe, lanzando una
      * Excepción si es el caso.
      *
+     * @return 
      * @throws GameExistExpception La excepción lanzada en caso de que el login
      * ya exista
      */
     @Override
-    public void isNameExisting(String name) throws GameExistExpception {
-        try {
-            if (this.webClient.find(Game.class, name) != null) {
-                throw new GameExistExpception();
-            }
-        } catch (NotFoundException ex) {
-            //If there is a NotFoundException 404,that is,
-            //the login does not exist, we catch the exception and do nothing. 
-        } catch (ClientErrorException ex) {
-            LOGGER.log(Level.SEVERE,
-                    "UsersManager: Exception checking login exixtence, {0}",
-                    ex.getMessage());
-        }
+    public Game isNameExisting(String name){
+        Game games = null;
+        games = webClient.findGamebyName(new GenericType<Game>() {
+        }, name);
+        return games;
     }
 
     /**
@@ -158,7 +152,8 @@ public class GameManagerImplementation implements GameManager {
         }
         return games;
     }
-/**
+
+    /**
      * Este método devuelve una Colección de {@link Game}, que filtra la
      * busqueda de juegos por los diferentes pegis.
      *
