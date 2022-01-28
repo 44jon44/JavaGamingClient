@@ -5,8 +5,7 @@
  */
 package businessLogic;
 
-
-import exception.GameExistsException;
+import exception.GameExistExpception;
 import java.util.Collection;
 import transferObjects.Game;
 
@@ -37,7 +36,7 @@ public interface GameManager {
      * @param name el nombre del objeto Game
      * @throws exception.GameExistExpception si exise el juego
      */
-    public Game isNameExisting(String name) throws GameExistsException;
+    public void isNameExisting(String name) throws GameExistExpception;
 
     /**
      * Este metodo crea un juego nuevo.

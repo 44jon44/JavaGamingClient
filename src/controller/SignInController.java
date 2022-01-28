@@ -6,8 +6,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.HashSet;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -27,7 +25,6 @@ import javafx.stage.Stage;
  * @author ibai arriola
  */
 public class SignInController {
-
     // un logger que nos informara mediante la terminal
     private static final Logger LOG = Logger.getLogger(SignInController.class.getName());
     //declaramos los componentes de la ventana  que manipularemos a continuacion
@@ -43,24 +40,22 @@ public class SignInController {
     private Button btnSignIN;
     // un  label que visualiza los diferentes errores
     @FXML
-    private Hyperlink hyperPassword;
-    @FXML
     private AnchorPane panelSignIN;
     @FXML
     private Label lblError;
     //un hyperlink que llama a la ventana modal viewSingUP
     @FXML
     private Hyperlink hyperSignUP;
-
+    
     //getter y setter del state SingIN
     public Stage getSignInStage() {
         return signInStage;
     }
-
+    
     public void setSignInStage(Stage signInStage) {
         this.signInStage = signInStage;
     }
-
+    
     public void initStage(Parent root) throws IOException {
         LOG.info("Init Stage de la VentanaSignIN");
         //Llamamos al metodo que se encarga del comportamiento del boton
@@ -69,8 +64,6 @@ public class SignInController {
         btnSignIN.setOnAction(this::signIN);
         //llamar al metodo de  resgistrarse cuando pulsas el hyperEnlace
         hyperSignUP.setOnAction(this::signUp);
-        hyperPassword.setOnAction(this::restorePass);
-
     }
 
     /**
@@ -87,14 +80,15 @@ public class SignInController {
             root = (Parent) employee.load();
             panelSignIN.getScene().getWindow().hide();
             //Creamos una nueva escena para la ventana SignIn
-            //cargamos el controlador de la ventana
+             //cargamos el controlador de la ventana
             EmployeeController controller = employee.getController();
             controller.setStage(new Stage());
             controller.initStage(root);
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+            
+        
     }
 
     /**
@@ -141,33 +135,5 @@ public class SignInController {
         btnSignIN.disableProperty().bind(tfUser.textProperty().isEmpty()
                 .or(tfPassword.textProperty().isEmpty()
                 ));
-    }
-
-    private void restorePass(ActionEvent event) {
-        try {
-            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader signUp = new FXMLLoader(getClass().getResource("/view/restorePassword.fxml"));
-            Parent root;
-            root = (Parent) signUp.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene UserViewScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage logout = new Stage();
-            //definimos como modal la nueva ventana
-            //logout.initModality(Modality.APPLICATION_MODAL);
-            //añadimos la escena en el stage
-            logout.setScene(UserViewScene);
-            //por defecto no podra redimensionarse
-            logout.setResizable(false);
-            //cargamos el controlador de la ventana
-            RestorePasswordController controller = signUp.getController();
-            controller.initStage(root);
-            //mostramos la ventana modal mientras la actual se queda esperando
-            logout.show();
-            //cerramos la ventana
-            panelSignIN.getScene().getWindow().hide();
-        } catch (IOException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }

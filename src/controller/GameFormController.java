@@ -7,7 +7,7 @@ package controller;
 
 import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
-import exception.GameExistsException;
+import exception.GameExistExpception;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -92,14 +92,12 @@ public class GameFormController {
         //ComboBox
         btnModify.setDisable(true);
         defaultComboValue();
-
         //Textfield
         tfGameName.requestFocus();
         tfGameName.textProperty().addListener(this::tfGameNameTextChanged);
         tfGameName.focusedProperty().addListener(this::tfGameNameTextFocus);
         tfGamePrice.textProperty().addListener(this::tfGamePriceTextFocus);
         tfGamePrice.focusedProperty().addListener(this::tfGamePriceTextChanged);
-
         //Botones y hyperlinks
         hlBack.setOnAction(this::backtoGameTable);
         btnAdd.setOnAction(this::addGame);
@@ -110,8 +108,7 @@ public class GameFormController {
     }
 
     public void defaultComboValue() {
-        ObservableList<Genre> genrefilterValue
-                = FXCollections.observableArrayList(Genre.values());
+        ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
         cbGameGenre.setItems(genrefilterValue);
         cbGameGenre.getSelectionModel().selectFirst();
         cbGameGenre.setEditable(false);
@@ -148,16 +145,12 @@ public class GameFormController {
     private void tfGameNameTextFocus(ObservableValue observable, Boolean oldValue, Boolean newValue) {
         LOG.info("Dentro de tfNameFocusChanged");
         if (oldValue) {//foco perdido 
-            if (tfGameName.getText().trim().length() > 255) {
-                lblErrorGameName.setText("mas de 255 caracteres");
-            }
             tfNameIsValid = validateTfName(tfGameName.getText());
             if (!tfNameIsValid) {
                 tfGameName.setStyle("-fx-text-inner-color: red;");
-                showlblErrorNameMessages();
+                showlblErrorNameMessages("");
             }
         } else if (newValue) {//foco ganado
-
         }
     }
 
@@ -169,63 +162,42 @@ public class GameFormController {
     }
 
     private void tfGamePriceTextChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-        try {
-            if (oldValue) {//foco perdido 
-                if (tfGamePrice.getText().trim().length() > 255) {
-                    lblErrorGamePrice.setText("mas de 255 caracteres");
-                }
-                tfPriceIsValid = validateTfPrice((tfGamePrice.getText()));
-                if (!tfPriceIsValid) {
-                    tfGamePrice.setStyle("-fx-text-inner-color: red;");
-                    showlblErrorPriceMessages();
-                }
-            } else if (newValue) {//foco ganado
+        LOG.info("Dentro de tfPriceFocusChanged");
+        if (oldValue) {//foco perdido 
+            tfPriceIsValid = validateTfPrice(Float.valueOf(tfGamePrice.getText()));
+            if (!tfPriceIsValid) {
+                tfGameName.setStyle("-fx-text-inner-color: red;");
+                showlblErrorPegiMessages(0);
             }
-        } catch (NumberFormatException ex) {
-            Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
-            showlblErrorPriceMessages();
-        } catch (Exception ex) {
-            Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
+        } else if (newValue) {//foco ganado
         }
     }
 
     @FXML
     private void addGame(ActionEvent event) {
         try {
-            if (!lblErrorGameName.getText().isEmpty() || !lblErrorGamePrice.getText().isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Error");
-                alert.setContentText("No cumple los requisitos del formulario");
-                Optional<ButtonType> result = alert.showAndWait();
-            } else {
-                Game game;
-                // game = gameManager.isNameExisting(tfGameName.getText());
-                // if (game != null) {
-                //Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                // alert.setTitle("Error");
-                // alert.setContentText("Ese juego ya existe");
-                // Optional<ButtonType> result = alert.showAndWait();
-                // }else {
-                LOG.info("Estamos creando el juego");
-                game = new Game();
-                game.setName(tfGameName.getText().trim());
-                game.setGenre(cbGameGenre.getSelectionModel().getSelectedItem().toString());
-                game.setPegi((Integer) cbGamePegi.getSelectionModel().getSelectedItem());
-                game.setRelaseData(Date.from(dpReleaseDate.getValue().
-                        atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                game.setPrice(Float.valueOf(tfGamePrice.getText()));
-                gameManager.createGame(game);
-                LOG.info("juego creado existosamente");
-                cleanTextFields();
-                createGameAlert();
-                // }
-            }
-        } catch (GameExistsException ex) {
-            Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
+            gameManager.isNameExisting(tfGameName.getText().trim());
+            
+            LOG.info("Estamos creando el juego");
+            game = new Game();
+            game.setName(tfGameName.getText().trim());
+            game.setGenre(cbGameGenre.getSelectionModel().getSelectedItem().toString());
+            game.setPegi((Integer) cbGamePegi.getSelectionModel().getSelectedItem());
+            game.setRelaseData(Date.from(dpReleaseDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+            game.setPrice(Float.valueOf(tfGamePrice.getText()));
 
+            gameManager.createGame(game);
+            
+            LOG.info("juego creado existosamente");
+            cleanTextFields();
+            createGameAlert();
+
+        } catch (GameExistExpception ex) {
+            Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     private void modifyGame(ActionEvent event) {
@@ -238,35 +210,39 @@ public class GameFormController {
             gameManager.updateGame(gameModify);
             LOG.info("juego modificado existosamente");
             modifyAlert();
-        } catch (GameExistsException ex) {
+        } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void showlblErrorNameMessages() {
+    private void showlblErrorNameMessages(String name) {
         if (tfGameName.getText().isEmpty()) {
             lblErrorGameName.setText("Campo obligatorio");
         } else {
-            lblErrorGameName.setText("Nombre de juego invalido");
+            lblErrorGamePrice.setText("Nombre de juego invalido");
         }
     }
 
-    private void showlblErrorPriceMessages() {
+    private void showlblErrorPegiMessages(float pegi) {
         if (tfGamePrice.getText().isEmpty()) {
-            lblErrorGamePrice.setText("Campo obligatorio");
+            lblErrorGameName.setText("Campo obligatorio");
         } else {
             lblErrorGamePrice.setText("introduzca un número entre (20/500)");
         }
     }
 
     private boolean validateTfName(String text) {
-        return Pattern.matches("^[A-Za-z0-9? ,_-]+$", text);
+        return Pattern.matches("\\b[a-zA-Z][a-zA-Z0-9]+\\b", text);
     }
 
-    private boolean validateTfPrice(String price) {
-        return price.matches("^(?:([0-9]{1,3}))((?:[.])(?:[0-9]{1,2}))?");
+    private boolean validateTfPrice(float price) {
+        if (price > 500 && price < 20) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private void cleanTextFields() {

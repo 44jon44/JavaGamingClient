@@ -161,5 +161,5 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             throw new BusinessLogicException("Error deleting user:\n"+ex.getMessage());
         }
     }
-    
+
 }
