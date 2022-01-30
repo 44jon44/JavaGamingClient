@@ -5,7 +5,6 @@
  */
 package controller;
 
-import exception.ConnectionNotAvailableException;
 import exception.LoginExistException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -23,7 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import model.Signable;
+
 
 import transferObjects.User;
 

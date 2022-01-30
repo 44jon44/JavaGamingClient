@@ -7,6 +7,7 @@ package controller;
 
 import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
+import exception.BusinessLogicException;
 import exception.GameExistExpception;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -87,26 +88,31 @@ public class GameFormController {
      * Initializes the controller class.
      */
     public void initStage(Parent root) throws Exception {
-        LOG.info("init stage del controlador de juegos");
-        Scene GameScene = new Scene(root);
-        stage.setScene(GameScene);
-        gameManager = new GameManagerImplementation();
-        //ComboBox
-        btnModify.setDisable(true);
-        defaultComboValue();
-        //Textfield
-        tfGameName.requestFocus();
-        tfGameName.textProperty().addListener(this::tfGameNameTextChanged);
-        tfGameName.focusedProperty().addListener(this::tfGameNameTextFocus);
-        tfGamePrice.textProperty().addListener(this::tfGamePriceTextFocus);
-        tfGamePrice.focusedProperty().addListener(this::tfGamePriceTextChanged);
-        //Botones y hyperlinks
-        hlBack.setOnAction(this::backtoGameTable);
-        btnAdd.setOnAction(this::addGame);
-        btnModify.setOnAction(this::modifyGame);
-        //datePicker
-        dpReleaseDate.setValue(LocalDate.now());
-        dpReleaseDate.setEditable(false);
+        try {
+            LOG.info("init stage del controlador de juegos");
+            Scene GameScene = new Scene(root);
+            stage.setScene(GameScene);
+            gameManager = new GameManagerImplementation();
+            //ComboBox
+            btnModify.setDisable(true);
+            defaultComboValue();
+            //Textfield
+            tfGameName.requestFocus();
+            tfGameName.textProperty().addListener(this::tfGameNameTextChanged);
+            tfGameName.focusedProperty().addListener(this::tfGameNameTextFocus);
+            tfGamePrice.textProperty().addListener(this::tfGamePriceTextFocus);
+            tfGamePrice.focusedProperty().addListener(this::tfGamePriceTextChanged);
+            //Botones y hyperlinks
+            hlBack.setOnAction(this::backtoGameTable);
+            btnAdd.setOnAction(this::addGame);
+            btnModify.setOnAction(this::modifyGame);
+            //datePicker
+            dpReleaseDate.setValue(LocalDate.now());
+            dpReleaseDate.setEditable(false);
+        } 
+        catch (Exception e) {
+        }
+
     }
 
     public void defaultComboValue() {
@@ -147,7 +153,7 @@ public class GameFormController {
     private void tfGameNameTextFocus(ObservableValue observable, Boolean oldValue, Boolean newValue) {
         LOG.info("Dentro de tfNameFocusChanged");
         if (oldValue) {//foco perdido 
-            if (tfGameName.getText().length() > 50 || tfGameName.getText().length()<3 ){
+            if (tfGameName.getText().length() > 50 || tfGameName.getText().length() < 3) {
                 lblErrorGameName.setText("el nombre tiene de 3 a 50 caracteres");
             } else {
                 tfNameIsValid = validateTfName(tfGameName.getText());
@@ -216,6 +222,11 @@ public class GameFormController {
                     createGameAlert();
                 }
             }
+        } catch (BusinessLogicException ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -252,6 +263,12 @@ public class GameFormController {
                     modifyAlert();
                 }
             }
+
+        } catch (BusinessLogicException ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {

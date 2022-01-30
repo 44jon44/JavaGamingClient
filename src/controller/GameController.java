@@ -4,6 +4,7 @@ import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
 import controller.GameFormController;
 import controller.HbMenuAdmController;
+import exception.BusinessLogicException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -38,9 +39,9 @@ import transferObjects.Genre;
  * @author Ibai Arriola
  */
 public class GameController {
-    
+
     private static final Logger LOG = Logger.getLogger(GameController.class.getName());
-    
+
     private GameManager gameManager;
     private ObservableList<Game> gameObservableList;
     @FXML
@@ -71,13 +72,13 @@ public class GameController {
     private Label lblGameError;
     @FXML
     private HBox hbMenuAdm;
-    
+
     private Stage stage;
-    
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     public void initStage(Parent root) {
         try {
             Scene gameScene = new Scene(root);
@@ -114,12 +115,19 @@ public class GameController {
                     btnModifyGame.setDisable(true);
                 }
             });
+        } catch (BusinessLogicException ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
+
         } catch (Exception ex) {
-            LOG.severe(ex.getLocalizedMessage());
-            
+            LOG.log(Level.SEVERE,
+                    "UI GestionUsuariosController: Error deleting user: {0}",
+                    ex.getMessage());
         }
     }
-    
+
     private void createGame(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
@@ -128,14 +136,19 @@ public class GameController {
             root = (Parent) gameForm.load();
             GameFormController controller = gameForm.getController();
             controller.setStage(stage);
-            controller.initStage(root);   
+            controller.initStage(root);
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
+        } catch (BusinessLogicException ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void modifyGame(ActionEvent event) {
         try {
             Game selectedGame = ((Game) tvGames.getSelectionModel()
@@ -148,15 +161,20 @@ public class GameController {
             GameFormController controller = gameForm.getController();
             controller.setStage(stage);
             controller.initStage(root);
-            controller.modifyGameData((Game)tvGames.getSelectionModel().getSelectedItem());
-           
+            controller.modifyGameData((Game) tvGames.getSelectionModel().getSelectedItem());
+
+        } catch (BusinessLogicException ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void deleteGame(ActionEvent event) {
         try {
             LOG.info("Deleting user...");
@@ -178,32 +196,37 @@ public class GameController {
                 tvGames.getItems().remove(selectedGame);
                 tvGames.refresh();
             }
+        } catch (BusinessLogicException ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         } catch (Exception e) {
             //If there is an error in the business logic tier show message and
             //log it.
             LOG.log(Level.SEVERE,
                     "UI GestionUsuariosController: Error deleting user: {0}",
                     e.getMessage());
-            
+
             e.printStackTrace();
         }
-        
+
     }
-    
+
     public void loadGamesOnTable() throws Exception {
         Collection games;
         games = gameManager.getAllGames();
         gameObservableList = FXCollections.observableArrayList(games);
         tvGames.setItems(gameObservableList);
         LOG.info("juegos cargados" + games);
-        
+
     }
-    
+
     @FXML
     public void selectedFilter(ObservableValue ov, String oldValue, String newValue) {
         if (newValue != null) {
             String searchFilter = cbSearchBy.getValue();
-            
+
             if (searchFilter.equalsIgnoreCase("GENERO")) {
                 ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
                 cbSearchValue.setItems(genrefilterValue);
@@ -215,14 +238,14 @@ public class GameController {
             }
         }
     }
-    
+
     public void defaultComboValue() {
         cbSearchBy.getSelectionModel().selectFirst();
         ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
         cbSearchValue.setItems(genrefilterValue);
         cbSearchValue.getSelectionModel().selectFirst();
     }
-    
+
     @FXML
     public void searchOnTable(ActionEvent event) {
         String searchFilter = (String) cbSearchBy.getValue();
@@ -245,17 +268,22 @@ public class GameController {
                     lblGameError.setText("No hay juegos disponibles del pegi seleccionado");
                 }
                 chargeFilters(games);
-                
+
             }
+        } catch (BusinessLogicException ex) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         } catch (Exception ex) {
             LOG.info("error al  filtrar la busqueda de juegos al pulsar btbSearh");
             LOG.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void chargeFilters(Collection<Game> games) {
         games = FXCollections.observableArrayList(games);
         tvGames.setItems((ObservableList<Game>) games);
     }
-    
+
 }
