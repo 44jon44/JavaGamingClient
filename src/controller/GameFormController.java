@@ -195,7 +195,7 @@ public class GameFormController {
             } else {
                 List<Game> games;
                 games = (List<Game>) gameManager.isNameExisting(tfGameName.getText().trim());
-                if (!games.isEmpty()) {
+                if (games != null && !games.isEmpty()) {
                     LOG.info("el juego ya existe");
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");

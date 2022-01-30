@@ -114,70 +114,72 @@ public class EmployeeController {
         this.stage = stage;
     }
 
-    public void initStage1(Parent root) {
-        try {
-            // menuController.setStage(stage);
-            btnAdd.setOnAction(this::create);
-            btnDelete.setOnAction(this::delete);
-            btnModify.setOnAction(this::modify);
-            btnFind.setOnAction(this::find);
-            //lblError se inicializa vacio
-            lblError.setText("");
-            //Se deshabilitan los botones btnDelete y bntModify
-            btnDelete.setDisable(true);
-            btnModify.setDisable(true);
-
-            btnFind.focusedProperty().addListener(this::valueFocusChanged);
-            //Cargamos los metodos de filtrado en la combo box
-            ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
-            if (emps.isEmpty()) {
-                lblError.setText("No se han encontrado empleados");
-            }
-            tblEmployees.setItems(emps);
-            
-            tfValue.requestFocus();
-
-            //Cargamos los metodos de filtrado en la combo box
-            ObservableList<String> observableList = FXCollections.observableList(list);
-            observableList.add("Nombre");
-            observableList.add("Salario");
-            observableList.add("Mostrar todos los empleados");
-            cmbFilter.setItems(observableList);
-            cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
-
-            tcName.setCellValueFactory(
-                    new PropertyValueFactory<>("fullName"));
-            tcEmail.setCellValueFactory(
-                    new PropertyValueFactory<>("email"));
-            tcHiringDate.setCellValueFactory(
-                    new PropertyValueFactory<>("hiringDate"));
-            tcSalary.setCellValueFactory(
-                    new PropertyValueFactory<>("salary"));
-            tcLogin.setCellValueFactory(
-                    new PropertyValueFactory<>("login"));
-
-            tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
-
-        } catch (OperationNotSupportedException ex) {
-            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
+//    public void initStage1(Parent root) {
+//        try {
+//            // menuController.setStage(stage);
+//            btnAdd.setOnAction(this::create);
+//            btnDelete.setOnAction(this::delete);
+//            btnModify.setOnAction(this::modify);
+//            btnFind.setOnAction(this::find);
+//            //lblError se inicializa vacio
+//            lblError.setText("");
+//            //Se deshabilitan los botones btnDelete y bntModify
+//            btnDelete.setDisable(true);
+//            btnModify.setDisable(true);
+//
+//            btnFind.focusedProperty().addListener(this::valueFocusChanged);
+//            //Cargamos los metodos de filtrado en la combo box
+//            ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
+//            if (emps.isEmpty()) {
+//                lblError.setText("No se han encontrado empleados");
+//            }
+//            tblEmployees.setItems(emps);
+//            
+//            tfValue.requestFocus();
+//
+//            //Cargamos los metodos de filtrado en la combo box
+//            ObservableList<String> observableList = FXCollections.observableList(list);
+//            observableList.add("Nombre");
+//            observableList.add("Salario");
+//            observableList.add("Mostrar todos los empleados");
+//            cmbFilter.setItems(observableList);
+//            cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
+//
+//            tcName.setCellValueFactory(
+//                    new PropertyValueFactory<>("fullName"));
+//            tcEmail.setCellValueFactory(
+//                    new PropertyValueFactory<>("email"));
+//            tcHiringDate.setCellValueFactory(
+//                    new PropertyValueFactory<>("hiringDate"));
+//            tcSalary.setCellValueFactory(
+//                    new PropertyValueFactory<>("salary"));
+//            tcLogin.setCellValueFactory(
+//                    new PropertyValueFactory<>("login"));
+//
+//            tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
+//
+//        } catch (OperationNotSupportedException ex) {
+//            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (Exception ex) {
+//            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//    }
 
     public void initStage(Parent root) {
         try {
             
-            Scene EmployeeScene = new Scene(root);
-
+            Scene employeeScene = new Scene(root);
+            //añadimos la escena al stage
+            stage.setScene(employeeScene);
+            //establecemos las propiedades de la ventana
             //definimos como modal la nueva ventana
-            stage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
-            stage.setScene(EmployeeScene);
+            if(stage.getModality() != Modality.NONE)
+                stage.initModality(Modality.NONE);
             //por defecto no podra redimensionarse
-            stage.setResizable(false);
-            
+            if(stage.isResizable())
+                stage.setResizable(false);
+            //transferimos el focus al TextField tfValue
             tfValue.requestFocus();
 
             // menuController.setStage(stage);
@@ -220,7 +222,9 @@ public class EmployeeController {
 
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
-            stage.showAndWait();
+            //stage.showAndWait();
+            if(!stage.isShowing())
+                stage.showAndWait();
         } catch (OperationNotSupportedException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -231,29 +235,14 @@ public class EmployeeController {
     private void create(ActionEvent event) {
 
         try {
-            //getResource tienes que aÃ±adir la ruta de la ventana que quieres iniciar.
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
             Parent root = (Parent) employeeForm.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene employeeFormScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage employeeFormStage = new Stage();
-
-            //definimos como modal la nueva ventana
-            employeeFormStage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
-            employeeFormStage.setScene(employeeFormScene);
-            //por defecto no podra redimensionarse
-            employeeFormStage.setResizable(false);
-            //cargamos el controlador de la ventana
-            EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
+            //controlador de la ventana
+            EmployeeFormController controller = employeeForm.getController();
+            controller.setStage(stage);
             controller.initStage(root);
             controller.initStageAdd();
-            controller = employeeForm.getController();
-            controller.initStage(root);
-
-            employeeFormStage.show();
-            employeePane.getScene().getWindow().hide();
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Ha saltado este error");
             LOG.log(Level.SEVERE, null, ex);
@@ -262,34 +251,51 @@ public class EmployeeController {
     }
 
     @FXML
+//    private void modify(ActionEvent event) {
+//        try {
+//            Employee emp = ((Employee) tblEmployees.getSelectionModel().getSelectedItem());
+//
+//            //getResource tienes que aÃ±adir la ruta de la ventana que quieres iniciar.
+//            FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
+//            Parent root = (Parent) employeeForm.load();
+//            //Creamos una nueva escena para la ventana SignIn
+//            Scene employeeFormScene = new Scene(root);
+//            //creamos un nuevo escenario para la nueva ventana
+//            Stage employeeFormStage = new Stage();
+//
+//            //definimos como modal la nueva ventana
+//            employeeFormStage.initModality(Modality.NONE);
+//            //aÃ±adimos la escena en el stage
+//            employeeFormStage.setScene(employeeFormScene);
+//            //por defecto no podra redimensionarse
+//            employeeFormStage.setResizable(false);
+//            //cargamos el controlador de la ventana
+//            EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
+//            controller.initStage(root);
+//            controller.initStageModify();
+//            controller.empToModify(emp);
+//            controller = employeeForm.getController();
+//            controller.initStage(root);
+//
+//            employeeFormStage.show();
+//            employeePane.getScene().getWindow().hide();
+//        } catch (IOException ex) {
+//            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     private void modify(ActionEvent event) {
         try {
             Employee emp = ((Employee) tblEmployees.getSelectionModel().getSelectedItem());
 
-            //getResource tienes que aÃ±adir la ruta de la ventana que quieres iniciar.
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
             Parent root = (Parent) employeeForm.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene employeeFormScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage employeeFormStage = new Stage();
-
-            //definimos como modal la nueva ventana
-            employeeFormStage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
-            employeeFormStage.setScene(employeeFormScene);
-            //por defecto no podra redimensionarse
-            employeeFormStage.setResizable(false);
-            //cargamos el controlador de la ventana
-            EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
+            //cargamaos el controlador de la ventana
+            EmployeeFormController controller = employeeForm.getController();
+            controller.setStage(stage);
+            controller.empToModify(emp);       
             controller.initStage(root);
             controller.initStageModify();
-            controller.empToModify(emp);
-            controller = employeeForm.getController();
-            controller.initStage(root);
-
-            employeeFormStage.show();
-            employeePane.getScene().getWindow().hide();
         } catch (IOException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -321,7 +327,7 @@ public class EmployeeController {
     }
 
     @FXML
-    private void find(ActionEvent event) {
+     private void find(ActionEvent event) {
         boolean validFloat = true;
         lblError.setText("");
         if (tfValue.getText().equalsIgnoreCase("") && cmbFilter.getValue() != null) {
@@ -344,7 +350,8 @@ public class EmployeeController {
                 }
                 try {
                     if (validFloat) {
-                        ObservableList<Employee> empsS = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesBySalary(Float.parseFloat(tfValue.getText())));
+                        ObservableList<Employee> empsS;
+                        empsS = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesBySalary(Float.parseFloat(tfValue.getText())));
                         if (empsS.isEmpty()) {
                             lblError.setText("No se han encontrado empleados");
                         }

@@ -84,10 +84,9 @@ public class SignInController {
             root = (Parent) employee.load();
             panelSignIN.getScene().getWindow().hide();
             //Creamos una nueva escena para la ventana SignIn
-            //cargamos el controlador de la ventana
+             //cargamos el controlador de la ventana
             EmployeeController controller = employee.getController();
             controller.setStage(new Stage());
-            controller.setEmployeeManager(employeesManager);
             controller.initStage(root);
 
         } catch (IOException ex) {

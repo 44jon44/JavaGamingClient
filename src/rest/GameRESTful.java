@@ -26,7 +26,7 @@ public class GameRESTful {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:9045/JavaGamingServer/webresources";
+    private static final String BASE_URI = "http://localhost:8080/JavaGamingServer/webresources";
 
     public GameRESTful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

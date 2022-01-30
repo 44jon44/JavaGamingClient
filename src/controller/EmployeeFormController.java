@@ -43,7 +43,7 @@ import transferObjects.Employee;
  *
  * @author ibai Arriola
  */
-public class EmployeeFormController implements Initializable {
+public class EmployeeFormController{
 
     ZoneId defaultZoneId = ZoneId.systemDefault();
     private EmployeeManager employeesManager;
@@ -90,12 +90,12 @@ public class EmployeeFormController implements Initializable {
     private TextField tfSalary;
     @FXML
     private Pane employeeFormPane;
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    
+    private Stage stage;
+    
+    public void setStage(Stage stage){
+        this.stage = stage;
     }
-
     void initStage(Parent root) {
         lblErrorName.setText("");
         lblErrorEmail.setText("");
@@ -129,7 +129,6 @@ public class EmployeeFormController implements Initializable {
     @FXML
     private void modify(ActionEvent event) {
         try {
-
             employeeModify.setFullName(tfName.getText());
             employeeModify.setLogin(tfLogin.getText().trim());
             employeeModify.setEmail(tfEmail.getText().trim());
