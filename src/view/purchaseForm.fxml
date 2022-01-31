@@ -54,7 +54,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <DatePicker fx:id="dpPurchaseDate" layoutX="212.0" layoutY="598.0" prefHeight="30.0" prefWidth="300.0" />
+      <DatePicker fx:id="dpPurchaseDate" editable="false" layoutX="212.0" layoutY="598.0" prefHeight="30.0" prefWidth="300.0" />
       <TextField fx:id="tfGamePrice" layoutX="212.0" layoutY="501.0" prefHeight="30.0" prefWidth="300.0" />
       <ComboBox fx:id="cbGameName" layoutX="212.0" layoutY="222.0" prefHeight="30.0" prefWidth="600.0" />
       <ComboBox fx:id="cbGameGenre" layoutX="212.0" layoutY="303.0" prefHeight="30.0" prefWidth="300.0" />
