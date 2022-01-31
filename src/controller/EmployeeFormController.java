@@ -58,6 +58,7 @@ public class EmployeeFormController implements Initializable {
     private boolean dpHiringDateIsValid = false;
     private boolean tfSalaryIsValid = false;
     private boolean exists = false;
+    boolean loginChanged=false;
     //Logger del controlador de la ventana "ViewSignIn"
     private static final Logger LOG = Logger.getLogger(EmployeeFormController.class.getName());
     /**
@@ -132,25 +133,42 @@ public class EmployeeFormController implements Initializable {
 
     void initStageModify() {
         btnSave.setOnAction(this::modify);
+        
     }
 
     @FXML
     private void modify(ActionEvent event) {
+        boolean exist=false;
         try {
-
-            employeeModify.setFullName(tfName.getText());
-            employeeModify.setLogin(tfLogin.getText().trim());
-            employeeModify.setEmail(tfEmail.getText().trim());
-            employeeModify.setHiringDate(Date.from(dpHiringDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-            employeeModify.setSalary(parseFloat(tfSalary.getText()));
-
-            EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
-        } catch (OperationNotSupportedException ex) {
-            Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+            if (tfLogin.getText().length() != 0 && loginChanged) {
+                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").isLoginExisting(tfLogin.getText());    
+            }
+        } catch (BusinessLogicException ex) {
+            exist = true;
+            System.out.println("Existe Pajin");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                    "El login ya existe",
+                    ButtonType.OK);
+            alert.showAndWait();
         } catch (Exception ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (!exist) {
+            try {
 
+                employeeModify.setFullName(tfName.getText().trim());
+                employeeModify.setLogin(tfLogin.getText().trim());
+                employeeModify.setEmail(tfEmail.getText().trim());
+                employeeModify.setHiringDate(Date.from(dpHiringDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                employeeModify.setSalary(tfSalary.getText().trim());
+
+                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
+            } catch (OperationNotSupportedException ex) {
+                Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @FXML
@@ -206,7 +224,7 @@ public class EmployeeFormController implements Initializable {
 
     @FXML
     private void tfLoginFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-
+        
         LOG.info("Dentro de tfLoginFocusChanged");
         if (oldValue) {//foco perdido 
             tfLoginIsValid = validateTfLogin(tfLogin.getText());
@@ -262,6 +280,7 @@ public class EmployeeFormController implements Initializable {
         if (!newValue.equalsIgnoreCase(oldValue)) {
             lblErrorLogin.setText("");
             tfLogin.setStyle("-fx-text-inner-color: black;");
+            loginChanged=true;
         }
     }
 
@@ -306,7 +325,7 @@ public class EmployeeFormController implements Initializable {
                 emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
                 emp.setPrivilege(UserPrivilege.EMPLOYEE);
                 emp.setStatus(UserStatus.ENABLED);
-                emp.setSalary(parseFloat(tfSalary.getText()));
+                emp.setSalary(tfSalary.getText());
 
                 EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
 
@@ -403,6 +422,7 @@ public class EmployeeFormController implements Initializable {
     /**
      * Este metodo muestra los posibles errores de el campo tfEmail en
      * lblErrorEmail
+     *
      * @param email
      */
     private void showlblErrorEmailMessages(String email) {
