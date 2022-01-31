@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="employeePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeController">
+<Pane fx:id="employeePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
       <TableView id="tblEmployees" fx:id="tblEmployees" layoutX="50.0" layoutY="181.0" prefHeight="480.0" prefWidth="924.0">
@@ -46,12 +46,12 @@
          <font>
             <Font size="14.0" />
          </font></Button>
-      <ComboBox id="cmbFilter" fx:id="cmbFilter" layoutX="140.0" layoutY="89.0" prefWidth="200.0" />
+      <ComboBox id="cmbFilter" fx:id="cmbFilter" layoutX="140.0" layoutY="89.0" prefHeight="25.0" prefWidth="250.0" />
       <Label id="lblError" fx:id="lblError" layoutX="60.0" layoutY="724.0" prefHeight="30.0" prefWidth="924.0" text="Esto es un mensaje de error" textFill="#ff3333">
          <font>
             <Font name="System Bold" size="16.0" />
          </font></Label>
-      <TextField id="tfValue" fx:id="tfValue" layoutX="470.0" layoutY="88.0" prefHeight="25.0" prefWidth="200.0" promptText="Introduce el valor de busqueda" />
+      <TextField id="tfValue" fx:id="tfValue" layoutX="470.0" layoutY="88.0" prefHeight="25.0" prefWidth="226.0" promptText="Introduce el valor de busqueda" />
       <Label id="lblTitle" fx:id="lblTitle" layoutX="60.0" layoutY="41.0" prefHeight="30.0" text="EMPLEADOS">
          <font>
             <Font name="System Bold" size="18.0" />

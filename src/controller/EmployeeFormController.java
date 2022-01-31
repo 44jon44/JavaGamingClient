@@ -6,6 +6,7 @@
 package controller;
 
 import businessLogic.EmployeeManager;
+import exception.BusinessLogicException;
 import factories.EmployeeManagerFactory;
 import java.io.IOException;
 import static java.lang.Float.parseFloat;
@@ -54,7 +55,7 @@ public class EmployeeFormController implements Initializable {
     private boolean tfNameIsValid = false;
     private boolean tfEmailIsValid = false;
     private boolean tfLoginIsValid = false;
-    private boolean dpHirngDateIsValid = false;
+    private boolean dpHiringDateIsValid = false;
     private boolean tfSalaryIsValid = false;
     private boolean exists = false;
     //Logger del controlador de la ventana "ViewSignIn"
@@ -107,18 +108,25 @@ public class EmployeeFormController implements Initializable {
         tfName.textProperty().addListener(this::tfNameTextChanged);
         tfEmail.focusedProperty().addListener(this::tfEmailFocusChanged);
         tfEmail.textProperty().addListener(this::tfEmailTextChanged);
-        tfLogin.focusedProperty().addListener(this::tfEmailFocusChanged);
+        tfLogin.focusedProperty().addListener(this::tfLoginFocusChanged);
         tfLogin.textProperty().addListener(this::tfLoginTextChanged);
         tfSalary.focusedProperty().addListener(this::tfSalaryFocusChanged);
         tfSalary.textProperty().addListener(this::tfSalaryTextChanged);
+
+        dpHiringDate.focusedProperty().addListener(this::dpHiringDateFocusChanged);
 
         btnDelete.setOnAction(this::clean);
 
         hpReturn.setOnAction(this::hpClicked);
 
+        dpHiringDate.setEditable(false);
+
+        tfName.requestFocus();
+
     }
 
     void initStageAdd() {
+        tfSalary.setText("1000");
         btnSave.setOnAction(this::save);
     }
 
@@ -152,8 +160,12 @@ public class EmployeeFormController implements Initializable {
         if (oldValue) {//foco perdido 
             tfNameIsValid = validateTfName(tfName.getText());
             if (!tfNameIsValid) {
-                showlblErrorUserMessages(tfName.getText());
+                showlblErrorNameMessages(tfName.getText());
             }
+            if (tfName.getText().trim().length() > 255) {
+                lblErrorName.setText("Longitud maxima de 255 caracteres");
+            }
+
         } else if (newValue) {//foco ganado
 
         }
@@ -168,6 +180,24 @@ public class EmployeeFormController implements Initializable {
             if (!tfEmailIsValid) {
                 tfEmail.setStyle("-fx-text-inner-color: red;");
                 showlblErrorEmailMessages(tfEmail.getText());
+            }
+            if (tfEmail.getText().trim().length() > 255) {
+                lblErrorEmail.setText("Longitud maxima de 255 caracteres");
+            }
+        } else if (newValue) {//foco ganado
+
+        }
+    }
+
+    @FXML
+    private void dpHiringDateFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
+
+        LOG.info("Dentro de dpHiringDate FocusChanged");
+        if (oldValue) {//foco perdido 
+            if (dpHiringDate.getValue() == null) {
+                lblErrorHiringDate.setText("Campo obligatorio");
+            } else {
+                dpHiringDate.setStyle("-fx-text-inner-color: black;");
             }
         } else if (newValue) {//foco ganado
 
@@ -194,10 +224,17 @@ public class EmployeeFormController implements Initializable {
 
         LOG.info("Dentro de tfUserFocusChanged");
         if (oldValue) {//foco perdido 
-            tfSalaryIsValid = validateTfFSalary(tfSalary.getText());
-            if (!tfSalaryIsValid) {
+            if (!tfSalary.getText().equalsIgnoreCase("")) {
+
+                tfSalaryIsValid = validateTfFSalary(tfSalary.getText());
+                if (!tfSalaryIsValid) {
+                    tfSalary.setStyle("-fx-text-inner-color: red;");
+                    showlblErrorSalaryMessages(tfSalary.getText());
+                }
+
+            } else {
                 tfSalary.setStyle("-fx-text-inner-color: red;");
-                showlblErrorLoginMessages(tfSalary.getText());
+                lblErrorSalary.setText("Campo obligatorio");
             }
         } else if (newValue) {//foco ganado
 
@@ -206,15 +243,15 @@ public class EmployeeFormController implements Initializable {
 
     @FXML
     private void tfNameTextChanged(ObservableValue observable, String oldValue, String newValue) {
-        if (newValue.length() != oldValue.length()) {
+        if (!newValue.equalsIgnoreCase(oldValue)) {
             lblErrorName.setText("");
-            tfEmail.setStyle("-fx-text-inner-color: black;");
+            tfName.setStyle("-fx-text-inner-color: black;");
         }
     }
 
     @FXML
     private void tfEmailTextChanged(ObservableValue observable, String oldValue, String newValue) {
-        if (newValue.length() != oldValue.length()) {
+        if (!newValue.equalsIgnoreCase(oldValue)) {
             lblErrorEmail.setText("");
             tfEmail.setStyle("-fx-text-inner-color: black;");
         }
@@ -222,38 +259,42 @@ public class EmployeeFormController implements Initializable {
 
     @FXML
     private void tfLoginTextChanged(ObservableValue observable, String oldValue, String newValue) {
-        if (newValue.length() != oldValue.length()) {
+        if (!newValue.equalsIgnoreCase(oldValue)) {
             lblErrorLogin.setText("");
-            tfEmail.setStyle("-fx-text-inner-color: black;");
+            tfLogin.setStyle("-fx-text-inner-color: black;");
         }
     }
 
     @FXML
     private void tfSalaryTextChanged(ObservableValue observable, String oldValue, String newValue) {
-        if (newValue.length() != oldValue.length()) {
+        if (!newValue.equalsIgnoreCase(oldValue)) {
             lblErrorSalary.setText("");
-            tfEmail.setStyle("-fx-text-inner-color: black;");
+            tfSalary.setStyle("-fx-text-inner-color: black;");
         }
     }
 
-    
-
     @FXML
     private void save(ActionEvent event) {
-        System.out.println("0");
+
         try {
             if (tfLogin.getText().length() != 0) {
-                System.out.println("1");
                 EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").isLoginExisting(tfLogin.getText());
-                exists = true;
                 System.out.println(exists);
             }
+        } catch (BusinessLogicException ex) {
+            exists = true;
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                    "El login ya existe",
+                    ButtonType.OK);
+            alert.showAndWait();
         } catch (Exception ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if ( true) {
-            System.out.println("2");
+        validateFields();
+        if (true) {
+
             try {
+                System.out.println("Validos");
                 LocalDate localDate = dpHiringDate.getValue();
                 Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
 
@@ -262,7 +303,7 @@ public class EmployeeFormController implements Initializable {
                 emp.setEmail(tfEmail.getText());
                 emp.setLogin(tfLogin.getText());
                 emp.setHiringDate(date);
-                emp.setPassword("abcd*1234");
+                emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
                 emp.setPrivilege(UserPrivilege.EMPLOYEE);
                 emp.setStatus(UserStatus.ENABLED);
                 emp.setSalary(parseFloat(tfSalary.getText()));
@@ -272,12 +313,8 @@ public class EmployeeFormController implements Initializable {
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            //Abrir ventana employee
         }
     }
-
-    
 
     private boolean fieldsInformed() {
 
@@ -295,55 +332,47 @@ public class EmployeeFormController implements Initializable {
 
     private boolean oneFieldInformed() {
 
-        if (!tfName.getText().equalsIgnoreCase("")
+        return !tfName.getText().equalsIgnoreCase("")
                 || !tfEmail.getText().equalsIgnoreCase("")
                 || !tfLogin.getText().equalsIgnoreCase("")
                 || dpHiringDate.getValue() != null
-                || !tfSalary.getText().equalsIgnoreCase("")) {
-            return true;
-        } else {
-            return false;
-        }
+                || !tfSalary.getText().equalsIgnoreCase("");
     }
 
     private boolean validFields() {
-        return tfNameIsValid && tfEmailIsValid && tfLoginIsValid && dpHirngDateIsValid && tfSalaryIsValid;
-
+        return tfNameIsValid && tfEmailIsValid && tfLoginIsValid && tfSalaryIsValid;
     }
 
     private boolean validateTfName(String user) {
-        return Pattern.matches("\\b[a-zA-Z][a-zA-Z0-9]+\\b", user);
+        return Pattern.matches("[a-zA-ZáéíóúÁÉÍÓÚ]{2,}[\\s[a-zA-ZáéíóúÁÉÍÓÚ]{2,}]*", user);
     }
 
     private boolean validateTfEmail(String email) {
         return Pattern.matches("\\b[a-zA-Z0-9_+-]+(?:.[a-zA-Z0-9_+-]+)*@(?:[a-zA-Z0-9-]+.)+[a-zA-Z]{2,6}\\b", email);
     }
 
-    private boolean validateTfLogin(String fullName) {
-        //return Pattern.matches("\\b\\p{L}+[\\p{L}\\p{Z}\\p{P}]{0,}", fullName);
-        return true;
+    private boolean validateTfLogin(String login) {
+        return Pattern.matches("[a-zA-Z_][a-zA-Z0-9_]{1,254}", login);
     }
 
     private boolean validateTfFSalary(String salary) {
-        return Pattern.matches("[+-]?([0-9]*[.])?[0-9]+", salary);
+        return Pattern.matches("^(?:([0-9]{4,6}))((?:[.])(?:[0-9]{1,2}))?", salary);
     }
 
-    private boolean validateHiringDate() {
-        return true;
-    }
-
-    private boolean validateFields() {
+    private void validateFields() {
         tfEmailIsValid = validateTfEmail(tfEmail.getText());
         tfNameIsValid = validateTfName(tfName.getText());
         tfLoginIsValid = validateTfLogin(tfLogin.getText());
-        dpHirngDateIsValid = validateHiringDate();
         tfSalaryIsValid = validateTfFSalary(tfSalary.getText());
-        return true;
+        if (dpHiringDate.getValue() != null) {
+            dpHiringDateIsValid = true;
+        }
+
     }
 
     private void showFieldErrors() {
         if (!tfNameIsValid) {
-            showlblErrorUserMessages(tfName.getText());
+            showlblErrorNameMessages(tfName.getText());
         }
         if (!tfEmailIsValid) {
             showlblErrorEmailMessages(tfEmail.getText());
@@ -351,28 +380,31 @@ public class EmployeeFormController implements Initializable {
         if (!tfLoginIsValid) {
             showlblErrorLoginMessages(tfLogin.getText());
         }
-        if (!dpHirngDateIsValid) {
-            //showlblErrorLoginMessages(tfLogin.getText());
-        }
         if (!tfSalaryIsValid) {
-            showlblErrorSalaryMessages(Float.parseFloat(tfSalary.getText()));
+            showlblErrorSalaryMessages(tfSalary.getText());
         }
 
     }
 
-    private void showlblErrorUserMessages(String name) {
-        tfName.setStyle("-fx-text-inner-color: red;");
-        if (name.contains(" ")) {
-            lblErrorName.setText("No puede contener espacios");
-        } else if (name.trim().length() == 0) {
-            lblErrorName.setText("Campo obligatorio");
-        } else if (name.trim().length() == 1) {
-            lblErrorName.setText("Longitud mínima 2");
-        } else {
-            lblErrorName.setText("Usuario inválido");
+    private void showlblErrorNameMessages(String name) {
+        switch (name.trim().length()) {
+            case 0:
+                lblErrorName.setText("Campo obligatorio");
+                break;
+            case 1:
+                lblErrorName.setText("Longitud minima de 2 caracteres");
+                break;
+            default:
+                lblErrorName.setText("El nombre solo puede contener\n letras y espacios");
+                break;
         }
     }
 
+    /**
+     * Este metodo muestra los posibles errores de el campo tfEmail en
+     * lblErrorEmail
+     * @param email
+     */
     private void showlblErrorEmailMessages(String email) {
         if (email.trim().length() == 0) {
             lblErrorEmail.setText("Campo obligatorio");
@@ -381,31 +413,66 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * Este metodo muestra los posibles errores de el campo tfLogin en
+     * lblErrorLogin
+     *
+     * @param login
+     */
     private void showlblErrorLoginMessages(String login) {
-        if (login.trim().length() == 0) {
+
+        char c = 0;
+
+        if (login.trim().length() >= 1) {
+            c = login.charAt(0);
+        }
+        if (login.contains(" ")) {
+            lblErrorLogin.setText("No puede contener espacios");
+        } else if (login.trim().length() == 0) {
             lblErrorLogin.setText("Campo obligatorio");
+        } else if (login.trim().length() == 1) {
+            lblErrorLogin.setText("Longitud mínima 2");
+        } else if (Character.isDigit(c)) {
+            lblErrorLogin.setText("El login no debe de empezar  \n por un numero");
+        } else if (login.length() > 255) {
+            lblErrorLogin.setText("El login no debe superar \n los 255 digitos");
         } else {
-            lblErrorLogin.setText("Nombre inválido");
+            lblErrorLogin.setText("login inválido solo puede contener \n "
+                    + "numeros y letras");
         }
     }
 
-    private void showlblErrorSalaryMessages(Float salary) {
-        if (salary != null) {
+    /**
+     * Este metodo muestra los posibles errores de el campo tfSalary en
+     * lblErrorSalary
+     *
+     * @param salary
+     */
+    private void showlblErrorSalaryMessages(String salary) {
+        boolean validDecimal = true;
 
-            if (salary < 1000) {
-                lblErrorLogin.setText("El salario debe de ser mayor o igual a 1000");
-            } else {
-                lblErrorLogin.setText("Introduce un numero decimal");
+        try {
+            float val = Float.parseFloat(salary.replace(',', '.'));
+        } catch (NumberFormatException e) {
+            lblErrorSalary.setText("El formato correcto \n es el de numero decimal");
+            validDecimal = false;
+        }
+        if (validDecimal) {
+            if (Float.parseFloat(salary) < 1000) {
+                lblErrorSalary.setText("El salario debe de ser \n mayor o igual a 1000");
             }
-        } else {
-            lblErrorSalary.setText("Campo Obligatorio");
+            if (Float.parseFloat(salary) > 1000000) {
+                lblErrorSalary.setText("El salario debe de ser \n menor que 1000000");
+            }
         }
-    }
-
-    private void showlblErrorHiringDateMessages(Date hiringDate) {
 
     }
 
+    /**
+     * Este metodo carga los datos del empleado a modificar
+     *
+     * @param emp
+     */
     public void empToModify(Employee emp) {
 
         tfName.setText(emp.getFullName());
@@ -418,6 +485,12 @@ public class EmployeeFormController implements Initializable {
         employeeModify = emp;
 
     }
+
+    /**
+     * Este metodo vacia todos los campos si se confirma en el alert
+     *
+     * @param event
+     */
     @FXML
     private void clean(ActionEvent event) {
 
@@ -432,11 +505,17 @@ public class EmployeeFormController implements Initializable {
             tfLogin.setText("");
             tfSalary.setText("");
             dpHiringDate.setValue(null);
-        }else{
+        } else {
             alert.close();
         }
     }
-    
+
+    /**
+     * Este metodo controla las distintas situcianes que pueden suceder al
+     * pulsar el hiperlink hpReturn
+     *
+     * @param event
+     */
     @FXML
     private void hpClicked(ActionEvent event) {
         if (oneFieldInformed()) {
@@ -483,4 +562,5 @@ public class EmployeeFormController implements Initializable {
             }
         }
     }
+
 }

@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -114,6 +116,11 @@ public class EmployeeController {
         this.stage = stage;
     }
 
+    /**
+     * initStage en caso de que se acceda mediante el menu
+     *
+     * @param root
+     */
     public void initStage1(Parent root) {
         try {
             // menuController.setStage(stage);
@@ -127,23 +134,21 @@ public class EmployeeController {
             btnDelete.setDisable(true);
             btnModify.setDisable(true);
 
-            btnFind.focusedProperty().addListener(this::valueFocusChanged);
             //Cargamos los metodos de filtrado en la combo box
             ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
             if (emps.isEmpty()) {
                 lblError.setText("No se han encontrado empleados");
             }
             tblEmployees.setItems(emps);
-            
-            tfValue.requestFocus();
 
+            tfValue.requestFocus();
+            tfValue.textProperty().addListener(this::tfValueTextChanged);
             //Cargamos los metodos de filtrado en la combo box
             ObservableList<String> observableList = FXCollections.observableList(list);
             observableList.add("Nombre");
             observableList.add("Salario");
             observableList.add("Mostrar todos los empleados");
             cmbFilter.setItems(observableList);
-            cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
 
             tcName.setCellValueFactory(
                     new PropertyValueFactory<>("fullName"));
@@ -166,9 +171,14 @@ public class EmployeeController {
 
     }
 
+    /**
+     * Metodo initStage en caso de que se acceda desde signIn
+     *
+     * @param root
+     */
     public void initStage(Parent root) {
         try {
-            
+
             Scene EmployeeScene = new Scene(root);
 
             //definimos como modal la nueva ventana
@@ -177,7 +187,7 @@ public class EmployeeController {
             stage.setScene(EmployeeScene);
             //por defecto no podra redimensionarse
             stage.setResizable(false);
-            
+
             tfValue.requestFocus();
 
             // menuController.setStage(stage);
@@ -187,11 +197,12 @@ public class EmployeeController {
             btnFind.setOnAction(this::find);
             //lblError se inicializa vacio
             lblError.setText("");
+            //Digitos maximos para tfValue
+            tfValue.requestFocus();
+            tfValue.textProperty().addListener(this::tfValueTextChanged);
             //Se deshabilitan los botones btnDelete y bntModify
             btnDelete.setDisable(true);
             btnModify.setDisable(true);
-
-            btnFind.focusedProperty().addListener(this::valueFocusChanged);
 
             ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
             if (emps.isEmpty()) {
@@ -205,7 +216,7 @@ public class EmployeeController {
             observableList.add("Salario");
             observableList.add("Mostrar todos los empleados");
             cmbFilter.setItems(observableList);
-            cmbFilter.focusedProperty().addListener(this::filterFocusChanged);
+            cmbFilter.getSelectionModel().selectFirst();
 
             tcName.setCellValueFactory(
                     new PropertyValueFactory<>("fullName"));
@@ -228,10 +239,15 @@ public class EmployeeController {
         }
     }
 
+    /**
+     * Metodo que abre la ventana employeeForm sin cargar datos
+     *
+     * @param event
+     */
     private void create(ActionEvent event) {
 
         try {
-            //getResource tienes que aÃ±adir la ruta de la ventana que quieres iniciar.
+            //getResource tienes que anadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
             Parent root = (Parent) employeeForm.load();
             //Creamos una nueva escena para la ventana SignIn
@@ -261,6 +277,11 @@ public class EmployeeController {
 
     }
 
+    /**
+     * Metodo que abre la ventana employeeForm cargando datos
+     *
+     * @param event
+     */
     @FXML
     private void modify(ActionEvent event) {
         try {
@@ -276,7 +297,7 @@ public class EmployeeController {
 
             //definimos como modal la nueva ventana
             employeeFormStage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
+            //anadimos la escena en el stage
             employeeFormStage.setScene(employeeFormScene);
             //por defecto no podra redimensionarse
             employeeFormStage.setResizable(false);
@@ -295,6 +316,11 @@ public class EmployeeController {
         }
     }
 
+    /**
+     * Este metodo borra el usuario seleccionado
+     *
+     * @param event
+     */
     @FXML
     private void delete(ActionEvent event) {
         try {
@@ -320,96 +346,87 @@ public class EmployeeController {
         }
     }
 
+    /**
+     * Este metodo busca empleados por metodo de filtrado y valor
+     *
+     * @param event
+     */
     @FXML
     private void find(ActionEvent event) {
-        boolean validFloat = true;
+        boolean validFloat;
         lblError.setText("");
         if (tfValue.getText().equalsIgnoreCase("") && cmbFilter.getValue() != null) {
             if (!cmbFilter.getValue().toString().equals("Mostrar todos los empleados")) {
                 lblError.setText("Debes de introducir un valor en campo value");
             }
         }
-        if (cmbFilter.getSelectionModel().isEmpty() && cmbFilter.getValue() == null) {
-            lblError.setText("Debes de seleccionar un filtro de busqueda");
-        } else {
-            if (cmbFilter.getValue().toString().equals("Salario")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-                    && !tfValue.getText().equalsIgnoreCase("")) {
 
-                try {
-                    Float.parseFloat(tfValue.getText());
-                } catch (NumberFormatException ex) {
-                    validFloat = false;
-                    lblError.setText("El campo value no es valido. Ejemplo correcto: 432.43");
+        if (cmbFilter.getValue().toString().equals("Salario")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+                && !tfValue.getText().equalsIgnoreCase("")) {
 
-                }
-                try {
-                    if (validFloat) {
-                        ObservableList<Employee> empsS = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesBySalary(Float.parseFloat(tfValue.getText())));
-                        if (empsS.isEmpty()) {
-                            lblError.setText("No se han encontrado empleados");
-                        }
-                        tblEmployees.setItems(empsS);
-                    }
-                } catch (OperationNotSupportedException ex) {
-                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
-                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            Pattern p = Pattern.compile("^(?:([0-9]{1,5}))((?:[.])(?:[0-9]{1,2}))?");
+            Matcher m = p.matcher(tfValue.getText().trim());
+            validFloat = m.matches();
 
-            }
-            if (cmbFilter.getValue().toString().equals("Nombre")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-                    && !tfValue.getText().equalsIgnoreCase("")) {
-                try {
-                    ObservableList<Employee> empsN = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesByName(tfValue.getText()));
-                    if (empsN.isEmpty()) {
+            try {
+                if (validFloat) {
+                    ObservableList<Employee> empsS = FXCollections.observableArrayList(employeesManager.employeesBySalary(tfValue.getText()));
+                    if (empsS.isEmpty()) {
                         lblError.setText("No se han encontrado empleados");
                     }
-                    tblEmployees.setItems(empsN);
-
-                } catch (Exception ex) {
-                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+                    tblEmployees.setItems(empsS);
+                } else {
+                    lblError.setText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"
+                    );
                 }
-
-            }
-            if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-                    && tfValue.getText().equalsIgnoreCase("")) {
-                try {
-                    ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
-                    if (emps.isEmpty()) {
-
-                        lblError.setText("No se han encontrado empleados");
-                    }
-                    tblEmployees.setItems(emps);
-                } catch (Exception ex) {
-                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")
-                    && !tfValue.getText().equalsIgnoreCase("")) {
-                lblError.setText("El campo value debe de estar vacio");
+            } catch (Exception ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+        if (cmbFilter.getValue().toString().equals("Nombre")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+                && !tfValue.getText().equalsIgnoreCase("")) {
+            try {
+                ObservableList<Employee> empsN = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesByName(tfValue.getText()));
+                if (empsN.isEmpty()) {
+                    lblError.setText("No se han encontrado empleados:");
+                }
+                tblEmployees.setItems(empsN);
+
+            } catch (Exception ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+                && tfValue.getText().equalsIgnoreCase("")) {
+            try {
+                ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
+                if (emps.isEmpty()) {
+
+                    lblError.setText("No se han encontrado empleados");
+                }
+                tblEmployees.setItems(emps);
+            } catch (Exception ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")
+                && !tfValue.getText().equalsIgnoreCase("")) {
+            lblError.setText("El campo value debe de estar vacio");
+        }
+
         tfValue.setText("");
     }
 
-    @FXML
-    private void valueFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-
-        if (oldValue) {//foco perdido 
-
-        }
-    }
-
-    @FXML
-    private void filterFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-
-        if (newValue != null) {//foco perdido 
-            tfValue.setText("");
-        } else {
-
-        }
-    }
-
+    /**
+     * Este metodo controla la seleccion de filas de la tabla. En caso de
+     * seleccionar una, se habilitaran los botones btnDelete y btnModify
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     @FXML
     private void handleUsersTableSelectionChanged(ObservableValue observable,
             Object oldValue,
@@ -427,8 +444,33 @@ public class EmployeeController {
 
     }
 
+    /**
+     * Este metodo carga la interfaz de logica EmployeeManager
+     *
+     * @param employeesManager
+     */
     public void setEmployeeManager(EmployeeManager employeesManager) {
         this.employeesManager = employeesManager;
     }
 
+    /**
+     * Este metodo controla la longitud maxima(255) del tfValue
+     *
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
+    private void tfValueTextChanged(ObservableValue observable, String oldValue, String newValue) {
+
+        if (newValue.length() != oldValue.length()
+                && newValue.length() > 255) {
+            lblError.setText("La longitud maxima es de 255");
+            tfValue.setText(oldValue);
+        }
+        if (newValue.length() != oldValue.length()
+                && newValue.length() < 255
+                && lblError.getText().equalsIgnoreCase("La longitud maxima es de 255")) {
+            lblError.setText("");
+        }
+    }
 }

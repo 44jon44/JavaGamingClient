@@ -31,7 +31,7 @@ public class EmployeeRESTful {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T employeeBySalary(GenericType<T> responseType, Float salary) throws ClientErrorException {
+    public <T> T employeeBySalary(GenericType<T> responseType, String salary) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("salary/{0}", new Object[]{salary}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
