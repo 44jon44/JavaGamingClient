@@ -8,7 +8,7 @@ package transferObjects;
 import java.io.Serializable;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+
 
 /**
  *
@@ -57,7 +57,6 @@ public class Purchase implements Serializable {
         return client;
     }
 
-    @XmlTransient
     public void setClient(Client client) {
         this.client = client;
     }
