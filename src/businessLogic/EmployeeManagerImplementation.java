@@ -125,7 +125,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
      * @throws Exception
      */
     @Override
-    public Collection<Employee> employeesBySalary(Float salary) throws Exception {
+    public Collection<Employee> employeesBySalary(String salary) throws Exception {
         List<Employee> employees = null;
         try {
             LOGGER.log(Level.INFO, "EmployeeManager: buscando empleados con el salario: {0}.", salary);

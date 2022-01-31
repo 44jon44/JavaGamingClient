@@ -5,7 +5,6 @@
  */
 package rest;
 
-import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -19,7 +18,7 @@ public class EmployeeRESTful {
 
     private WebTarget webTarget;
     private Client client;
-   private static final String BASE_URI = ResourceBundle.getBundle("rest.rest").getString("BASE_URI");
+    private static final String BASE_URI = "http://localhost:8080/JavaGamingServer/webresources";
 
     public EmployeeRESTful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -32,7 +31,7 @@ public class EmployeeRESTful {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T employeeBySalary(GenericType<T> responseType, Float salary) throws ClientErrorException {
+    public <T> T employeeBySalary(GenericType<T> responseType, String salary) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("salary/{0}", new Object[]{salary}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
