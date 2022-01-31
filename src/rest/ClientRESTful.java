@@ -5,6 +5,7 @@
  */
 package rest;
 
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -25,7 +26,7 @@ public class ClientRESTful {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:9045/JavaGamingServer/webresources";
+    private static final String BASE_URI = ResourceBundle.getBundle("rest.rest").getString("BASE_URI");
 
     public ClientRESTful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
