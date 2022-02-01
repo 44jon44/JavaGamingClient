@@ -5,18 +5,23 @@
  */
 package controller;
 
-import businessLogic.PurchaseManager;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import businessLogic.PurchaseManager;
+import factories.ClientManagerFactory;
+import factories.PurchaseManagerFactory;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,22 +35,32 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import javax.naming.OperationNotSupportedException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import transferObjects.Client;
 import transferObjects.Game;
 import transferObjects.Purchase;
+import businessLogic.ClientManager;
 
 /**
  * FXML Controller class
  *
  * @author Alex Hurtado
  */
-public class PurchaseController{
+public class PurchaseController {
 
     private static final Logger LOG = Logger.getLogger(PurchaseController.class.getName());
-    
+
+    private final static String TYPE = "REST_WEB_CLIENT";
+
     private PurchaseManager purchasesManager;
-    
-    private ObservableList<Purchase> purchaseObservableList;
+
+    private ObservableList<Purchase> purchasesObservableList;
+
+    private ClientManager clientsManager;
+
+    private ObservableList<Client> clientsObservableList;
     @FXML
     private Pane purchasePane;
     @FXML
@@ -53,15 +68,15 @@ public class PurchaseController{
     @FXML
     private TableColumn tcPurchaseDate;
     @FXML
-    private TableColumn<Client, String> tcClientName;
+    private TableColumn<Purchase, String> tcClientName;
     @FXML
-    private TableColumn<Game, String> tcGameName;
+    private TableColumn<Purchase, String> tcGameName;
     @FXML
-    private TableColumn<Game, String> tcGameGenre;
+    private TableColumn<Purchase, String> tcGameGenre;
     @FXML
-    private TableColumn<Game, Integer> tcGamePegi;
+    private TableColumn<Purchase, Integer> tcGamePegi;
     @FXML
-    private TableColumn<Game, Integer> tcGamePrice;
+    private TableColumn<Purchase, Float> tcGamePrice;
     @FXML
     private Button btnModifyPurchase;
     @FXML
@@ -71,7 +86,7 @@ public class PurchaseController{
     @FXML
     private Label lblError;
     @FXML
-    private ComboBox cbClients;
+    private ComboBox<Client> cbClients;
     @FXML
     private DatePicker dpPurchaseDate;
     @FXML
@@ -82,17 +97,23 @@ public class PurchaseController{
     private Button btnClearSeach;
     @FXML
     private HBox hbMenuAdm;
-    
+
     private Stage stage;
-    
+
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    private Purchase selectedPurchase;
+
+    public void setSelectedPurchase(Purchase selectedPurchase) {
+        this.selectedPurchase = selectedPurchase;
     }
 
     public void initStageOriginal(Parent root) {
         Scene purchaseScene = new Scene(root);
         stage.setScene(purchaseScene);
-        btnAddPurchase.setOnAction(this::addPurchase);
+        btnAddPurchase.setOnAction(this::handleAddPurchase);
         btnModifyPurchase.setDisable(true);
         btnDeletePurchase.setDisable(true);
     }
@@ -102,27 +123,29 @@ public class PurchaseController{
         stage.setScene(purchaseScene);
         stage.setResizable(false);
         stage.initModality(Modality.NONE);
-        btnAddPurchase.setOnAction(this::addPurchase);
-        btnModifyPurchase.setDisable(true);
-        btnDeletePurchase.setDisable(true);
-        //TableView
-        tcPurchaseDate.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
-//        tcClientName.setCellValueFactory(new PropertyValueFactory<>("client.name"));
-//        tcGameName.setCellValueFactory(new PropertyValueFactory<>("game.name"));
-//        tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("game.genre"));
-//        tcGamePegi.setCellValueFactory(new PropertyValueFactory<>("game.pegi"));
-//        tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("game.price"));
-        tcClientName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getFullName()));
-        tcGameName.setCellValueFactory(new PropertyValueFactory<>("game.name"));
-        tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("game.genre"));
-        tcGamePegi.setCellValueFactory(new PropertyValueFactory<>("game.pegi"));
-        tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("game.price"));
-        
-        loadPurchaseData();
+        loadViewState();
         stage.showAndWait();
     }
     
-    private void addPurchase(ActionEvent event) {
+    public void initStageBack(Parent root) {
+        Scene purchaseScene = new Scene(root);
+        stage.setScene(purchaseScene);
+        loadViewState();
+        stage.showAndWait();
+    }
+
+//    public void handlePurchaseSelected(ObservableValue ov, Object oldValue, Object newValue) {
+//        if (newValue != null) {
+//            btnModifyPurchase.setDisable(false);
+//            btnDeletePurchase.setDisable(false);
+//            LOG.info(ov.toString());
+//        }else{
+//            btnModifyPurchase.setDisable(true);
+//            btnDeletePurchase.setDisable(true);
+//        }
+//    }
+    @FXML
+    private void handleAddPurchase(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader purchaseForm = new FXMLLoader(getClass().getResource("/view/purchaseForm.fxml"));
@@ -132,16 +155,141 @@ public class PurchaseController{
             controller.setStage(stage);
             controller.initStage(root);
         } catch (IOException ex) {
-            LOG.log(Level.INFO,"Ha saltado este error");
+            LOG.log(Level.INFO, "Ha saltado este error");
             LOG.log(Level.SEVERE, null, ex);
         }
     }
 
-    void setPurchaseManager(PurchaseManager puchasesManager) {
+    @FXML
+    private void handleModifyPurchase(ActionEvent event) {
+        try {
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+            FXMLLoader purchaseForm = new FXMLLoader(getClass().getResource("/view/purchaseForm.fxml"));
+            Parent root = (Parent) purchaseForm.load();
+            //controlador de la ventana
+            PurchaseFormController controller = purchaseForm.getController();
+            controller.setStage(stage);
+            controller.setPurchaseToModify(selectedPurchase);
+            controller.initStage(root);
+        } catch (IOException ex) {
+            LOG.log(Level.INFO, "Ha saltado este error");
+            LOG.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void handleClearSearch(ActionEvent event) {
+        cbClients.valueProperty().set(null);
+        cbPrice.valueProperty().set(null);
+        dpPurchaseDate.getEditor().clear();
+        loadPurchasesData();
+    }
+
+    @FXML
+    private void handleSearch(ActionEvent event) {
+        LOG.log(Level.SEVERE, "Método 'BUSCAR' no implementado");
+    }
+
+    @FXML
+    private void handleDeletePurchase(ActionEvent event) {
+        LOG.log(Level.SEVERE, "Método 'BORRAR COMPRA' no implementado");
+//            if(selectedPurchase != null){
+//                purchasesManager.remove(selectedPurchase.getIdPurchase().toString());
+//            }
+    }
+
+    public void setPurchaseManager(PurchaseManager puchasesManager) {
         this.purchasesManager = puchasesManager;
     }
 
-    private void loadPurchaseData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void loadPurchasesData() {
+        Collection purchases;
+        purchases = purchasesManager.getAllPurchasess();
+        purchasesObservableList = FXCollections.observableArrayList(purchases);
+        tvPurchases.setItems(purchasesObservableList);
+        LOG.log(Level.INFO, "Juegos cargados: {0}", purchasesObservableList.size());
+    }
+
+    private void loadClientsData() {
+        Collection clients;
+        clients = clientsManager.findAllClients();
+        clientsObservableList = FXCollections.observableArrayList(clients);
+        cbClients.setItems(clientsObservableList);
+        LOG.log(Level.INFO, "Clientes cargados: {0}", clientsObservableList.size());
+    }
+
+    private void loadPricesData() {
+        ObservableList<String> precios = FXCollections.observableArrayList("Menos de 30€", "30€ a 40€", "40€ a 50€", "50€ a 60€", "Más de 60€");
+        cbPrice.setItems(precios);
+    }
+
+    private void loadViewState() {
+        try {
+            //botones
+            btnAddPurchase.setOnAction(this::handleAddPurchase);
+            btnModifyPurchase.setOnAction(this::handleModifyPurchase);
+            btnDeletePurchase.setOnAction(this::handleDeletePurchase);
+            btnModifyPurchase.setDisable(true);
+            btnDeletePurchase.setDisable(true);
+            btnSearch.setOnAction(this::handleSearch);
+            btnClearSeach.setOnAction(this::handleClearSearch);
+            //DatePicker
+            dpPurchaseDate.setEditable(false);
+            dpPurchaseDate.setConverter(new StringConverter<LocalDate>() {
+                String pattern = "yyyy-MM-dd";
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+                
+                {
+                    dpPurchaseDate.setPromptText(pattern.toLowerCase());
+                }
+                
+                @Override
+                public String toString(LocalDate date) {
+                    if (date != null) {
+                        return dateFormatter.format(date);
+                    } else {
+                        return "";
+                    }
+                }
+                
+                @Override
+                public LocalDate fromString(String string) {
+                    if (string != null && !string.isEmpty()) {
+                        return LocalDate.parse(string, dateFormatter);
+                    } else {
+                        return null;
+                    }
+                }
+            });
+            //ComboBox
+            clientsManager = ClientManagerFactory.createClientManager(TYPE);
+            loadClientsData();
+            loadPricesData();
+            //TableView
+            
+            tcPurchaseDate.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
+            tcClientName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getClient().getFullName()));
+            tcGameName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGame().getName()));
+            tcGameGenre.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGame().getGenre()));
+            tcGamePegi.setCellValueFactory(cell -> new SimpleIntegerProperty(cell.getValue().getGame().getPegi()).asObject());
+            tcGamePrice.setCellValueFactory(cell -> new SimpleFloatProperty(cell.getValue().getGame().getPrice()).asObject());
+            purchasesManager = PurchaseManagerFactory.createPurchaseManager(TYPE);
+            //carga de datos en la tabla
+            loadPurchasesData();
+            //listener para cuando se selecciona una fila de la TableView
+            tvPurchases.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+                if (newValue != null) {
+                    btnModifyPurchase.setDisable(false);
+                    btnDeletePurchase.setDisable(false);
+                    setSelectedPurchase((Purchase) tvPurchases.getSelectionModel().getSelectedItem());
+                    
+                } else {
+                    btnModifyPurchase.setDisable(true);
+                    btnDeletePurchase.setDisable(true);
+                }
+            });
+        } catch (OperationNotSupportedException ex) {
+            Logger.getLogger(PurchaseController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

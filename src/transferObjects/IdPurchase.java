@@ -66,6 +66,7 @@ public class IdPurchase implements Serializable {
 // muestra la salida  de  idpurchase
     @Override
     public String toString() {
-        return "IdPurchase{" + "idGame=" + idGame + ", idClient=" + idClient + '}';
+        //return "IdPurchase{" + "idGame=" + idGame + ", idClient=" + idClient + '}';
+        return idGame + "," + idClient;
     }
 }

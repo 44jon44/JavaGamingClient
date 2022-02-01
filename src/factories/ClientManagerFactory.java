@@ -5,9 +5,9 @@
  */
 package factories;
 
-import businessLogic.ClientManager;
 import businessLogic.ClientManagerImplementation;
 import javax.naming.OperationNotSupportedException;
+import businessLogic.ClientManager;
 
 /**
  *
