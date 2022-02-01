@@ -48,6 +48,7 @@ public class Client extends User implements Serializable {
  */
     @Override
     public String toString() {
-        return "Client{" + super.toString() + "signUpDate=" + signUpDate + '}';
+        //return "Client{" + super.toString() + "signUpDate=" + signUpDate + '}';
+        return super.getFullName();
     }
 }

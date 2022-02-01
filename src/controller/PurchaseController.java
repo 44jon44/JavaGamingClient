@@ -5,11 +5,14 @@
  */
 package controller;
 
+import businessLogic.PurchaseManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,9 +25,14 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import transferObjects.Client;
+import transferObjects.Game;
+import transferObjects.Purchase;
 
 /**
  * FXML Controller class
@@ -35,22 +43,25 @@ public class PurchaseController{
 
     private static final Logger LOG = Logger.getLogger(PurchaseController.class.getName());
     
+    private PurchaseManager purchasesManager;
+    
+    private ObservableList<Purchase> purchaseObservableList;
     @FXML
     private Pane purchasePane;
     @FXML
-    private TableView<?> tvPurchases;
+    private TableView tvPurchases;
     @FXML
-    private TableColumn<?, ?> tcPurchaseDate;
+    private TableColumn tcPurchaseDate;
     @FXML
-    private TableColumn<?, ?> tcClientName;
+    private TableColumn<Client, String> tcClientName;
     @FXML
-    private TableColumn<?, ?> tcGameName;
+    private TableColumn<Game, String> tcGameName;
     @FXML
-    private TableColumn<?, ?> tcGameGenre;
+    private TableColumn<Game, String> tcGameGenre;
     @FXML
-    private TableColumn<?, ?> tcGamePegi;
+    private TableColumn<Game, Integer> tcGamePegi;
     @FXML
-    private TableColumn<?, ?> tbGamePrice;
+    private TableColumn<Game, Integer> tcGamePrice;
     @FXML
     private Button btnModifyPurchase;
     @FXML
@@ -60,11 +71,11 @@ public class PurchaseController{
     @FXML
     private Label lblError;
     @FXML
-    private ComboBox<?> cbClients;
+    private ComboBox cbClients;
     @FXML
     private DatePicker dpPurchaseDate;
     @FXML
-    private ComboBox<?> cbPrice;
+    private ComboBox cbPrice;
     @FXML
     private Button btnSearch;
     @FXML
@@ -78,12 +89,37 @@ public class PurchaseController{
         this.stage = stage;
     }
 
-    public void initStage(Parent root) {
+    public void initStageOriginal(Parent root) {
         Scene purchaseScene = new Scene(root);
         stage.setScene(purchaseScene);
         btnAddPurchase.setOnAction(this::addPurchase);
         btnModifyPurchase.setDisable(true);
         btnDeletePurchase.setDisable(true);
+    }
+    
+    public void initStage(Parent root) {
+        Scene purchaseScene = new Scene(root);
+        stage.setScene(purchaseScene);
+        stage.setResizable(false);
+        stage.initModality(Modality.NONE);
+        btnAddPurchase.setOnAction(this::addPurchase);
+        btnModifyPurchase.setDisable(true);
+        btnDeletePurchase.setDisable(true);
+        //TableView
+        tcPurchaseDate.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
+//        tcClientName.setCellValueFactory(new PropertyValueFactory<>("client.name"));
+//        tcGameName.setCellValueFactory(new PropertyValueFactory<>("game.name"));
+//        tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("game.genre"));
+//        tcGamePegi.setCellValueFactory(new PropertyValueFactory<>("game.pegi"));
+//        tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("game.price"));
+        tcClientName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getFullName()));
+        tcGameName.setCellValueFactory(new PropertyValueFactory<>("game.name"));
+        tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("game.genre"));
+        tcGamePegi.setCellValueFactory(new PropertyValueFactory<>("game.pegi"));
+        tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("game.price"));
+        
+        loadPurchaseData();
+        stage.showAndWait();
     }
     
     private void addPurchase(ActionEvent event) {
@@ -99,5 +135,13 @@ public class PurchaseController{
             LOG.log(Level.INFO,"Ha saltado este error");
             LOG.log(Level.SEVERE, null, ex);
         }
+    }
+
+    void setPurchaseManager(PurchaseManager puchasesManager) {
+        this.purchasesManager = puchasesManager;
+    }
+
+    private void loadPurchaseData() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

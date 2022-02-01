@@ -146,6 +146,7 @@ public class Game implements Serializable {
     //mostrar los diferentes juegos 
     @Override
     public String toString() {
-        return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';
+        //return "Game{" + "idGame=" + idGame + ", name=" + name + ", genre=" + genre + ", pegi=" + pegi + ", relaseData=" + relaseData + ", price=" + price + '}';
+        return getName();
     }
 }

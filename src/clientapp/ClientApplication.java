@@ -5,6 +5,7 @@
  */
 package clientapp;
 
+import controller.PurchaseController;
 import controller.SignInController;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -42,6 +43,7 @@ public class ClientApplication extends Application {
         //Finalmente  mostramos nuestra ventana
         signInStage.show();
     }
+    
     public static void main(String[] args) {
         launch(args);
     }

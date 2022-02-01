@@ -20,7 +20,7 @@
           <TableColumn id="tcEmail" fx:id="tcGameName" prefWidth="200.0" text="NOMBRE JUEGO" />
             <TableColumn id="tcFullName" fx:id="tcGameGenre" prefWidth="170.0" text="GÉNERO" />
             <TableColumn id="tcSignUpDate" fx:id="tcGamePegi" minWidth="8.0" prefWidth="101.0" text="PEGI" />
-            <TableColumn fx:id="tbGamePrice" prefWidth="102.0" text="PRECIO" />
+            <TableColumn fx:id="tcGamePrice" prefWidth="102.0" text="PRECIO" />
         </columns>
       </TableView>
       <Button fx:id="btnModifyPurchase" alignment="CENTER" contentDisplay="CENTER" layoutX="387.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #4169e1;" text="MODIFICAR COMPRA" textFill="WHITE">

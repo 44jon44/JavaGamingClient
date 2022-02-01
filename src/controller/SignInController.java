@@ -6,6 +6,9 @@
 package controller;
 
 import businessLogic.EmployeeManager;
+import businessLogic.PurchaseManager;
+import factories.EmployeeManagerFactory;
+import factories.PurchaseManagerFactory;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +24,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javax.naming.OperationNotSupportedException;
 
 /**
  * @author ibai arriola
@@ -29,6 +33,7 @@ public class SignInController {
 
     
     private EmployeeManager employeesManager;
+    private PurchaseManager puchasesManager;
     // un logger que nos informara mediante la terminal
     private static final Logger LOG = Logger.getLogger(SignInController.class.getName());
     //declaramos los componentes de la ventana  que manipularemos a continuacion
@@ -76,26 +81,46 @@ public class SignInController {
      * @param event el evento de activacion del boton
      */
     @FXML
+//    private void signIN(ActionEvent event) {
+//        try {
+//            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+//            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+//            Parent root;
+//            root = (Parent) employee.load();
+//            panelSignIN.getScene().getWindow().hide();
+//            //Creamos una nueva escena para la ventana SignIn
+//            //cargamos el controlador de la ventana
+//            EmployeeController controller = employee.getController();
+//            controller.setStage(new Stage());
+//            controller.setEmployeeManager(employeesManager);
+//            controller.initStage(root);
+//
+//        } catch (IOException ex) {
+//            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     private void signIN(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+            FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
             Parent root;
-            root = (Parent) employee.load();
+            root = (Parent) purchase.load();
             panelSignIN.getScene().getWindow().hide();
             //Creamos una nueva escena para la ventana SignIn
             //cargamos el controlador de la ventana
-            EmployeeController controller = employee.getController();
+            PurchaseController controller = purchase.getController();
             controller.setStage(new Stage());
-            controller.setEmployeeManager(employeesManager);
+            puchasesManager = PurchaseManagerFactory.createPurchaseManager("REST_WEB_CLIENT");
+            controller.setPurchaseManager(puchasesManager);
             controller.initStage(root);
 
         } catch (IOException ex) {
-            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
+        } catch (OperationNotSupportedException ex)
+        {
+            LOG.log(Level.SEVERE, null, ex);
         }
-
     }
-
     /**
      * Abre una ventana modal de signUP que que el usuario se pueda registrar
      *

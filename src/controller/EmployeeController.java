@@ -168,15 +168,16 @@ public class EmployeeController {
 
     public void initStage(Parent root) {
         try {
-            
-            Scene EmployeeScene = new Scene(root);
-
+            Scene employeeScene = new Scene(root);  
+            //añadimos la escena en el stage
+            stage.setScene(employeeScene);
             //definimos como modal la nueva ventana
-            stage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
-            stage.setScene(EmployeeScene);
+            if(stage.getModality() != Modality.NONE)
+                stage.initModality(Modality.NONE);
             //por defecto no podra redimensionarse
-            stage.setResizable(false);
+            if(stage.isResizable())
+                stage.setResizable(false);
+            // menuController.setStage(stage);
             
             tfValue.requestFocus();
 
@@ -220,7 +221,9 @@ public class EmployeeController {
 
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
-            stage.showAndWait();
+            //stage.showAndWait();
+            if(!stage.isShowing())
+                stage.showAndWait();
         } catch (OperationNotSupportedException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {

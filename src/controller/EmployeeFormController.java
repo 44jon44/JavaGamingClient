@@ -24,6 +24,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -43,7 +44,7 @@ import transferObjects.Employee;
  *
  * @author ibai Arriola
  */
-public class EmployeeFormController implements Initializable {
+public class EmployeeFormController{
 
     ZoneId defaultZoneId = ZoneId.systemDefault();
     private EmployeeManager employeesManager;
@@ -91,12 +92,16 @@ public class EmployeeFormController implements Initializable {
     @FXML
     private Pane employeeFormPane;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    private Stage stage;
+    
+    public void setStage(Stage stage){
+        this.stage = stage;
     }
-
+    
     void initStage(Parent root) {
+        Scene gameFormScene = new Scene(root);
+        stage.setScene(gameFormScene);
+        stage.show();
         lblErrorName.setText("");
         lblErrorEmail.setText("");
         lblErrorLogin.setText("");
