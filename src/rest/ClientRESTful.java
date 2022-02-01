@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:ClientFacadeREST [client]<br>
@@ -20,7 +21,7 @@ import javax.ws.rs.client.WebTarget;
  *        client.close();
  * </pre>
  *
- * @author ibai Arriola
+ * @author Alex Hurtado
  */
 public class ClientRESTful {
 
@@ -33,10 +34,22 @@ public class ClientRESTful {
         webTarget = client.target(BASE_URI).path("client");
     }
 
+    public <T> T findClientById(Class<T> responseType, String idClient) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("fin/id/{0}", new Object[]{idClient}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
     public String countREST() throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path("count");
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public <T> T findClientByEmail(Class<T> responseType, String email) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("find/email/{0}", new Object[]{email}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
     public void edit(Object requestEntity, String id) throws ClientErrorException {
@@ -49,9 +62,15 @@ public class ClientRESTful {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findRange(Class<T> responseType, String from, String to) throws ClientErrorException {
+    public <T> T findRange(GenericType<T> responseType, String from, String to) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from, to}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findClientByLogin(Class<T> responseType, String login) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("find/login/{0}", new Object[]{login}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
@@ -59,7 +78,13 @@ public class ClientRESTful {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    public <T> T findAll(Class<T> responseType) throws ClientErrorException {
+    public <T> T findClientByFullName(Class<T> responseType, String fullName) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("find/fullName/{0}", new Object[]{fullName}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findAll(GenericType<T>  responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }

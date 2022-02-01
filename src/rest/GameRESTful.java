@@ -93,5 +93,10 @@ public class GameRESTful {
     public void close() {
         client.close();
     }
-    
+      public <T> T findGamebyName(GenericType<T> responseType, String name) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("name/{0}", new Object[]{name}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
 }
