@@ -58,5 +58,6 @@
          </font>
       </Label>
       <Separator layoutY="150.0" prefHeight="3.0" prefWidth="1024.0" />
+      <Button id="btnReport" fx:id="btnReport" layoutX="868.0" layoutY="56.0" mnemonicParsing="false" text="Report" />
    </children>
 </Pane>

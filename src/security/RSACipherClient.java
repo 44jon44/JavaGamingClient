@@ -5,9 +5,13 @@
  */
 package security;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -16,6 +20,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -35,6 +40,7 @@ public class RSACipherClient {
     private static byte[] salt = "this is the salt".getBytes();
     private static String key;
     private static byte[] privateKey;
+    private static final ResourceBundle RB = ResourceBundle.getBundle("security.rsa");
     //Logger para la clase en encriptacion.
     private static final Logger LOG = Logger.getLogger(RSACipherClient.class.getName());
 
@@ -61,14 +67,19 @@ public class RSACipherClient {
      * @param plainText Texto que se quiere encriptar.
      * @return byte[] Array de bytes del texto encriptado.
      */
-    public static String encrypt(byte[] plainText) throws IllegalBlockSizeException, BadPaddingException {
+    public static String encrypt(byte[] plainText) throws IllegalBlockSizeException, BadPaddingException, IOException {
         Cipher cipher;
         String bs = null;
         PublicKey key;
+        String filePubKey = RB.getString("PUBLIC_KEY_FILE");
         try {
-            // Leemos la clave publica del archivo en el cual lo hemos escrito
-            //key = readPublicKey("./src/files/public.key");
-            key = readPublicKey("C:\\Users\\jonma\\Documents\\NetBeansProjects\\JavaGamingClient\\src\\security\\RSAPublic.key");
+            // Leemos la clave publica del archivo en el cual lo hemos escrito            
+            InputStream is = RSACipherClient.class.getResourceAsStream(filePubKey);
+            byte[] encKey = toByteArray(is);
+            is.close();
+            
+            key = readPublicKey(encKey);
+            
             // Obtenemos una instancide de Cipher con el algoritmos que vamos a usar "RSA/ECB/OAEPWithSHA1AndMGF1Padding"
             cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA1AndMGF1Padding");
             // Iniciamos el Cipher en ENCRYPT_MODE y le pasamos la clave publica
@@ -78,14 +89,26 @@ public class RSACipherClient {
             bs=DatatypeConverter.printHexBinary(cipher.doFinal(plainText));
             System.out.println("Contraseña Cifrada " + bs);
             
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IOException | InvalidKeySpecException ex) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException ex) {
             LOG.log(Level.SEVERE, null, ex.getMessage());
+        } catch (InvalidKeySpecException ex) {
+            Logger.getLogger(RSACipherClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return bs;
         
     }
-        
+        public static byte[] toByteArray(InputStream in) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        // read bytes from the input stream and store them in buffer
+        while ((len = in.read(buffer)) != -1) {
+            // write bytes from the buffer into output stream
+            os.write(buffer, 0, len);
+        }
+        return os.toByteArray();
+    }
         public static byte[] decrypt(byte[] ciphertext) {
         Cipher cipher;
         byte[] bs = null;
@@ -137,8 +160,8 @@ public class RSACipherClient {
      * @throws InvalidKeySpecException Excepción que se lanza si la
      * especificación de la clave es inapropiada para el keySpec especificado.
      */
-    public static PublicKey readPublicKey(String filePath) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(fileReader(filePath));
+    public static PublicKey readPublicKey(byte[] key) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        X509EncodedKeySpec publicSpec = new X509EncodedKeySpec(key);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePublic(publicSpec);
     }

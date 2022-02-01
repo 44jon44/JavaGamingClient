@@ -8,6 +8,7 @@ package controller;
 import businessLogic.EmployeeManager;
 import exception.BusinessLogicException;
 import factories.EmployeeManagerFactory;
+import java.awt.AWTEventMulticaster;
 import java.io.IOException;
 import static java.lang.Float.parseFloat;
 import java.net.URL;
@@ -58,7 +59,7 @@ public class EmployeeFormController implements Initializable {
     private boolean dpHiringDateIsValid = false;
     private boolean tfSalaryIsValid = false;
     private boolean exists = false;
-    boolean loginChanged=false;
+    boolean loginChanged = false;
     //Logger del controlador de la ventana "ViewSignIn"
     private static final Logger LOG = Logger.getLogger(EmployeeFormController.class.getName());
     /**
@@ -133,15 +134,15 @@ public class EmployeeFormController implements Initializable {
 
     void initStageModify() {
         btnSave.setOnAction(this::modify);
-        
+
     }
 
     @FXML
     private void modify(ActionEvent event) {
-        boolean exist=false;
+        boolean exist = false;
         try {
             if (tfLogin.getText().length() != 0 && loginChanged) {
-                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").isLoginExisting(tfLogin.getText());    
+                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").isLoginExisting(tfLogin.getText());
             }
         } catch (BusinessLogicException ex) {
             exist = true;
@@ -224,7 +225,7 @@ public class EmployeeFormController implements Initializable {
 
     @FXML
     private void tfLoginFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
-        
+
         LOG.info("Dentro de tfLoginFocusChanged");
         if (oldValue) {//foco perdido 
             tfLoginIsValid = validateTfLogin(tfLogin.getText());
@@ -280,7 +281,7 @@ public class EmployeeFormController implements Initializable {
         if (!newValue.equalsIgnoreCase(oldValue)) {
             lblErrorLogin.setText("");
             tfLogin.setStyle("-fx-text-inner-color: black;");
-            loginChanged=true;
+            loginChanged = true;
         }
     }
 
@@ -317,16 +318,21 @@ public class EmployeeFormController implements Initializable {
                 LocalDate localDate = dpHiringDate.getValue();
                 Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
 
-                Employee emp = new Employee();
-                emp.setFullName(tfName.getText());
-                emp.setEmail(tfEmail.getText());
-                emp.setLogin(tfLogin.getText());
-                emp.setHiringDate(date);
-                emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
+//                Employee emp = new Employee();
+//                
+//                emp.setFullName(tfName.getText());
+//                emp.setEmail(tfEmail.getText());
+//                emp.setLogin(tfLogin.getText());
+//                emp.setHiringDate(date);
+//                emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
+//                emp.setPrivilege(UserPrivilege.EMPLOYEE);
+//                emp.setStatus(UserStatus.ENABLED);
+//                emp.setSalary(tfSalary.getText());
+                Employee emp = new Employee(date, tfSalary.getText(), tfLogin.getText(), tfEmail.getText(), tfName.getText(), "56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
                 emp.setPrivilege(UserPrivilege.EMPLOYEE);
                 emp.setStatus(UserStatus.ENABLED);
-                emp.setSalary(tfSalary.getText());
-
+                emp.setIdUser(200);
+                
                 EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
 
             } catch (Exception ex) {

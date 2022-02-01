@@ -47,7 +47,7 @@ public class UserManagerImplementation implements UserManager{
             LOGGER.log(Level.SEVERE,
                     "UserManager: Exception finding employee by fullName, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error Signing Up:\n" + ex.getMessage());
+            throw new BusinessLogicException("Error Signing In:\n" + ex.getMessage());
         }
 
 

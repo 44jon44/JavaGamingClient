@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -47,6 +48,8 @@ public class HbMenuAdmController{
     private Menu mbExit;
     @FXML
     private Menu mbSignOut;
+    @FXML
+    private TableView tblEmployees;
     
     private Stage stage;
 
@@ -133,25 +136,9 @@ public class HbMenuAdmController{
 
     @FXML
     private void printClicked(ActionEvent event) {
-        try {
-            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
-            Parent root;
-            root = (Parent) game.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene GameScene = new Scene(root);
-            //creamos un nuevo escenario para la nueva ventana
-            Stage gameStage = new Stage();
-            //definimos como modal la nueva ventana
-            gameStage.initModality(Modality.NONE);
-            //añadimos la escena en el stage
-            gameStage.setScene(GameScene);
-            //por defecto no podra redimensionarse
-            gameStage.setResizable(false);
-            gameStage.show();
-
-        } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+        
+        if(tblEmployees.isVisible()){
+            System.out.println("se ve Pajin");
         }
     }
 

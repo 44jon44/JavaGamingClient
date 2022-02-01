@@ -9,7 +9,10 @@ import businessLogic.EmployeeManager;
 import factories.EmployeeManagerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +39,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.naming.OperationNotSupportedException;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 import transferObjects.Employee;
 
 /**
@@ -73,6 +83,8 @@ public class EmployeeController {
      */
     @FXML
     private Button btnFind;
+    @FXML
+    private Button btnReport;
     @FXML
     private TextField tfValue;
     @FXML
@@ -183,7 +195,7 @@ public class EmployeeController {
 
             //definimos como modal la nueva ventana
             stage.initModality(Modality.NONE);
-            //aÃ±adimos la escena en el stage
+            //anadimos la escena en el stage
             stage.setScene(EmployeeScene);
             //por defecto no podra redimensionarse
             stage.setResizable(false);
@@ -195,6 +207,7 @@ public class EmployeeController {
             btnDelete.setOnAction(this::delete);
             btnModify.setOnAction(this::modify);
             btnFind.setOnAction(this::find);
+            btnReport.setOnAction(this::print);
             //lblError se inicializa vacio
             lblError.setText("");
             //Digitos maximos para tfValue
@@ -471,6 +484,28 @@ public class EmployeeController {
                 && newValue.length() < 255
                 && lblError.getText().equalsIgnoreCase("La longitud maxima es de 255")) {
             lblError.setText("");
+        }
+    }
+
+    @FXML
+    private void print(ActionEvent event) {
+        try {
+            LOG.info("Se va a imprimir un informe");
+            JasperReport report
+                    = JasperCompileManager.compileReport(getClass()
+                            .getResourceAsStream("/report/EmployeeReport.jrxml"));
+
+            JRBeanCollectionDataSource dataItems
+                    = new JRBeanCollectionDataSource((Collection<Employee>) this.tblEmployees.getItems());
+            
+            Map<String, Object> parameters = new HashMap<>();
+            
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            
+            JasperViewer jasperViewer =new JasperViewer(jasperPrint,false);
+            jasperViewer.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
