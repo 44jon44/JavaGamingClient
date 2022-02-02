@@ -13,13 +13,13 @@
 <Pane fx:id="employeePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
-      <TableView id="tblEmployees" fx:id="tblEmployees" layoutX="50.0" layoutY="181.0" prefHeight="480.0" prefWidth="924.0">
+      <TableView id="tblEmployees" fx:id="tblEmployees" layoutX="24.0" layoutY="181.0" prefHeight="480.0" prefWidth="978.0">
         <columns>
-          <TableColumn id="tcName" fx:id="tcName" prefWidth="192.80001831054688" text="NOMBRE" />
-          <TableColumn id="tcEmail" fx:id="tcEmail" prefWidth="242.39999389648438" text="EMAIL" />
-            <TableColumn id="tcLogin" fx:id="tcLogin" prefWidth="219.20001220703125" text="LOGIN" />
-            <TableColumn id="tcHiringDate" fx:id="tcHiringDate" prefWidth="158.39996337890625" text="FECHA CONTRATO" />
-            <TableColumn id="tcSalary" fx:id="tcSalary" minWidth="7.2000732421875" prefWidth="127.199951171875" text="SALARIO" />
+          <TableColumn id="tcName" fx:id="tcName" prefWidth="273.59999656677246" text="NOMBRE" />
+          <TableColumn id="tcEmail" fx:id="tcEmail" prefWidth="254.39999389648438" text="EMAIL" />
+            <TableColumn id="tcLogin" fx:id="tcLogin" prefWidth="214.39996337890625" text="LOGIN" />
+            <TableColumn id="tcHiringDate" fx:id="tcHiringDate" prefWidth="148.0" text="FECHA CONTRATO" />
+            <TableColumn id="tcSalary" fx:id="tcSalary" minWidth="7.2000732421875" prefWidth="85.5999755859375" text="SALARIO" />
         </columns>
       </TableView>
       <Button fx:id="btnAdd" layoutX="57.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #2b8b57;" text="AÑADIR EMPLEADO" textFill="WHITE">

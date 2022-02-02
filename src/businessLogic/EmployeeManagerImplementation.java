@@ -106,7 +106,9 @@ public class EmployeeManagerImplementation implements EmployeeManager {
     public void isLoginExisting(String login) throws Exception {
         try {
             if (this.webClient.find(Employee.class, login) != null) {
+                System.out.println("Encontrado");
                 throw new LoginExistException();
+                
             }
         } catch (NotFoundException ex) {
             //If there is a NotFoundException 404,that is,

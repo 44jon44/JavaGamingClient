@@ -8,6 +8,7 @@ package controller;
 import businessLogic.EmployeeManager;
 import factories.EmployeeManagerFactory;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -89,7 +91,7 @@ public class EmployeeController {
     private TextField tfValue;
     @FXML
     private Label lblError;
-
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
     /**
      * User's login data table column.
      */
@@ -109,7 +111,7 @@ public class EmployeeController {
      * User's login data table column.
      */
     @FXML
-    private TableColumn tcHiringDate;
+    private TableColumn<Employee, String> tcHiringDate;
     /**
      * User's login data table column.
      */
@@ -217,6 +219,15 @@ public class EmployeeController {
             btnDelete.setDisable(true);
             btnModify.setDisable(true);
 
+            tcSalary.setStyle("-fx-alignment: CENTER-RIGHT;");
+            tcName.setStyle("-fx-alignment: CENTER;");
+            tcEmail.setStyle("-fx-alignment: CENTER;");
+            tcLogin.setStyle("-fx-alignment: CENTER;");
+            tcHiringDate.setStyle("-fx-alignment: CENTER;");
+
+            tblEmployees.getSelectionModel().clearSelection();
+            tblEmployees.refresh();
+
             ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
             if (emps.isEmpty()) {
                 lblError.setText("No se han encontrado empleados");
@@ -235,8 +246,8 @@ public class EmployeeController {
                     new PropertyValueFactory<>("fullName"));
             tcEmail.setCellValueFactory(
                     new PropertyValueFactory<>("email"));
-            tcHiringDate.setCellValueFactory(
-                    new PropertyValueFactory<>("hiringDate"));
+            tcHiringDate.setCellValueFactory(cellData
+                    -> new SimpleStringProperty(dateFormatter.format(cellData.getValue().getHiringDate())));
             tcSalary.setCellValueFactory(
                     new PropertyValueFactory<>("salary"));
             tcLogin.setCellValueFactory(
@@ -346,14 +357,16 @@ public class EmployeeController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").deleteEmployee(emp);
-            }
-            tblEmployees.getItems().remove(emp);
-            tblEmployees.refresh();
-            btnDelete.setDisable(true);
-            btnModify.setDisable(true);
 
-            tblEmployees.getSelectionModel().clearSelection();
-            tblEmployees.refresh();
+                tblEmployees.getItems().remove(emp);
+                tblEmployees.refresh();
+                btnDelete.setDisable(true);
+                btnModify.setDisable(true);
+
+                tblEmployees.getSelectionModel().clearSelection();
+                tblEmployees.refresh();
+            }
+
         } catch (Exception ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -497,12 +510,12 @@ public class EmployeeController {
 
             JRBeanCollectionDataSource dataItems
                     = new JRBeanCollectionDataSource((Collection<Employee>) this.tblEmployees.getItems());
-            
+
             Map<String, Object> parameters = new HashMap<>();
-            
+
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-            
-            JasperViewer jasperViewer =new JasperViewer(jasperPrint,false);
+
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);

@@ -21,4 +21,12 @@ public interface UserManager {
      * @throws Exception 
      */
     public Collection<User> checkLogin(String login, String password) throws Exception;
+    
+    /**
+     * Este metodo comprueba si ya existe un login
+     * @param login
+     * @return
+     * @throws Exception 
+     */
+    public Collection<User> checkLoginExists(String login) throws Exception;
 }

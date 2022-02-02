@@ -8,6 +8,7 @@ package controller;
 import businessLogic.EmployeeManager;
 import exception.BusinessLogicException;
 import factories.EmployeeManagerFactory;
+import factories.UserManagerFactory;
 import java.awt.AWTEventMulticaster;
 import java.io.IOException;
 import static java.lang.Float.parseFloat;
@@ -142,7 +143,8 @@ public class EmployeeFormController implements Initializable {
         boolean exist = false;
         try {
             if (tfLogin.getText().length() != 0 && loginChanged) {
-                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").isLoginExisting(tfLogin.getText());
+
+                UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
             }
         } catch (BusinessLogicException ex) {
             exist = true;
@@ -298,8 +300,9 @@ public class EmployeeFormController implements Initializable {
 
         try {
             if (tfLogin.getText().length() != 0) {
-                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").isLoginExisting(tfLogin.getText());
-                System.out.println(exists);
+                System.out.println("Dentro");
+                UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
+
             }
         } catch (BusinessLogicException ex) {
             exists = true;
@@ -310,29 +313,30 @@ public class EmployeeFormController implements Initializable {
         } catch (Exception ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println(exists);
         validateFields();
         if (true) {
 
             try {
-                System.out.println("Validos");
+
                 LocalDate localDate = dpHiringDate.getValue();
                 Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+                System.out.println(date);
 
-//                Employee emp = new Employee();
-//                
-//                emp.setFullName(tfName.getText());
-//                emp.setEmail(tfEmail.getText());
-//                emp.setLogin(tfLogin.getText());
-//                emp.setHiringDate(date);
-//                emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
-//                emp.setPrivilege(UserPrivilege.EMPLOYEE);
-//                emp.setStatus(UserStatus.ENABLED);
-//                emp.setSalary(tfSalary.getText());
-                Employee emp = new Employee(date, tfSalary.getText(), tfLogin.getText(), tfEmail.getText(), tfName.getText(), "56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
+                Employee emp = new Employee();
+
+                emp.setFullName(tfName.getText());
+                emp.setEmail(tfEmail.getText());
+                emp.setLogin(tfLogin.getText());
+                emp.setHiringDate(date);
+                emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
                 emp.setPrivilege(UserPrivilege.EMPLOYEE);
                 emp.setStatus(UserStatus.ENABLED);
-                emp.setIdUser(200);
-                
+                emp.setSalary(tfSalary.getText());
+                //Employee emp = new Employee(date, tfSalary.getText(), tfLogin.getText(), tfEmail.getText(), tfName.getText(), "56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
+                emp.setPrivilege(UserPrivilege.EMPLOYEE);
+                emp.setStatus(UserStatus.ENABLED);
+
                 EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
 
             } catch (Exception ex) {
@@ -435,7 +439,10 @@ public class EmployeeFormController implements Initializable {
         if (email.trim().length() == 0) {
             lblErrorEmail.setText("Campo obligatorio");
         } else {
-            lblErrorEmail.setText("Email inválido");
+            lblErrorEmail.setText("Email invalido");
+        }
+        if (email.trim().length() > 255) {
+            lblErrorEmail.setText("Longitud maxima de 255 caracteres");
         }
     }
 
