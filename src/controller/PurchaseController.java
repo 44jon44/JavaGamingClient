@@ -42,6 +42,7 @@ import transferObjects.Client;
 import transferObjects.Game;
 import transferObjects.Purchase;
 import businessLogic.ClientManager;
+import javafx.beans.value.ObservableValue;
 
 /**
  * FXML Controller class
@@ -134,16 +135,16 @@ public class PurchaseController {
         stage.showAndWait();
     }
 
-//    public void handlePurchaseSelected(ObservableValue ov, Object oldValue, Object newValue) {
-//        if (newValue != null) {
-//            btnModifyPurchase.setDisable(false);
-//            btnDeletePurchase.setDisable(false);
-//            LOG.info(ov.toString());
-//        }else{
-//            btnModifyPurchase.setDisable(true);
-//            btnDeletePurchase.setDisable(true);
-//        }
-//    }
+    public void handlePurchaseSelected(ObservableValue ov, Object oldValue, Object newValue) {
+        if (newValue != null) {
+            btnModifyPurchase.setDisable(false);
+            btnDeletePurchase.setDisable(false);
+            LOG.info(ov.toString());
+        }else{
+            btnModifyPurchase.setDisable(true);
+            btnDeletePurchase.setDisable(true);
+        }
+    }
     @FXML
     private void handleAddPurchase(ActionEvent event) {
         try {
@@ -192,10 +193,14 @@ public class PurchaseController {
 
     @FXML
     private void handleDeletePurchase(ActionEvent event) {
-        LOG.log(Level.SEVERE, "Método 'BORRAR COMPRA' no implementado");
-//            if(selectedPurchase != null){
-//                purchasesManager.remove(selectedPurchase.getIdPurchase().toString());
-//            }
+        //LOG.log(Level.SEVERE, "Método 'BORRAR COMPRA' no implementado");
+            if(selectedPurchase != null){
+                purchasesManager.deletePurchase(
+                        String.valueOf(selectedPurchase.getClient().getIdUser()),String.valueOf(selectedPurchase.getGame().getIdGame()));
+                LOG.info("Compra borrada");
+            }else{
+                LOG.info("Compra no seleccionada.");
+            }
     }
 
     public void setPurchaseManager(PurchaseManager puchasesManager) {
@@ -266,7 +271,6 @@ public class PurchaseController {
             loadClientsData();
             loadPricesData();
             //TableView
-            
             tcPurchaseDate.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
             tcClientName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getClient().getFullName()));
             tcGameName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGame().getName()));

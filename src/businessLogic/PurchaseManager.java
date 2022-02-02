@@ -37,6 +37,8 @@ public interface PurchaseManager {
 
     public Purchase findPurchasesByClientId(String idClient) throws ClientErrorException;
 
+    public void deletePurchase(String idClient, String idGame) throws ClientErrorException;
+    
     public void close();
     
 }

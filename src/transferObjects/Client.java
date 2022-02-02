@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Client extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     /**
      * Fecha en la que se ha dado de alta el cliente.
      */
