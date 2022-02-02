@@ -13,6 +13,7 @@ import java.awt.AWTEventMulticaster;
 import java.io.IOException;
 import static java.lang.Float.parseFloat;
 import java.net.URL;
+import java.security.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -148,7 +149,7 @@ public class EmployeeFormController implements Initializable {
             }
         } catch (BusinessLogicException ex) {
             exist = true;
-            System.out.println("Existe Pajin");
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION,
                     "El login ya existe",
                     ButtonType.OK);
@@ -156,7 +157,10 @@ public class EmployeeFormController implements Initializable {
         } catch (Exception ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (!exist) {
+
+        validateFields();
+        if (!exists && validFields()) {
+
             try {
 
                 employeeModify.setFullName(tfName.getText().trim());
@@ -166,12 +170,23 @@ public class EmployeeFormController implements Initializable {
                 employeeModify.setSalary(tfSalary.getText().trim());
 
                 EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
-            } catch (OperationNotSupportedException ex) {
-                Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                        "El usuario se ha modificado correctamente",
+                        ButtonType.OK);
+                alert.showAndWait();
+
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        if (!exists && !validFields()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                    "Algun campo no es correcto",
+                    ButtonType.OK);
+            alert.showAndWait();
+        }
+
     }
 
     @FXML
@@ -280,11 +295,17 @@ public class EmployeeFormController implements Initializable {
 
     @FXML
     private void tfLoginTextChanged(ObservableValue observable, String oldValue, String newValue) {
+        int i = 0;
         if (!newValue.equalsIgnoreCase(oldValue)) {
             lblErrorLogin.setText("");
             tfLogin.setStyle("-fx-text-inner-color: black;");
-            loginChanged = true;
+
+            if (i == 1) {
+                loginChanged = true;
+            }
+            i++;
         }
+
     }
 
     @FXML
@@ -302,7 +323,6 @@ public class EmployeeFormController implements Initializable {
             if (tfLogin.getText().length() != 0) {
                 System.out.println("Dentro");
                 UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
-
             }
         } catch (BusinessLogicException ex) {
             exists = true;
@@ -313,9 +333,9 @@ public class EmployeeFormController implements Initializable {
         } catch (Exception ex) {
             Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(exists);
+
         validateFields();
-        if (true) {
+        if (!exists && validFields()) {
 
             try {
 
@@ -324,7 +344,7 @@ public class EmployeeFormController implements Initializable {
                 System.out.println(date);
 
                 Employee emp = new Employee();
-
+                emp.setIdUser(null);
                 emp.setFullName(tfName.getText());
                 emp.setEmail(tfEmail.getText());
                 emp.setLogin(tfLogin.getText());
@@ -333,15 +353,26 @@ public class EmployeeFormController implements Initializable {
                 emp.setPrivilege(UserPrivilege.EMPLOYEE);
                 emp.setStatus(UserStatus.ENABLED);
                 emp.setSalary(tfSalary.getText());
-                //Employee emp = new Employee(date, tfSalary.getText(), tfLogin.getText(), tfEmail.getText(), tfName.getText(), "56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
+                
                 emp.setPrivilege(UserPrivilege.EMPLOYEE);
                 emp.setStatus(UserStatus.ENABLED);
 
                 EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                        "El usuario se ha añadido correctamente",
+                        ButtonType.OK);
+                alert.showAndWait();
+
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        if (!exists && !validFields()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                    "Algun campo no es correcto",
+                    ButtonType.OK);
+            alert.showAndWait();
         }
     }
 
@@ -411,6 +442,11 @@ public class EmployeeFormController implements Initializable {
         }
         if (!tfSalaryIsValid) {
             showlblErrorSalaryMessages(tfSalary.getText());
+        }
+        if (dpHiringDate.getValue() == null) {
+            lblErrorHiringDate.setText("Campo obligatorio");
+        } else {
+            lblErrorHiringDate.setText("");
         }
 
     }

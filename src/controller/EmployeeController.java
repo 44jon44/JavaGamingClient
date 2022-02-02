@@ -137,39 +137,50 @@ public class EmployeeController {
      */
     public void initStage1(Parent root) {
         try {
-            // menuController.setStage(stage);
+            
             btnAdd.setOnAction(this::create);
             btnDelete.setOnAction(this::delete);
             btnModify.setOnAction(this::modify);
             btnFind.setOnAction(this::find);
+            btnReport.setOnAction(this::print);
             //lblError se inicializa vacio
             lblError.setText("");
+            //Digitos maximos para tfValue
+            tfValue.requestFocus();
+            tfValue.textProperty().addListener(this::tfValueTextChanged);
             //Se deshabilitan los botones btnDelete y bntModify
             btnDelete.setDisable(true);
             btnModify.setDisable(true);
 
-            //Cargamos los metodos de filtrado en la combo box
+            tcSalary.setStyle("-fx-alignment: CENTER-RIGHT;");
+            tcName.setStyle("-fx-alignment: CENTER;");
+            tcEmail.setStyle("-fx-alignment: CENTER;");
+            tcLogin.setStyle("-fx-alignment: CENTER;");
+            tcHiringDate.setStyle("-fx-alignment: CENTER;");
+
+            tblEmployees.getSelectionModel().clearSelection();
+            tblEmployees.refresh();
+
             ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
             if (emps.isEmpty()) {
                 lblError.setText("No se han encontrado empleados");
             }
             tblEmployees.setItems(emps);
 
-            tfValue.requestFocus();
-            tfValue.textProperty().addListener(this::tfValueTextChanged);
             //Cargamos los metodos de filtrado en la combo box
             ObservableList<String> observableList = FXCollections.observableList(list);
             observableList.add("Nombre");
             observableList.add("Salario");
             observableList.add("Mostrar todos los empleados");
             cmbFilter.setItems(observableList);
+            cmbFilter.getSelectionModel().selectFirst();
 
             tcName.setCellValueFactory(
                     new PropertyValueFactory<>("fullName"));
             tcEmail.setCellValueFactory(
                     new PropertyValueFactory<>("email"));
-            tcHiringDate.setCellValueFactory(
-                    new PropertyValueFactory<>("hiringDate"));
+            tcHiringDate.setCellValueFactory(cellData
+                    -> new SimpleStringProperty(dateFormatter.format(cellData.getValue().getHiringDate())));
             tcSalary.setCellValueFactory(
                     new PropertyValueFactory<>("salary"));
             tcLogin.setCellValueFactory(
@@ -192,7 +203,6 @@ public class EmployeeController {
      */
     public void initStage(Parent root) {
         try {
-
             Scene EmployeeScene = new Scene(root);
 
             //definimos como modal la nueva ventana
@@ -201,9 +211,9 @@ public class EmployeeController {
             stage.setScene(EmployeeScene);
             //por defecto no podra redimensionarse
             stage.setResizable(false);
-
             tfValue.requestFocus();
 
+            
             // menuController.setStage(stage);
             btnAdd.setOnAction(this::create);
             btnDelete.setOnAction(this::delete);
@@ -365,6 +375,11 @@ public class EmployeeController {
 
                 tblEmployees.getSelectionModel().clearSelection();
                 tblEmployees.refresh();
+                
+                Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
+                    "¿Borrar la fila seleccionada?\n"
+                    + "Esta operación no se puede deshacer.",
+                    ButtonType.OK, ButtonType.CANCEL);
             }
 
         } catch (Exception ex) {

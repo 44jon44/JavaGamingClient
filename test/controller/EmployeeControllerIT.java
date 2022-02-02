@@ -18,7 +18,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
+
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -26,8 +26,6 @@ import javafx.scene.layout.Pane;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import javafx.stage.Stage;
-import model.UserStatus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
