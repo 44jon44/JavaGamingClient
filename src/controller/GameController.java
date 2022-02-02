@@ -2,18 +2,16 @@ package controller;
 
 import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
-import controller.GameFormController;
-import controller.HbMenuAdmController;
-import exception.BusinessLogicException;
+
 import java.io.IOException;
-import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,9 +46,9 @@ import transferObjects.Genre;
  * @author Ibai Arriola
  */
 public class GameController {
-    
+
     private static final Logger LOG = Logger.getLogger(GameController.class.getName());
-    
+
     private GameManager gameManager;
     private ObservableList<Game> gameObservableList;
     @FXML
@@ -62,7 +60,7 @@ public class GameController {
     @FXML
     private TableColumn tcGamePegi;
     @FXML
-    private TableColumn tcGameReleaseDate;
+    private TableColumn<Game, String> tcGameReleaseDate;
     @FXML
     private TableColumn tcGamePrice;
     @FXML
@@ -83,13 +81,14 @@ public class GameController {
     private Label lblGameError;
     @FXML
     private HBox hbMenuAdm;
-    
+
+    private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
     private Stage stage;
-    
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     public void initStage(Parent root) {
         try {
             Scene gameScene = new Scene(root);
@@ -105,45 +104,61 @@ public class GameController {
             btnModifyGame.setDisable(true);
 
             //COMBOBOX DE LOS FILTRADOS
-            ObservableList<String> filter = FXCollections.observableArrayList("GENERO", "PEGI");
+            ObservableList<String> filter = FXCollections.
+                    observableArrayList("GENERO", "PEGI");
             cbSearchBy.setItems(filter);
             defaultComboValue();
-            cbSearchBy.getSelectionModel().selectedItemProperty().addListener(this::selectedFilter);
+            cbSearchBy.getSelectionModel().selectedItemProperty().
+                    addListener(this::selectedFilter);
             btnSearch.setOnAction(this::searchOnTable);
             //COLUMNAS DE LA TABLA GAME
             tcGameName.setCellValueFactory(new PropertyValueFactory<>("name"));
             tcGameGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
             tcGamePegi.setCellValueFactory(new PropertyValueFactory<>("pegi"));
             tcGamePrice.setCellValueFactory(new PropertyValueFactory<>("price"));
-            tcGameReleaseDate.setCellValueFactory(new PropertyValueFactory<>("relaseData"));
+            //formateamos las fechas para quitar la forma predeterminada
+            tcGameReleaseDate.setCellValueFactory(cellData
+                    -> new SimpleStringProperty(dateFormatter.format(cellData.getValue().getRelaseData())));
             gameManager = new GameManagerImplementation();
             loadGamesOnTable();
-            tvGames.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
-                if (newValue != null) {
-                    btnDeleteGame.setDisable(false);
-                    btnModifyGame.setDisable(false);
-                } else {
-                    btnDeleteGame.setDisable(true);
-                    btnModifyGame.setDisable(true);
-                }
-            });
-        } catch (BusinessLogicException ex) {
+            //CENTRAMOS LOS DATOS DE LA TABLA
+            tcGameName.setStyle("-fx-alignment: CENTER;");
+            tcGameGenre.setStyle("-fx-alignment: CENTER;");
+            tcGamePegi.setStyle("-fx-alignment: CENTER;");
+            tcGamePrice.setStyle("-fx-alignment: CENTER;");
+            tcGameReleaseDate.setStyle("-fx-alignment: CENTER;");
+            /////////////////////////////////////////////////////
+            tvGames.getSelectionModel().selectedItemProperty()
+                    .addListener((ov, oldValue, newValue) -> {
+                        if (newValue != null) {
+                            btnDeleteGame.setDisable(false);
+                            btnModifyGame.setDisable(false);
+                        } else {
+                            btnDeleteGame.setDisable(true);
+                            btnModifyGame.setDisable(true);
+                        }
+                    });
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE,
+                    "Error al iniciar la ventana Game",
+                    ex.getMessage());
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setContentText("Fallo de servidor, intentelo mas tarde");
             Optional<ButtonType> result = alert.showAndWait();
-            
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE,
-                    "UI GestionUsuariosController: Error deleting user: {0}",
-                    ex.getMessage());
         }
     }
-    
+
+    /**
+     * En este metodo navegamos a la ventana GameForm.fxm
+     *
+     * @param event accionamos el evento del boton
+     */
     private void createGame(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader gameForm = new FXMLLoader(getClass().getResource("/view/gameForm.fxml"));
+            FXMLLoader gameForm = new FXMLLoader(getClass()
+                    .getResource("/view/gameForm.fxml"));
             Parent root;
             root = (Parent) gameForm.load();
             GameFormController controller = gameForm.getController();
@@ -151,60 +166,64 @@ public class GameController {
             controller.initStage(root);
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
-        } catch (BusinessLogicException ex) {
+        } catch (Exception ex) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setContentText("Fallo de servidor, intentelo mas tarde");
             Optional<ButtonType> result = alert.showAndWait();
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /**
+     * vamos a la ventana de gameForm y pasamos los datos seleccionados
+     *
+     * @param event accionamos el evento del boton
+     */
     private void modifyGame(ActionEvent event) {
         try {
             Game selectedGame = ((Game) tvGames.getSelectionModel()
                     .getSelectedItem());
 
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader gameForm = new FXMLLoader(getClass().getResource("/view/gameForm.fxml"));
+            FXMLLoader gameForm = new FXMLLoader(getClass()
+                    .getResource("/view/gameForm.fxml"));
             Parent root;
             root = (Parent) gameForm.load();
             GameFormController controller = gameForm.getController();
             controller.setStage(stage);
             controller.initStage(root);
             controller.modifyGameData((Game) tvGames.getSelectionModel().getSelectedItem());
-            
-        } catch (BusinessLogicException ex) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setContentText("Fallo de servidor, intentelo mas tarde");
-            Optional<ButtonType> result = alert.showAndWait();
+
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
-    private void reportTable(ActionEvent event){
-           try {
+
+    /**
+     * El boton para imprimir la tabla que tenemos mediante el jasper Report
+     *
+     * @param event accionamos el evento del boton
+     */
+    private void reportTable(ActionEvent event) {
+        try {
             LOG.info("Beginning printing action...");
-            JasperReport report=
-                JasperCompileManager.compileReport(getClass()
-                    .getResourceAsStream("/report/GameReport.jrxml"));
-            //Data for the report: a collection of UserBean passed as a JRDataSource 
-            //implementation 
-            JRBeanCollectionDataSource dataItems=
-                    new JRBeanCollectionDataSource((Collection<Game>)this.tvGames.getItems());
+            JasperReport report
+                    = JasperCompileManager.compileReport(getClass()
+                            .getResourceAsStream("/report/GameReport.jrxml"));
+
+            JRBeanCollectionDataSource dataItems
+                    = new JRBeanCollectionDataSource((Collection<Game>) this.tvGames.getItems());
             //Map of parameter to be passed to the report
-            Map<String,Object> parameters=new HashMap<>();
+            Map<String, Object> parameters = new HashMap<>();
             //Fill report with data
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report,parameters,dataItems);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
             //Create and show the report window. The second parameter false value makes 
             //report window not to close app.
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
-           // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         } catch (JRException ex) {
             //If there is an error show message and
             //log it.
@@ -213,10 +232,16 @@ public class GameController {
             alert.setContentText("Fallo al imprimir");
             Optional<ButtonType> result = alert.showAndWait();
             LOG.log(Level.SEVERE,
-                        ": Error printing report: {0}",
-                        ex.getMessage());
+                    ": Error printing report: {0}",
+                    ex.getMessage());
         }
     }
+
+    /**
+     * borramos el juego seleccionado de la tabla
+     *
+     * @param event accionamos el evento del boton
+     */
     private void deleteGame(ActionEvent event) {
         try {
             LOG.info("Deleting user...");
@@ -234,98 +259,137 @@ public class GameController {
             if (result.get() == ButtonType.OK) {
                 //delete game from server side
                 gameManager.deleteGame(selectedGame.getIdGame());
-                //removes selected item from table
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION,
+                        "juego borrado");
+                alert2.show();
                 tvGames.getItems().remove(selectedGame);
                 tvGames.refresh();
+            } else {
+                Alert alert3 = new Alert(Alert.AlertType.INFORMATION,
+                        "operación cancelada");
+                alert3.show();
             }
-        } catch (BusinessLogicException ex) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setContentText("Fallo de servidor, intentelo mas tarde");
-            Optional<ButtonType> result = alert.showAndWait();
         } catch (Exception e) {
             //If there is an error in the business logic tier show message and
             //log it.
             LOG.log(Level.SEVERE,
                     "UI GestionUsuariosController: Error deleting user: {0}",
                     e.getMessage());
-            
-            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         }
-        
+
     }
-    
+
+    /**
+     *
+     * En este metodo cargamos los datos de todos los juegos de la parte
+     * servidor
+     */
     public void loadGamesOnTable() throws Exception {
         Collection games;
         games = gameManager.getAllGames();
         gameObservableList = FXCollections.observableArrayList(games);
         tvGames.setItems(gameObservableList);
         LOG.info("juegos cargados" + games);
-        
+
     }
-    
+
+    /**
+     * Este metodo sirve para seleccionar filtros de busqueda
+     *
+     * @param ov el observable
+     * @param oldValue el valor anterior del filtro
+     * @param newValue el valor acctualizado del filtro
+     */
     @FXML
     public void selectedFilter(ObservableValue ov, String oldValue, String newValue) {
         if (newValue != null) {
             String searchFilter = cbSearchBy.getValue();
-            
+
             if (searchFilter.equalsIgnoreCase("GENERO")) {
-                ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
+                ObservableList<Genre> genrefilterValue = FXCollections
+                        .observableArrayList(Genre.values());
                 cbSearchValue.setItems(genrefilterValue);
                 cbSearchValue.getSelectionModel().selectFirst();
             } else {
-                ObservableList<Integer> pegiValuefilter = FXCollections.observableArrayList(3, 8, 12, 16, 18);
+                ObservableList<Integer> pegiValuefilter = FXCollections
+                        .observableArrayList(3, 8, 12, 16, 18);
                 cbSearchValue.setItems(pegiValuefilter);
                 cbSearchValue.getSelectionModel().selectFirst();
             }
         }
     }
-    
+
+    /**
+     * Este metodo carga los valores predeterminados a las combo cuando
+     * iniciamos la ventana game
+     */
     public void defaultComboValue() {
         cbSearchBy.getSelectionModel().selectFirst();
-        ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
+        ObservableList<Genre> genrefilterValue = FXCollections
+                .observableArrayList(Genre.values());
         cbSearchValue.setItems(genrefilterValue);
         cbSearchValue.getSelectionModel().selectFirst();
     }
-    
+
+    /**
+     * nos filtra la tabla con los valores de busqueda que tengamos en las combo
+     *
+     *@param event accionamos el evento del boton
+     */
     @FXML
     public void searchOnTable(ActionEvent event) {
         String searchFilter = (String) cbSearchBy.getValue();
         String genre;
         Integer pegi;
+        //lista de juegos donde cargaremos los juegos para la tabla
         Collection<Game> games = null;
         try {
             lblGameError.setText("");
             if (searchFilter.equalsIgnoreCase("GENERO")) {
+                //obtenemos el genero selecionado en el cbSearchValue
                 genre = cbSearchValue.getValue().toString();
+                // cargamos nuestra lista con el filtro de busqueda
                 games = gameManager.getAllGamesbyGenre(genre);
                 if (games.isEmpty()) {
                     lblGameError.setText("No hay juegos disponibles del genero seleccionado");
                 }
+                //cargamos los 
                 chargeFilters(games);
             } else {
+                //obtenemos el pegi selecionado en el cbSearchValue
                 pegi = (Integer) cbSearchValue.getValue();
+                // cargamos nuestra lista con el filtro de busqueda
                 games = gameManager.getAllGamesbyPegi(pegi);
                 if (games.isEmpty()) {
                     lblGameError.setText("No hay juegos disponibles del pegi seleccionado");
                 }
+                //llamamos al metodo para que carge nuestra lista en la tabla
                 chargeFilters(games);
-                
+
             }
-        } catch (BusinessLogicException ex) {
+        } catch (Exception ex) {
+            LOG.info("error al  filtrar la busqueda de juegos al pulsar btbSearh");
+            LOG.log(Level.SEVERE, null, ex);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setContentText("Fallo de servidor, intentelo mas tarde");
             Optional<ButtonType> result = alert.showAndWait();
-        } catch (Exception ex) {
-            LOG.info("error al  filtrar la busqueda de juegos al pulsar btbSearh");
-            LOG.log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /**
+     * Este metodo se encarga de cargar los filtros del cliente en la tabla y
+     * asi poder facilitarle la busqueda
+     *
+     * @param games lista de juegos filtrada obtenido en el metodo searchOnTable
+     */
     public void chargeFilters(Collection<Game> games) {
         games = FXCollections.observableArrayList(games);
         tvGames.setItems((ObservableList<Game>) games);
     }
-    
+
 }

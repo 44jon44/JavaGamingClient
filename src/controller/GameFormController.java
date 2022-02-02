@@ -7,7 +7,6 @@ package controller;
 
 import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
-import exception.BusinessLogicException;
 import exception.GameExistExpception;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -77,6 +76,7 @@ public class GameFormController {
     private GameManager gameManager;
     private boolean tfNameIsValid = false;
     private boolean tfPriceIsValid = false;
+    private boolean tfnameExist = false;
 
     Game game;
 
@@ -109,12 +109,18 @@ public class GameFormController {
             //datePicker
             dpReleaseDate.setValue(LocalDate.now());
             dpReleaseDate.setEditable(false);
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
+             Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         }
 
     }
 
+    /**
+     * carga los combos por defecto
+     */
     public void defaultComboValue() {
         ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
         cbGameGenre.setItems(genrefilterValue);
@@ -127,6 +133,11 @@ public class GameFormController {
         cbGamePegi.setEditable(false);
     }
 
+    /**
+     * volvemos a la ventana anterior
+     *
+     * @param event
+     */
     public void backtoGameTable(ActionEvent event) {
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
@@ -143,6 +154,14 @@ public class GameFormController {
         }
     }
 
+    /**
+     * si se cambia la longitud del texto se quita el label de error y el color
+     * se vuelve normal
+     *
+     * @param ov el observable
+     * @param oldValue el valor anterior del filtro
+     * @param newValue el valor acctualizado del filtro
+     */
     private void tfGameNameTextChanged(ObservableValue observable, String oldValue, String newValue) {
         if (newValue.length() != oldValue.length()) {
             lblErrorGameName.setText("");
@@ -150,16 +169,24 @@ public class GameFormController {
         }
     }
 
+    /**
+     * valida que este campo este escrito correctamente validando la longitud ,
+     * o posibles errores a la hora de escribir
+     *
+     * @param ov el observable
+     * @param oldValue el valor anterior del filtro
+     * @param newValue el valor acctualizado del filtro
+     */
     private void tfGameNameTextFocus(ObservableValue observable, Boolean oldValue, Boolean newValue) {
         LOG.info("Dentro de tfNameFocusChanged");
         if (oldValue) {//foco perdido 
             if (tfGameName.getText().length() > 50 || tfGameName.getText().length() < 3) {
-                lblErrorGameName.setText("el nombre tiene de 3 a 50 caracteres");
+                lblErrorGameName.setText("debe tener (3-50) caracteres");
             } else {
                 tfNameIsValid = validateTfName(tfGameName.getText());
                 if (!tfNameIsValid) {
                     tfGameName.setStyle("-fx-text-inner-color: red;");
-                    showlblErrorNameMessages("");
+                    lblErrorGameName.setText("Nombre de juego invalido");
                 }
             }
 
@@ -167,6 +194,14 @@ public class GameFormController {
         }
     }
 
+    /**
+     * si se cambia la longitud del texto se quita el label de error y el color
+     * se vuelve normal
+     *
+     * @param ov el observable
+     * @param oldValue el valor anterior del filtro
+     * @param newValue el valor acctualizado del filtro
+     */
     private void tfGamePriceTextFocus(ObservableValue observable, String oldValue, String newValue) {
         if (newValue.length() != oldValue.length()) {
             lblErrorGamePrice.setText("");
@@ -174,25 +209,42 @@ public class GameFormController {
         }
     }
 
+    /**
+     * valida que este campo este escrito correctamente validando la longitud ,
+     * o posibles errores a la hora de escribir
+     *
+     * @param ov el observable
+     * @param oldValue el valor anterior del filtro
+     * @param newValue el valor acctualizado del filtro
+     */
     private void tfGamePriceTextChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
         LOG.info("Dentro de tfPriceFocusChanged");
         if (oldValue) {//foco perdido 
-            if (tfGameName.getText().length() > 50) {
-                lblErrorGamePrice.setText("No puede tener mas de 50 caracteres");
-            }
-            tfPriceIsValid = validateTfPrice(tfGamePrice.getText());
-            if (!tfPriceIsValid) {
-                tfGamePrice.setStyle("-fx-text-inner-color: red;");
-                showlblErrorPegiMessages(0);
+            if (tfGamePrice.getText().length() > 50) {
+                lblErrorGamePrice.setText("mas de 50 caracteres");
+            } else {
+                tfPriceIsValid = validateTfPrice(tfGamePrice.getText());
+                if (!tfPriceIsValid) {
+                    tfGamePrice.setStyle("-fx-text-inner-color: red;");
+                    showlblErrorPegiMessages(0);
+                }
             }
         } else if (newValue) {//foco ganado
         }
     }
 
+    /**
+     * valida que los campos sean correctos y que no exista una entrada en la
+     * base de datos con un mismo nombre y Añade un juego a la base de datos
+     *
+     * @param event
+     */
     @FXML
     private void addGame(ActionEvent event) {
         try {
-            if (!lblErrorGameName.getText().isEmpty() || !lblErrorGamePrice.getText().isEmpty()) {
+            if (!lblErrorGameName.getText().isEmpty()
+                    || !lblErrorGamePrice.getText().isEmpty()
+                    || tfGameName.getText().equals("") || tfGamePrice.getText().equals("")) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 LOG.info("el juego ya existe");
                 alert.setTitle("Error");
@@ -214,19 +266,13 @@ public class GameFormController {
                     game.setPegi((Integer) cbGamePegi.getSelectionModel().getSelectedItem());
                     game.setRelaseData(Date.from(dpReleaseDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
                     game.setPrice(Float.valueOf(tfGamePrice.getText()));
-
                     gameManager.createGame(game);
-
                     LOG.info("juego creado existosamente");
                     cleanTextFields();
                     createGameAlert();
                 }
             }
-        } catch (BusinessLogicException ex) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setContentText("Fallo de servidor, intentelo mas tarde");
-            Optional<ButtonType> result = alert.showAndWait();
+        
         } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -234,9 +280,17 @@ public class GameFormController {
         }
     }
 
+    /**
+     * valida que los campos sean correctos y que no exista una entrada en la
+     * base de datos con un mismo nombre y Modifica un juego a la base de datos
+     *
+     * @param event
+     */
     private void modifyGame(ActionEvent event) {
         try {
-            if (!lblErrorGameName.getText().isEmpty() || !lblErrorGamePrice.getText().isEmpty()) {
+            if (!lblErrorGameName.getText().isEmpty()
+                    || !lblErrorGamePrice.getText().isEmpty()
+                    || tfGameName.getText().equals("") || tfGamePrice.getText().equals("")) {
                 LOG.info("no ha rellenado los campos correctamente");
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error");
@@ -245,7 +299,7 @@ public class GameFormController {
             } else {
                 List<Game> games;
                 games = (List<Game>) gameManager.isNameExisting(tfGameName.getText().trim());
-                if (!games.isEmpty()) {
+                if (!games.isEmpty() && !games.get(0).getName().equalsIgnoreCase(gameModify.getName())) {
                     LOG.info("el juego ya existe");
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
@@ -264,11 +318,6 @@ public class GameFormController {
                 }
             }
 
-        } catch (BusinessLogicException ex) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setContentText("Fallo de servidor, intentelo mas tarde");
-            Optional<ButtonType> result = alert.showAndWait();
         } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -276,14 +325,11 @@ public class GameFormController {
         }
     }
 
-    private void showlblErrorNameMessages(String name) {
-        if (tfGameName.getText().isEmpty()) {
-            lblErrorGameName.setText("Campo obligatorio");
-        } else {
-            lblErrorGameName.setText("Nombre de juego invalido");
-        }
-    }
-
+    /**
+     * dependiendo de la longitud del campo lanza un error o otro
+     *
+     * @param pegi
+     */
     private void showlblErrorPegiMessages(float pegi) {
         if (tfGamePrice.getText().isEmpty()) {
             lblErrorGamePrice.setText("Campo obligatorio");
@@ -292,20 +338,41 @@ public class GameFormController {
         }
     }
 
+    /**
+     * Validamos que el nombre este bien escrito
+     *
+     * @param el nombre del juego
+     * @return un boleano
+     */
     private boolean validateTfName(String text) {
 
         return Pattern.matches("^[A-Za-z0-9? ,_-]+$", text);
     }
 
+    /**
+     * Validamos que el precio este bien escrito
+     *
+     * @param el precio del juego
+     * @return un boleano
+     */
     private boolean validateTfPrice(String price) {
         return Pattern.matches("^(?:([0-9]{1,3}))((?:[.])(?:[0-9]{1,2}))?", price);
     }
 
+    /**
+     * Limpiamos los campos del formulario
+     */
     private void cleanTextFields() {
         tfGameName.setText("");
         tfGamePrice.setText("");
     }
 
+    /**
+     * Cuando hemos pulsado modificar en la ventana anterior toma los datos del
+     * del juego seleccionado y deshabilita el boton de añadir
+     *
+     * @param g el Objeto juego a modificar
+     */
     void modifyGameData(Game g) {
         btnAdd.setDisable(true);
         btnModify.setDisable(false);
@@ -317,6 +384,11 @@ public class GameFormController {
         gameModify = g;
     }
 
+    /**
+     * esta alerta informa al cliente que ha modificado un el juego y lo lleva a
+     * la ventana game
+     *
+     */
     private void modifyAlert() {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -335,11 +407,12 @@ public class GameFormController {
 
         }
     }
-
+    /**
+     * esta alerta informa al cliente que ha creado un juego
+     */
     private void createGameAlert() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("AGregar");
-        alert.setContentText("Se ha agregado correctamente el Juego");
-        Optional<ButtonType> result = alert.showAndWait();
+        Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "juego creado existosamente");
+        alert2.show();
     }
+
 }
