@@ -42,6 +42,7 @@ import transferObjects.Client;
 import transferObjects.Game;
 import transferObjects.Purchase;
 import businessLogic.ClientManager;
+import java.text.SimpleDateFormat;
 import javafx.beans.value.ObservableValue;
 
 /**
@@ -62,12 +63,15 @@ public class PurchaseController {
     private ClientManager clientsManager;
 
     private ObservableList<Client> clientsObservableList;
+    
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    
     @FXML
     private Pane purchasePane;
     @FXML
     private TableView tvPurchases;
     @FXML
-    private TableColumn tcPurchaseDate;
+    private TableColumn<Purchase, String> tcPurchaseDate;
     @FXML
     private TableColumn<Purchase, String> tcClientName;
     @FXML
@@ -197,6 +201,7 @@ public class PurchaseController {
             if(selectedPurchase != null){
                 purchasesManager.deletePurchase(
                         String.valueOf(selectedPurchase.getClient().getIdUser()),String.valueOf(selectedPurchase.getGame().getIdGame()));
+                        loadPurchasesData();
                 LOG.info("Compra borrada");
             }else{
                 LOG.info("Compra no seleccionada.");
@@ -271,7 +276,8 @@ public class PurchaseController {
             loadClientsData();
             loadPricesData();
             //TableView
-            tcPurchaseDate.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
+            //tcPurchaseDate.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
+            tcPurchaseDate.setCellValueFactory(cell -> new SimpleStringProperty(dateFormatter.format(cell.getValue().getPurchaseDate())));
             tcClientName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getClient().getFullName()));
             tcGameName.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGame().getName()));
             tcGameGenre.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGame().getGenre()));
