@@ -23,7 +23,6 @@ public class PurchaseManagerImplementation implements PurchaseManager{
     //Logger de la implementación de la interfaz
     private static final Logger LOG = Logger.getLogger(PurchaseManagerImplementation.class.getName());
     private PurchaseRESTful webClient;
-    private ClientRESTful webClient2;
     
     /**
      * Crea un objeto PurchaseManagerImplementation. Construye un cliente web para
@@ -32,8 +31,6 @@ public class PurchaseManagerImplementation implements PurchaseManager{
      */
     public PurchaseManagerImplementation() {
         webClient = new PurchaseRESTful();
-        webClient2 = new ClientRESTful();
-
     }
     
     @Override
@@ -42,7 +39,7 @@ public class PurchaseManagerImplementation implements PurchaseManager{
     }
 
     @Override
-    public Collection<Purchase> getAllPurchasess() throws ClientErrorException {
+    public Collection<Purchase> getAllPurchasess() throws Exception {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         Collection<Purchase> purchases = webClient.findAll(
         new GenericType<Collection<Purchase>>(){});
@@ -51,7 +48,7 @@ public class PurchaseManagerImplementation implements PurchaseManager{
     }
     
     @Override
-    public Purchase findPurchaseById(String idClient, String idGame) throws ClientErrorException {
+    public Purchase findPurchaseById(String idClient, String idGame) throws Exception {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         Purchase purchase;
         purchase = webClient.findPurchaseById(Purchase.class, idClient, idGame);
@@ -59,52 +56,55 @@ public class PurchaseManagerImplementation implements PurchaseManager{
     }
 
     @Override
-    public Collection<Purchase> findPurchasesByPurchaseDate(String purchaseDate) throws ClientErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Collection<Purchase> findPurchasesByPurchaseDate(String purchaseDate) throws Exception {
+        Collection<Purchase> purchases = webClient.findPurchasesByPurchaseDate(new GenericType<Collection<Purchase>>(){}, purchaseDate);
+        return purchases;
     }
 
     @Override
-    public Collection<Purchase> findPurchasesByPrice(String price) throws ClientErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Collection<Purchase> findPurchasesByPrice(String price) throws Exception {
+        Collection<Purchase> purchases = webClient.findPurchasesByPrice(new GenericType<Collection<Purchase>>(){}, price);
+        return purchases;
     }
 
     @Override
-    public void edit(Object requestEntity, String id) throws ClientErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void edit(Object requestEntity, String id) throws Exception {
+        webClient.edit(requestEntity, id);
     }
 
     @Override
-    public Purchase find(String id) throws ClientErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Purchase find(String id) throws Exception {
+        return webClient.find(Purchase.class, id);
     }
 
     @Override
-    public Collection<Purchase> findRange(String from, String to) throws ClientErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Collection<Purchase> findRange(String from, String to) throws Exception {
+        Collection<Purchase> purchases = webClient.findRange(new GenericType<Collection<Purchase>>(){}, from, to);
+        return purchases;
     }
 
     @Override
-    public void create(Object requestEntity) throws ClientErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void create(Object requestEntity) throws Exception {
+        webClient.create(requestEntity);
     }
 
     @Override
-    public void remove(String id) throws ClientErrorException {
+    public void remove(String id) throws Exception {
         webClient.remove(id);
     }
 
     @Override
-    public Purchase findPurchasesByClientId(String idClient) throws ClientErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Collection<Purchase> findPurchasesByClientId(String idClient) throws Exception {
+        return webClient.findPurchasesByClientId(new GenericType<Collection<Purchase>>(){},idClient);
     }
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        webClient.close();
     }
 
     @Override
-    public void deletePurchase(String idClient, String idGame) throws ClientErrorException {
+    public void deletePurchase(String idClient, String idGame) throws Exception {
         webClient.deletePurchase(idClient, idGame);
     }
 }

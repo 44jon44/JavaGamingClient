@@ -16,27 +16,27 @@ import transferObjects.Client;
  */
 public interface ClientManager {
 
-    public Client findClientById(String idClient) throws ClientErrorException;
+    public Client findClientById(String idClient) throws Exception;
 
-    public String countREST() throws ClientErrorException;
+    public String countREST() throws Exception;
 
-    public Client findClientByEmail(String email) throws ClientErrorException;
+    public Client findClientByEmail(String email) throws Exception;
 
-    public void edit(Client client, String id) throws ClientErrorException;
+    public void edit(Client client, String id) throws Exception;
 
-    public Client find(String id) throws ClientErrorException;
+    public Client find(String id) throws Exception;
 
-    public Collection<Client> findRange(String from, String to) throws ClientErrorException;
+    public Collection<Client> findRange(String from, String to) throws Exception;
 
-    public Client findClientByLogin(String login) throws ClientErrorException;
+    public Client findClientByLogin(String login) throws Exception;
 
-    public void create(Client client) throws ClientErrorException;
+    public void create(Client client) throws Exception;
     
-    public Client findClientByFullName(String fullName) throws ClientErrorException;
+    public Client findClientByFullName(String fullName) throws Exception;
 
-    public Collection<Client> findAllClients() throws ClientErrorException;
+    public Collection<Client> findAllClients() throws Exception;
 
-    public void remove(String id) throws ClientErrorException;
+    public void remove(String id) throws Exception;
 
     public void close();
 }

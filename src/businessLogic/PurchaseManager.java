@@ -17,27 +17,27 @@ public interface PurchaseManager {
 
     public String countREST() throws ClientErrorException;
 
-    public Purchase findPurchaseById(String idClient, String idGame) throws ClientErrorException;
+    public Purchase findPurchaseById(String idClient, String idGame) throws Exception;
 
-    public Collection<Purchase> findPurchasesByPurchaseDate(String purchaseDate) throws ClientErrorException;
+    public Collection<Purchase> findPurchasesByPurchaseDate(String purchaseDate) throws Exception;
 
-    public Collection<Purchase> findPurchasesByPrice(String price) throws ClientErrorException;
+    public Collection<Purchase> findPurchasesByPrice(String price) throws Exception;
 
-    public void edit(Object requestEntity, String id) throws ClientErrorException;
+    public void edit(Object requestEntity, String id) throws Exception;
 
-    public Purchase find(String id) throws ClientErrorException;
+    public Purchase find(String id) throws Exception;
 
-    public Collection<Purchase> findRange(String from, String to) throws ClientErrorException;
+    public Collection<Purchase> findRange(String from, String to) throws Exception;
 
-    public void create(Object requestEntity) throws ClientErrorException;
+    public void create(Object requestEntity) throws Exception;
 
-    public Collection<Purchase> getAllPurchasess() throws ClientErrorException;
+    public Collection<Purchase> getAllPurchasess() throws Exception;
 
-    public void remove(String id) throws ClientErrorException;
+    public void remove(String id) throws Exception;
 
-    public Purchase findPurchasesByClientId(String idClient) throws ClientErrorException;
+    public Collection<Purchase> findPurchasesByClientId(String idClient) throws Exception;
 
-    public void deletePurchase(String idClient, String idGame) throws ClientErrorException;
+    public void deletePurchase(String idClient, String idGame) throws Exception;
     
     public void close();
     

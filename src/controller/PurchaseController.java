@@ -198,13 +198,15 @@ public class PurchaseController {
     @FXML
     private void handleDeletePurchase(ActionEvent event) {
         //LOG.log(Level.SEVERE, "Método 'BORRAR COMPRA' no implementado");
-            if(selectedPurchase != null){
+            try{
+                if(selectedPurchase != null){
                 purchasesManager.deletePurchase(
                         String.valueOf(selectedPurchase.getClient().getIdUser()),String.valueOf(selectedPurchase.getGame().getIdGame()));
                         loadPurchasesData();
                 LOG.info("Compra borrada");
-            }else{
-                LOG.info("Compra no seleccionada.");
+            }
+            }catch(Exception e){
+                LOG.log(Level.SEVERE, null, e);
             }
     }
 
@@ -213,19 +215,31 @@ public class PurchaseController {
     }
 
     private void loadPurchasesData() {
-        Collection purchases;
-        purchases = purchasesManager.getAllPurchasess();
-        purchasesObservableList = FXCollections.observableArrayList(purchases);
-        tvPurchases.setItems(purchasesObservableList);
-        LOG.log(Level.INFO, "Juegos cargados: {0}", purchasesObservableList.size());
+        try
+        {
+            Collection purchases;
+            purchases = purchasesManager.getAllPurchasess();
+            purchasesObservableList = FXCollections.observableArrayList(purchases);
+            tvPurchases.setItems(purchasesObservableList);
+            LOG.log(Level.INFO, "Juegos cargados: {0}", purchasesObservableList.size());
+        } catch (Exception ex)
+        {
+            LOG.log(Level.SEVERE, null, ex);
+        }
     }
 
     private void loadClientsData() {
-        Collection clients;
-        clients = clientsManager.findAllClients();
-        clientsObservableList = FXCollections.observableArrayList(clients);
-        cbClients.setItems(clientsObservableList);
-        LOG.log(Level.INFO, "Clientes cargados: {0}", clientsObservableList.size());
+        try
+        {
+            Collection clients;
+            clients = clientsManager.findAllClients();
+            clientsObservableList = FXCollections.observableArrayList(clients);
+            cbClients.setItems(clientsObservableList);
+            LOG.log(Level.INFO, "Clientes cargados: {0}", clientsObservableList.size());
+        } catch (Exception ex)
+        {
+            LOG.log(Level.SEVERE, null, ex);
+        }
     }
 
     private void loadPricesData() {
@@ -299,7 +313,7 @@ public class PurchaseController {
                 }
             });
         } catch (OperationNotSupportedException ex) {
-            Logger.getLogger(PurchaseController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 }

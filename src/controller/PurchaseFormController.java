@@ -146,11 +146,17 @@ public class PurchaseFormController{
     }
 
     private void loadCbClients() {
-        Collection clients;
-        clients = clientsManager.findAllClients();
-        clientsObservableList = FXCollections.observableArrayList(clients);
-        cbClient.setItems(clientsObservableList);
-        LOG.log(Level.INFO, "Clientes cargados: {0}", clientsObservableList.size());
+        try
+        {
+            Collection clients;
+            clients = clientsManager.findAllClients();
+            clientsObservableList = FXCollections.observableArrayList(clients);
+            cbClient.setItems(clientsObservableList);
+            LOG.log(Level.INFO, "Clientes cargados: {0}", clientsObservableList.size());
+        } catch (Exception ex)
+        {
+            LOG.log(Level.SEVERE, null, ex);
+        }
     }
     
     @FXML

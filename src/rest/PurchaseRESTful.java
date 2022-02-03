@@ -46,13 +46,13 @@ public class PurchaseRESTful {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findPurchasesByPurchaseDate(Class<T> responseType, String purchaseDate) throws ClientErrorException {
+    public <T> T findPurchasesByPurchaseDate(GenericType<T> responseType, String purchaseDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("find/date/{0}", new Object[]{purchaseDate}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findPurchasesByPrice(Class<T> responseType, String price) throws ClientErrorException {
+    public <T> T findPurchasesByPrice(GenericType<T>  responseType, String price) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("find/price/{0}", new Object[]{price}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -68,7 +68,7 @@ public class PurchaseRESTful {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findRange(Class<T> responseType, String from, String to) throws ClientErrorException {
+    public <T> T findRange(GenericType<T>  responseType, String from, String to) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from, to}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -92,7 +92,7 @@ public class PurchaseRESTful {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
-    public <T> T findPurchasesByClientId(Class<T> responseType, String idClient) throws ClientErrorException {
+    public <T> T findPurchasesByClientId(GenericType<T> responseType, String idClient) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("find/idClient/{0}", new Object[]{idClient}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

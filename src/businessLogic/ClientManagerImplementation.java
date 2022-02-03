@@ -27,7 +27,7 @@ public class ClientManagerImplementation implements ClientManager{
     }
     
     @Override
-    public Client findClientById(String idClient) throws ClientErrorException {
+    public Client findClientById(String idClient) throws Exception {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         Client client;
         client = webClient.findClientById(Client.class, idClient);
@@ -35,61 +35,61 @@ public class ClientManagerImplementation implements ClientManager{
     }
 
     @Override
-    public String countREST() throws ClientErrorException {
+    public String countREST() throws Exception {
         return webClient.countREST();
     }
 
     @Override
-    public Client findClientByEmail(String email) throws ClientErrorException {
+    public Client findClientByEmail(String email) throws Exception {
         Client client;
         client = webClient.findClientByEmail(Client.class, email);
         return client;
     }
 
     @Override
-    public void edit(Client client, String id) throws ClientErrorException {
+    public void edit(Client client, String id) throws Exception {
         webClient.edit(client, id);
     }
 
     @Override
-    public Client find(String id) throws ClientErrorException {
+    public Client find(String id) throws Exception {
         return webClient.find(Client.class, id);
     }
 
     @Override
-    public Collection<Client> findRange(String from, String to) throws ClientErrorException {
+    public Collection<Client> findRange(String from, String to) throws Exception {
         Collection<Client> clients = webClient.findRange(new GenericType<Collection<Client>>(){}, from, to);
         return clients;
     }
 
     @Override
-    public Client findClientByLogin(String login) throws ClientErrorException {
+    public Client findClientByLogin(String login) throws Exception {
         Client client;
         client = webClient.findClientByLogin(Client.class, login);
         return client;
     }
 
     @Override
-    public void create(Client client) throws ClientErrorException {
+    public void create(Client client) throws Exception {
         webClient.create(client);
     }
 
     @Override
-    public Client findClientByFullName(String fullName) throws ClientErrorException {
+    public Client findClientByFullName(String fullName) throws Exception {
         Client client;
         client = webClient.findClientByFullName(Client.class, fullName);
         return client;
     }
 
     @Override
-    public Collection<Client> findAllClients() throws ClientErrorException {
+    public Collection<Client> findAllClients() throws Exception {
         Collection<Client> clients;
         clients = webClient.findAll(new GenericType<Collection<Client>>(){});
         return clients;
     }
 
     @Override
-    public void remove(String id) throws ClientErrorException {
+    public void remove(String id) throws Exception {
         webClient.remove(id);
     }
 
