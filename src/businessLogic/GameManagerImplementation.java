@@ -1,5 +1,6 @@
 package businessLogic;
 
+import exception.BusinessLogicException;
 import exception.GameExistExpception;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +29,7 @@ public class GameManagerImplementation implements GameManager {
      */
     public GameManagerImplementation() {
         webClient = new GameRESTful();
-        
+
     }
 
     /**
@@ -40,7 +41,7 @@ public class GameManagerImplementation implements GameManager {
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
     @Override
-    public Collection<Game> getAllGames() throws Exception {
+    public Collection<Game> getAllGames() throws  Exception {
         Collection<Game> games = null;
         try {
             LOGGER.info("UsersManager: Finding all users from REST service (XML).");
@@ -63,7 +64,7 @@ public class GameManagerImplementation implements GameManager {
      *
      */
     @Override
-    public void createGame(Game game) throws Exception {
+    public void createGame(Game game) throws  Exception {
         try {
             LOGGER.log(Level.INFO, "UsersManager: Creating Game {0}.", game.getName());
             //Send user data to web client for creation. 
@@ -87,7 +88,7 @@ public class GameManagerImplementation implements GameManager {
     public void updateGame(Game game) throws Exception {
         try {
             LOGGER.log(Level.INFO, "UsersManager: Updating user {0}.", game.getIdGame());
-            webClient.edit(game,game.getIdGame().toString());
+            webClient.edit(game, game.getIdGame().toString());
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception updating user, {0}",
@@ -102,9 +103,9 @@ public class GameManagerImplementation implements GameManager {
      * @param game El objeto UserGame que se va a eliminar.
      */
     @Override
-    public void deleteGame(Integer idgame) throws Exception {
+    public void deleteGame(Integer idgame)  throws   Exception {
         try {
-           
+
             webClient.remove(idgame);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
@@ -121,19 +122,19 @@ public class GameManagerImplementation implements GameManager {
      * ya exista
      */
     @Override
-    public void isNameExisting(String name) throws GameExistExpception {
+    public Collection<Game> isNameExisting(String name) throws  GameExistExpception  {
+        List<Game> games = null;
         try {
-            if (this.webClient.find(Game.class, name) != null) {
-                throw new GameExistExpception();
-            }
-        } catch (NotFoundException ex) {
-            //If there is a NotFoundException 404,that is,
-            //the login does not exist, we catch the exception and do nothing. 
-        } catch (ClientErrorException ex) {
+            LOGGER.info("UsersManager: Finding all users from REST service (XML).");
+            //Ask webClient for all users' data.
+            games = webClient.findGamebyName(new GenericType<List<Game>>() {
+            }, name);
+        } catch (Exception ex) {
             LOGGER.log(Level.SEVERE,
-                    "UsersManager: Exception checking login exixtence, {0}",
+                    "GameManager: Exception finding all users, {0}",
                     ex.getMessage());
         }
+        return games;
     }
 
     /**
@@ -158,7 +159,8 @@ public class GameManagerImplementation implements GameManager {
         }
         return games;
     }
-/**
+
+    /**
      * Este método devuelve una Colección de {@link Game}, que filtra la
      * busqueda de juegos por los diferentes pegis.
      *
@@ -166,7 +168,7 @@ public class GameManagerImplementation implements GameManager {
      * juegos filtrados por genero.
      */
     @Override
-    public Collection<Game> getAllGamesbyPegi(Integer pegi) throws Exception {
+    public Collection<Game> getAllGamesbyPegi(Integer pegi) throws  Exception {
         List<Game> games = null;
         try {
             LOGGER.info("UsersManager: Finding all users from REST service (XML).");
