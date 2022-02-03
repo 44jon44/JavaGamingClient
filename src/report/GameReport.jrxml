@@ -20,15 +20,18 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[JUEGOS]]></text>
 			</staticText>
-		</band>
-	</title>
-	<pageHeader>
-		<band height="35" splitType="Stretch">
+			<textField pattern="h.mm a">
+				<reportElement x="0" y="0" width="100" height="20" uuid="be91b65c-e47b-4bc2-82fc-5b11215cfacf"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement x="455" y="0" width="100" height="20" uuid="03999485-3086-4dc0-81ca-e70baaa08664"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band height="41" splitType="Stretch">
