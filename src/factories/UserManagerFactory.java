@@ -1,7 +1,5 @@
 package factories;
 
-import businessLogic.EmployeeManager;
-import businessLogic.EmployeeManagerImplementation;
 import businessLogic.UserManager;
 import businessLogic.UserManagerImplementation;
 import javax.naming.OperationNotSupportedException;
@@ -14,13 +12,13 @@ public class UserManagerFactory {
     public static final String REST_WEB_CLIENT_TYPE = "REST_WEB_CLIENT";
 
     public static UserManager createUserManager(String type) throws OperationNotSupportedException {
-        //The object to be returned
+        //El objeto a retornar
         UserManager userManager = null;
-        //Evaluate type parameter
+        //Evalua el parametro recibido 
         switch (type) {
-            //If rest web client type is asked for, use DwellingManagerImplementation.
+            
             case REST_WEB_CLIENT_TYPE:
-                //If rest web client type is asked for, use DwellingManagerImplementation
+                //Si es un cliente Rest, llama a UserManager
                 userManager = new UserManagerImplementation();
                 break;
             default:

@@ -72,7 +72,7 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     ZoneId defaultZoneId = ZoneId.systemDefault();
 
-    //private final DatePicker dpHiringDate = lookup("#dpHiringDate").query();
+    //Texto mas largo de lo permitido en la bbdd
     private static final String OVERSIZED_TEXT
             = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
             + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
@@ -87,13 +87,19 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     public EmployeeControllerIT() {
     }
-
+/**
+ * Metodo  que la aplicacion para testear
+ * @throws TimeoutException 
+ */
     @BeforeClass
     public static void inicio() throws TimeoutException {
         FxToolkit.registerPrimaryStage();
         FxToolkit.setupApplication(clientapp.ClientApplication.class);
     }
 
+    /**
+     * Test de interaccion inicial que comprueba que inicia sesion
+     */
     @Test
     public void testA_initialInteraction() {
         clickOn("#tfUser");
@@ -105,11 +111,14 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     }
 
+    /**
+     * Test que comprueba el estado inicial de la tabla de empleados
+     */
     @Test
     //@Ignore
     public void testB_initialState() {
 
-        //verifyThat("#tfValue",  (TextField t) -> t.isFocused());
+        verifyThat("#tfValue", (TextField t) -> t.isFocused());
         verifyThat("#lblError", LabeledMatchers.hasText(""));
         verifyThat("#btnAdd", isEnabled());
         verifyThat("#btnModify", isDisabled());
@@ -117,6 +126,10 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     }
 
+    /**
+     * Test que compueba que los botones se habiliten o desahibilten en funcion
+     * de la seleccion de una fila de la tabla
+     */
     @Test
     //@Ignore
     public void testC_createModifyDeleteEnabledChange() {
@@ -130,6 +143,9 @@ public class EmployeeControllerIT extends ApplicationTest {
         verifyThat("#btnModify", isEnabled());
     }
 
+    /**
+     * Test que compueba la cancelacion de borrado
+     */
     @Test
     @Ignore
     public void testD_cancelarBorrado() {
@@ -144,8 +160,11 @@ public class EmployeeControllerIT extends ApplicationTest {
         assertEquals(rowCount, table.getItems().size());
     }
 
+    /**
+     * Test que compueba el borrado
+     */
     @Test
-    @Ignore
+    //@Ignore
     public void testE_Borrado() {
         int rowCount = table.getItems().size();
         assertNotEquals("La tabla no tiene Datos: no se puede testear.",
@@ -160,8 +179,11 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     }
 
+    /**
+     * Test que compueba que salte un error cuando un usuario exista al añadir
+     */
     @Test
-    @Ignore
+    //@Ignore
     public void testF_usuarioExisteAlCrear() {
         int rowCount = table.getItems().size();
         assertNotEquals("Table has no data: Cannot test.",
@@ -193,28 +215,68 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     }
 
+    /**
+     * Test que compueba que se crea un empleado correctamente
+     */
     @Test
     @Ignore
     public void testG_createUser() {
+
         //get row count
         int rowCount = table.getItems().size();
         //get an existing login from random generator
-        String login = "username" + new Random().nextInt();
+        String login = "username" + new Random().nextInt() + 2133213213;
         //write that login on text field
+        clickOn("#btnAdd");
+        dpHiringDate = (DatePicker) lookup("#dpHiringDate").query();
+        clickOn("#tfName");
+        write("validName");
 
+        clickOn("#tfEmail");
+        write("newValid@newValid.com");
+
+        clickOn("#tfLogin");
+        write(login);
+
+        dpHiringDate.setValue(LocalDate.now());
+
+        clickOn("#btnSave");
+        clickOn(isDefaultButton());
+
+        clickOn("#hpReturn");
+        clickOn(isDefaultButton());
+
+        clickOn("#cmbFilter");
+        press(KeyCode.DOWN).release(KeyCode.DOWN);
+        press(KeyCode.DOWN).release(KeyCode.DOWN);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        clickOn("#btnFind");
+        
+        table.refresh();
+        int size2;
+        size2 = table.getItems().size();
+        assertEquals("The row has not been added!!!", rowCount + 1, size2);
+        //look for user in table data model
+        List<Employee> employees = table.getItems();
+        assertEquals("The user has not been added!!!",
+                employees.stream().filter(u -> u.getLogin().equals(login)).count(), 1);
     }
 
+    /**
+     * Test que compueba que salte un error cuando un login exista al modificar
+     */
     @Test
     @Ignore
     public void testH_usuarioExisteAlModificar() {
+
         int rowCount = table.getItems().size();
         assertNotEquals("Table has no data: Cannot test.",
                 rowCount, 0);
-        Node row = lookup(".table-row-cell").nth(0).query();
+        Node row = lookup(".table-row-cell").nth(rowCount - 1).query();
         clickOn(row);
         //get an existing login from table data
 
-        String login1 = ((Employee) table.getItems().get(1)).getLogin();
+        String login1 = ((Employee) table.getItems().get(rowCount - 2)).getLogin();
         clickOn("#btnModify");
         verifyThat("#employeeFormPane", isVisible());
 
@@ -237,6 +299,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         verifyThat("El login ya existe",
                 isVisible());
         clickOn(isDefaultButton());
+
         assertEquals("A row has been added!!!", rowCount, table.getItems().size());
 
         clickOn("#hpReturn");
@@ -244,6 +307,9 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     }
 
+    /**
+     * Test que compueba que se modifica correctamente
+     */
     @Test
     @Ignore
     public void testK_modifyUser() {
@@ -253,15 +319,14 @@ public class EmployeeControllerIT extends ApplicationTest {
         assertNotEquals("La tabla no tiene datos. Nose puede testear",
                 rowCount, 0);
         //look for 1st row in table view and click it
-        Node row = lookup(".table-row-cell").nth(0).query();
+        Node row = lookup(".table-row-cell").nth(rowCount - 1).query();
         assertNotNull("Row is null: table has not that row. ", row);
         clickOn(row);
         //get selected item and index from table
         Employee prevEmp = (Employee) table.getSelectionModel()
                 .getSelectedItem();
-        int selectedIndex = table.getSelectionModel().getSelectedIndex();
-        //Modify user data
 
+        //Modify user data
         clickOn("#btnModify");
 
         Employee modEm = new Employee();
@@ -282,10 +347,9 @@ public class EmployeeControllerIT extends ApplicationTest {
         Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
         modEm.setHiringDate(date);
 
-        clickOn("#hpReturn");
+        clickOn("#btnSave");
         clickOn(isDefaultButton());
-        table.refresh();
-        Employee emp2 = (Employee) table.getItems().get(selectedIndex);
+        Employee emp2 = (Employee) table.getItems().get(rowCount - 1);
 
         assertEquals("The user has not been modified!!!",
                 modEm.getFullName(),
@@ -302,11 +366,16 @@ public class EmployeeControllerIT extends ApplicationTest {
         assertEquals("The user has not been modified!!!",
                 modEm.getSalary(),
                 emp2.getSalary());
+        
 
     }
 
+    /**
+     * Test que compueba que salte un error cuando se introduzcan mas caracteres
+     * de los permitidos en la bbdd
+     */
     @Test
-    @Ignore
+    //@Ignore
     public void testL_MaximaLongitud() {
         clickOn("#tfValue");
         write(OVERSIZED_TEXT);
@@ -328,13 +397,13 @@ public class EmployeeControllerIT extends ApplicationTest {
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
 
-        clickOn("#tfEmail");
-        write(OVERSIZED_TEXT);
-        clickOn("#tfName");
-        verifyThat("#lblErrorEmail", LabeledMatchers.hasText("Longitud maxima de 255 caracteres"));
-        clickOn("#tfEmail");
-        push(KeyCode.CONTROL, KeyCode.A);
-        eraseText(1);
+//        clickOn("#tfEmail");
+//        write(OVERSIZED_TEXT);
+//        clickOn("#tfName");
+//        verifyThat("#lblErrorEmail", LabeledMatchers.hasText("Longitud maxima de 255 caracteres"));
+//        clickOn("#tfEmail");
+//        push(KeyCode.CONTROL, KeyCode.A);
+//        eraseText(1);
 
         clickOn("#tfLogin");
         write(OVERSIZED_TEXT);
@@ -361,8 +430,12 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn(isDefaultButton());
     }
 
+    /**
+     * Test que compueba que salte un error cuando el texto de tfName no sea
+     * correcto
+     */
     @Test
-    @Ignore
+    //@Ignore
     public void testM_ErroresName() {
         clickOn("#btnAdd");
         clickOn("#tfName");
@@ -409,8 +482,12 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn(isDefaultButton());
     }
 
+    /**
+     * Test que compueba que salte un error cuando el texto de tfEmail no sea
+     * correcto
+     */
     @Test
-    @Ignore
+    //@Ignore
     public void testN_ErroresEmail() {
         clickOn("#btnAdd");
 
@@ -421,6 +498,8 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn("#tfEmail");
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
+        
+        
 
         clickOn("#tfEmail");
         write("jon@@gmail.com");
@@ -450,8 +529,12 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn(isDefaultButton());
     }
 
+    /**
+     * Test que compueba que salte un error cuando el texto de tfLogin no sea
+     * correcto
+     */
     @Test
-    @Ignore
+    //@Ignore
     public void testO_ErroresLogin() {
         clickOn("#btnAdd");
 
@@ -500,8 +583,12 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn(isDefaultButton());
     }
 
+    /**
+     * Test que compueba que salte un error cuando el valor de la
+     * fechaContratacion no sea correcto
+     */
     @Test
-    @Ignore
+    //@Ignore
     public void testP_ErroresHiringDate() {
         clickOn("#btnAdd");
 
@@ -514,6 +601,10 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     }
 
+    /**
+     * Test que compueba que salte un error cuando el texto de tfSalary no sea
+     * correcto
+     */
     @Test
     //@Ignore
     public void testR_ErroresSalary() {
@@ -528,14 +619,14 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn("#tfSalary");
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
-        
+
         write("");
         clickOn("#tfEmail");
         verifyThat("#lblErrorSalary", LabeledMatchers.hasText("Campo obligatorio"));
         clickOn("#tfSalary");
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
-        
+
         write("1233..32");
         clickOn("#tfEmail");
         verifyThat("#lblErrorSalary", LabeledMatchers.hasText("El formato correcto \n es el de numero decimal"));
@@ -543,6 +634,71 @@ public class EmployeeControllerIT extends ApplicationTest {
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
         clickOn("#hpReturn");
-        
+
+    }
+
+    /**
+     * Test que compueba que salte un error cuando se haya seleccionado Nombre
+     * en cmbFilter
+     */
+    @Test
+    //@Ignore
+    public void testS_ErroresComboNombre() {
+        clickOn("#btnFind");
+        verifyThat("#lblError", LabeledMatchers.hasText("Debes de introducir un valor en campo value"));
+
+        clickOn("#tfValue");
+        write("NonExistingValue");
+        clickOn("#btnFind");
+        verifyThat("#lblError", LabeledMatchers.hasText("No se han encontrado empleados:"));
+
+    }
+
+    /**
+     * Test que compueba que salte un error cuando se haya seleccionado Salario
+     * en cmbFilter
+     */
+    @Test
+    //@Ignore
+    public void testT_ErroresComboSalario() {
+        clickOn("#cmbFilter");
+        press(KeyCode.DOWN).release(KeyCode.DOWN);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        clickOn("#btnFind");
+        verifyThat("#lblError", LabeledMatchers.hasText("Debes de introducir un valor en campo value"));
+
+        clickOn("#tfValue");
+        write("10000");//No existe el valor
+        clickOn("#btnFind");
+        verifyThat("#lblError", LabeledMatchers.hasText("No se han encontrado empleados"));
+
+        clickOn("#tfValue");
+        write("100..43");//Formato incorrecto
+        clickOn("#btnFind");
+        verifyThat("#lblError", LabeledMatchers.hasText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"));
+
+        clickOn("#tfValue");
+        write("123ee");//Formato incorrecto
+        clickOn("#btnFind");
+        verifyThat("#lblError", LabeledMatchers.hasText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"));
+
+    }
+
+    /**
+     * Test que compueba que salte un error cuando se haya seleccionado mostar
+     * todos los empleados en cmbFilter
+     */
+    @Test
+    //@Ignore
+    public void testU_ErroresComboTodosEmpleados() {
+
+        clickOn("#cmbFilter");
+        press(KeyCode.DOWN).release(KeyCode.DOWN);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        clickOn("#tfValue");
+        write("text");
+        clickOn("#btnFind");
+        verifyThat("#lblError", LabeledMatchers.hasText("El campo value debe de estar vacio"));
+
     }
 }

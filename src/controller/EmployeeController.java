@@ -49,6 +49,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import transferObjects.Employee;
+import exception.*;
 
 /**
  * FXML Controller class
@@ -136,8 +137,8 @@ public class EmployeeController {
      * @param root
      */
     public void initStage1(Parent root) {
+        LOG.info("InitStage de la ventana EmployeeController...");
         try {
-            
             btnAdd.setOnAction(this::create);
             btnDelete.setOnAction(this::delete);
             btnModify.setOnAction(this::modify);
@@ -188,10 +189,13 @@ public class EmployeeController {
 
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
-        } catch (OperationNotSupportedException ex) {
-            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error abriendo la ventana employee");
+            errorAlert.showAndWait();
         }
 
     }
@@ -202,6 +206,7 @@ public class EmployeeController {
      * @param root
      */
     public void initStage(Parent root) {
+        LOG.info("InitStage de la ventana EmployeeController...");
         try {
             Scene EmployeeScene = new Scene(root);
 
@@ -213,7 +218,6 @@ public class EmployeeController {
             stage.setResizable(false);
             tfValue.requestFocus();
 
-            
             // menuController.setStage(stage);
             btnAdd.setOnAction(this::create);
             btnDelete.setOnAction(this::delete);
@@ -266,10 +270,12 @@ public class EmployeeController {
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
             stage.showAndWait();
-        } catch (OperationNotSupportedException ex) {
-            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error abriendo la ventana employee");
+            errorAlert.showAndWait();
         }
     }
 
@@ -279,7 +285,7 @@ public class EmployeeController {
      * @param event
      */
     private void create(ActionEvent event) {
-
+        LOG.info("Creando empleado...");
         try {
             //getResource tienes que anadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
@@ -304,7 +310,7 @@ public class EmployeeController {
 
             employeeFormStage.show();
             employeePane.getScene().getWindow().hide();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOG.log(Level.INFO, "Ha saltado este error");
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -318,6 +324,7 @@ public class EmployeeController {
      */
     @FXML
     private void modify(ActionEvent event) {
+        LOG.info("Modificando...");
         try {
             Employee emp = ((Employee) tblEmployees.getSelectionModel().getSelectedItem());
 
@@ -357,6 +364,7 @@ public class EmployeeController {
      */
     @FXML
     private void delete(ActionEvent event) {
+        LOG.info("Borrando...");
         try {
             Employee emp;
             emp = ((Employee) tblEmployees.getSelectionModel().getSelectedItem());
@@ -375,89 +383,105 @@ public class EmployeeController {
 
                 tblEmployees.getSelectionModel().clearSelection();
                 tblEmployees.refresh();
-                
+
                 Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
-                    "¿Borrar la fila seleccionada?\n"
-                    + "Esta operación no se puede deshacer.",
-                    ButtonType.OK, ButtonType.CANCEL);
+                        "¿Borrar la fila seleccionada?\n"
+                        + "Esta operación no se puede deshacer.",
+                        ButtonType.OK, ButtonType.CANCEL);
             }
 
         } catch (Exception ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error borrando empleado");
+            errorAlert.showAndWait();
         }
     }
 
     /**
-     * Este metodo busca empleados por metodo de filtrado y valor
+     * Este metodo busca empleados por metodo de filtrado y valor Opciones de
+     * filtrado: salario, nombre y mostrar todos los empleados
      *
      * @param event
      */
     @FXML
     private void find(ActionEvent event) {
+        LOG.info("Buscando...");
         boolean validFloat;
-        lblError.setText("");
-        if (tfValue.getText().equalsIgnoreCase("") && cmbFilter.getValue() != null) {
-            if (!cmbFilter.getValue().toString().equals("Mostrar todos los empleados")) {
-                lblError.setText("Debes de introducir un valor en campo value");
+        try {
+            lblError.setText("");
+            if (tfValue.getText().equalsIgnoreCase("") && cmbFilter.getValue() != null) {
+                if (!cmbFilter.getValue().toString().equals("Mostrar todos los empleados")) {
+                    lblError.setText("Debes de introducir un valor en campo value");
+                }
             }
-        }
 
-        if (cmbFilter.getValue().toString().equals("Salario")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-                && !tfValue.getText().equalsIgnoreCase("")) {
+            if (cmbFilter.getValue().toString().equals("Salario")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+                    && !tfValue.getText().equalsIgnoreCase("")) {
 
-            Pattern p = Pattern.compile("^(?:([0-9]{1,5}))((?:[.])(?:[0-9]{1,2}))?");
-            Matcher m = p.matcher(tfValue.getText().trim());
-            validFloat = m.matches();
+                Pattern p = Pattern.compile("^(?:([0-9]{1,5}))((?:[.])(?:[0-9]{1,2}))?");
+                Matcher m = p.matcher(tfValue.getText().trim());
+                validFloat = m.matches();
 
-            try {
-                if (validFloat) {
-                    ObservableList<Employee> empsS = FXCollections.observableArrayList(employeesManager.employeesBySalary(tfValue.getText()));
-                    if (empsS.isEmpty()) {
+                try {
+                    if (validFloat) {
+                        ObservableList<Employee> empsS = FXCollections.observableArrayList(employeesManager.employeesBySalary(tfValue.getText()));
+                        if (empsS.isEmpty()) {
+                            lblError.setText("No se han encontrado empleados");
+                        }
+                        tblEmployees.setItems(empsS);
+                    } else {
+                        lblError.setText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"
+                        );
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            if (cmbFilter.getValue().toString().equals("Nombre")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+                    && !tfValue.getText().equalsIgnoreCase("")) {
+                try {
+                    ObservableList<Employee> empsN = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesByName(tfValue.getText()));
+                    if (empsN.isEmpty()) {
+                        lblError.setText("No se han encontrado empleados:");
+                    }
+                    tblEmployees.setItems(empsN);
+
+                } catch (Exception ex) {
+                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+            if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+                    && tfValue.getText().equalsIgnoreCase("")) {
+                try {
+                    ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
+                    if (emps.isEmpty()) {
+
                         lblError.setText("No se han encontrado empleados");
                     }
-                    tblEmployees.setItems(empsS);
-                } else {
-                    lblError.setText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"
-                    );
+                    tblEmployees.setItems(emps);
+                } catch (Exception ex) {
+                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (Exception ex) {
-                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-
-        if (cmbFilter.getValue().toString().equals("Nombre")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-                && !tfValue.getText().equalsIgnoreCase("")) {
-            try {
-                ObservableList<Employee> empsN = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesByName(tfValue.getText()));
-                if (empsN.isEmpty()) {
-                    lblError.setText("No se han encontrado empleados:");
-                }
-                tblEmployees.setItems(empsN);
-
-            } catch (Exception ex) {
-                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")
+                    && !tfValue.getText().equalsIgnoreCase("")) {
+                lblError.setText("El campo value debe de estar vacio");
             }
 
-        }
-        if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-                && tfValue.getText().equalsIgnoreCase("")) {
-            try {
-                ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
-                if (emps.isEmpty()) {
+            tfValue.setText("");
+        } catch (Exception ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
 
-                    lblError.setText("No se han encontrado empleados");
-                }
-                tblEmployees.setItems(emps);
-            } catch (Exception ex) {
-                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error buscando empleado");
+            errorAlert.showAndWait();
         }
-        if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")
-                && !tfValue.getText().equalsIgnoreCase("")) {
-            lblError.setText("El campo value debe de estar vacio");
-        }
-
-        tfValue.setText("");
     }
 
     /**
@@ -515,6 +539,12 @@ public class EmployeeController {
         }
     }
 
+    /**
+     * Controlador del ActionEvent del boton print. Muestra un Jframe que
+     * contiene un informe. Esto permite imprimir el informe
+     *
+     * @param event El objeto de activacion del ActionEvent
+     */
     @FXML
     private void print(ActionEvent event) {
         try {
@@ -534,6 +564,11 @@ public class EmployeeController {
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error generando el informe");
+            errorAlert.showAndWait();
         }
     }
 }

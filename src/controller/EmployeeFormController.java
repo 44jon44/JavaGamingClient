@@ -9,16 +9,11 @@ import businessLogic.EmployeeManager;
 import exception.BusinessLogicException;
 import factories.EmployeeManagerFactory;
 import factories.UserManagerFactory;
-import java.awt.AWTEventMulticaster;
 import java.io.IOException;
-import static java.lang.Float.parseFloat;
-import java.net.URL;
-import java.security.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -26,7 +21,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -37,7 +31,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javax.naming.OperationNotSupportedException;
 import model.UserPrivilege;
 import model.UserStatus;
 import transferObjects.Employee;
@@ -47,7 +40,7 @@ import transferObjects.Employee;
  *
  * @author ibai Arriola
  */
-public class EmployeeFormController implements Initializable {
+public class EmployeeFormController {
 
     ZoneId defaultZoneId = ZoneId.systemDefault();
     private EmployeeManager employeesManager;
@@ -65,42 +58,82 @@ public class EmployeeFormController implements Initializable {
     //Logger del controlador de la ventana "ViewSignIn"
     private static final Logger LOG = Logger.getLogger(EmployeeFormController.class.getName());
     /**
-     * Create user data button.
+     * Boton crear empleado
      */
     @FXML
     private Button btnSave;
+    /**
+     * Boton borrar empleado
+     */
     @FXML
     private Button btnDelete;
+    /**
+     * label de error de nombre
+     */
     @FXML
     private Label lblErrorName;
+    /**
+     * label de error de email
+     */
     @FXML
     private Label lblErrorEmail;
+    /**
+     * label de error de login
+     */
     @FXML
     private Label lblErrorLogin;
+    /**
+     * label de error de fechaContratacion
+     */
     @FXML
     private Label lblErrorHiringDate;
+    /**
+     * label de error de salario
+     */
     @FXML
     private Label lblErrorSalary;
+    /**
+     * hiperlink que vuelve a la ventana employee.fxml
+     */
     @FXML
     private Hyperlink hpReturn;
+    /**
+     * textField del campo nombre
+     */
     @FXML
     private TextField tfName;
+    /**
+     * textField del campo email
+     */
     @FXML
     private TextField tfEmail;
+    /**
+     * textField del campo login
+     */
     @FXML
     private TextField tfLogin;
+    /**
+     * textField del campo fechaContratacion
+     */
     @FXML
     private DatePicker dpHiringDate;
+    /**
+     * textField del campo salario
+     */
     @FXML
     private TextField tfSalary;
+    /**
+     * Pane de la escena e
+     */
     @FXML
     private Pane employeeFormPane;
+    private String prevLogin;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
-
+    /**
+     * Metodo para inicializar el stage EmployeeFormController Stage
+     *
+     * @param root El objeto padre representado el nodo raiz de la vista grafica
+     */
     void initStage(Parent root) {
         lblErrorName.setText("");
         lblErrorEmail.setText("");
@@ -129,66 +162,93 @@ public class EmployeeFormController implements Initializable {
 
     }
 
+    /**
+     * Inicializa la ventana cuando anteriormente se ha seleccionado anadir
+     */
     void initStageAdd() {
         tfSalary.setText("1000");
         btnSave.setOnAction(this::save);
     }
 
+    /**
+     * Inicializa la ventana cuando anteriormente se ha seleccionado anadir
+     */
     void initStageModify() {
         btnSave.setOnAction(this::modify);
 
     }
 
+    /**
+     * Controlador del evento accion del boton modificar. Valida los datos y los
+     * envia a la capa de logica
+     *
+     * @param event El objecto ActionEvent del evento
+     */
     @FXML
     private void modify(ActionEvent event) {
         boolean exist = false;
         try {
-            if (tfLogin.getText().length() != 0 && loginChanged) {
-
-                UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
-            }
-        } catch (BusinessLogicException ex) {
-            exist = true;
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                    "El login ya existe",
-                    ButtonType.OK);
-            alert.showAndWait();
-        } catch (Exception ex) {
-            Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        validateFields();
-        if (!exists && validFields()) {
-
             try {
-
-                employeeModify.setFullName(tfName.getText().trim());
-                employeeModify.setLogin(tfLogin.getText().trim());
-                employeeModify.setEmail(tfEmail.getText().trim());
-                employeeModify.setHiringDate(Date.from(dpHiringDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                employeeModify.setSalary(tfSalary.getText().trim());
-
-                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
+                if (tfLogin.getText().length() != 0) {
+                    System.out.println("Dentro");
+                    UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
+                }
+            } catch (BusinessLogicException ex) {
+                exist = true;
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "El usuario se ha modificado correctamente",
+                        "El login ya existe",
                         ButtonType.OK);
                 alert.showAndWait();
-
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        if (!exists && !validFields()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                    "Algun campo no es correcto",
-                    ButtonType.OK);
-            alert.showAndWait();
-        }
+            System.out.println(exist);
+            validateFields();
+            if (!exist && validFields()) {
 
+                try {
+
+                    employeeModify.setFullName(tfName.getText().trim());
+                    employeeModify.setLogin(tfLogin.getText().trim());
+                    employeeModify.setEmail(tfEmail.getText().trim());
+                    employeeModify.setHiringDate(Date.from(dpHiringDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                    employeeModify.setSalary(tfSalary.getText().trim());
+
+                    EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El usuario se ha modificado correctamente",
+                            ButtonType.OK);
+                    alert.showAndWait();
+
+                } catch (Exception ex) {
+                    Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (!exists && !validFields()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                        "Algun campo no es correcto",
+                        ButtonType.OK);
+                alert.showAndWait();
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error abriendo modificando empleado");
+            errorAlert.showAndWait();
+        }
     }
 
+    /**
+     * Metodo que controla cuando cambia de foco el tfName
+     *
+     * @param observable
+     * @param oldValue foco perdido
+     * @param newValue foco ganado
+     */
     @FXML
     private void tfNameFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 
@@ -207,6 +267,13 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * Metodo que controla cuando cambia de foco el tfEmail
+     *
+     * @param observable
+     * @param oldValue foco perdido
+     * @param newValue foco ganado
+     */
     @FXML
     private void tfEmailFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 
@@ -225,6 +292,13 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * Metodo que controla cuando cambia de foco el dpHiringDate
+     *
+     * @param observable
+     * @param oldValue foco perdido
+     * @param newValue foco ganado
+     */
     @FXML
     private void dpHiringDateFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 
@@ -240,6 +314,13 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * Metodo que controla cuando cambia de foco el tfLogin
+     *
+     * @param observable
+     * @param oldValue foco perdido
+     * @param newValue foco ganado
+     */
     @FXML
     private void tfLoginFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 
@@ -255,6 +336,13 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * Metodo que controla cuando cambia de foco el tfSalary
+     *
+     * @param observable
+     * @param oldValue foco perdido
+     * @param newValue foco ganado
+     */
     @FXML
     private void tfSalaryFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 
@@ -277,6 +365,13 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * metodo que controla cuando el tfName ha sufrido un cambio de texto
+     *
+     * @param observable
+     * @param oldValue valor antiguo
+     * @param newValue
+     */
     @FXML
     private void tfNameTextChanged(ObservableValue observable, String oldValue, String newValue) {
         if (!newValue.equalsIgnoreCase(oldValue)) {
@@ -285,6 +380,13 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * metodo que controla cuando el tfEmail ha sufrido un cambio de texto
+     *
+     * @param observable
+     * @param oldValue valor antiguo
+     * @param newValue
+     */
     @FXML
     private void tfEmailTextChanged(ObservableValue observable, String oldValue, String newValue) {
         if (!newValue.equalsIgnoreCase(oldValue)) {
@@ -293,13 +395,20 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * metodo que controla cuando el tfLogin ha sufrido un cambio de texto
+     *
+     * @param observable
+     * @param oldValue valor antiguo
+     * @param newValue
+     */
     @FXML
     private void tfLoginTextChanged(ObservableValue observable, String oldValue, String newValue) {
         int i = 0;
         if (!newValue.equalsIgnoreCase(oldValue)) {
             lblErrorLogin.setText("");
             tfLogin.setStyle("-fx-text-inner-color: black;");
-
+            LOG.info("Login textChanged");
             if (i == 1) {
                 loginChanged = true;
             }
@@ -308,6 +417,13 @@ public class EmployeeFormController implements Initializable {
 
     }
 
+    /**
+     * metodo que controla cuando el tfSalary ha sufrido un cambio de texto
+     *
+     * @param observable
+     * @param oldValue valor antiguo
+     * @param newValue
+     */
     @FXML
     private void tfSalaryTextChanged(ObservableValue observable, String oldValue, String newValue) {
         if (!newValue.equalsIgnoreCase(oldValue)) {
@@ -316,66 +432,86 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * Controlador del evento accion del boton crear. Valida los datos y los
+     * envia a la capa de logica
+     *
+     * @param event El objecto ActionEvent del evento
+     */
     @FXML
     private void save(ActionEvent event) {
-
         try {
-            if (tfLogin.getText().length() != 0) {
-                System.out.println("Dentro");
-                UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
-            }
-        } catch (BusinessLogicException ex) {
-            exists = true;
-            Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                    "El login ya existe",
-                    ButtonType.OK);
-            alert.showAndWait();
-        } catch (Exception ex) {
-            Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        validateFields();
-        if (!exists && validFields()) {
-
             try {
-
-                LocalDate localDate = dpHiringDate.getValue();
-                Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-                System.out.println(date);
-
-                Employee emp = new Employee();
-                emp.setIdUser(null);
-                emp.setFullName(tfName.getText());
-                emp.setEmail(tfEmail.getText());
-                emp.setLogin(tfLogin.getText());
-                emp.setHiringDate(date);
-                emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
-                emp.setPrivilege(UserPrivilege.EMPLOYEE);
-                emp.setStatus(UserStatus.ENABLED);
-                emp.setSalary(tfSalary.getText());
-                
-                emp.setPrivilege(UserPrivilege.EMPLOYEE);
-                emp.setStatus(UserStatus.ENABLED);
-
-                EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
-
+                if (tfLogin.getText().length() != 0) {
+                    System.out.println("Dentro");
+                    UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
+                }
+            } catch (BusinessLogicException ex) {
+                exists = true;
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "El usuario se ha añadido correctamente",
+                        "El login ya existe",
                         ButtonType.OK);
                 alert.showAndWait();
-
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        if (!exists && !validFields()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                    "Algun campo no es correcto",
-                    ButtonType.OK);
-            alert.showAndWait();
+
+            validateFields();
+            if (!exists && validFields()) {
+
+                try {
+
+                    LocalDate localDate = dpHiringDate.getValue();
+                    Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+                    System.out.println(date);
+
+                    Employee emp = new Employee();
+                    emp.setIdUser(null);
+                    emp.setFullName(tfName.getText());
+                    emp.setEmail(tfEmail.getText());
+                    emp.setLogin(tfLogin.getText());
+                    emp.setHiringDate(date);
+                    emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
+                    emp.setPrivilege(UserPrivilege.EMPLOYEE);
+                    emp.setStatus(UserStatus.ENABLED);
+                    emp.setSalary(tfSalary.getText());
+
+                    emp.setPrivilege(UserPrivilege.EMPLOYEE);
+                    emp.setStatus(UserStatus.ENABLED);
+
+                    EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El usuario se ha añadido correctamente",
+                            ButtonType.OK);
+                    alert.showAndWait();
+
+                } catch (Exception ex) {
+                    Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (!exists && !validFields()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                        "Algun campo no es correcto",
+                        ButtonType.OK);
+                alert.showAndWait();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error añadiendo empleado");
+            errorAlert.showAndWait();
         }
     }
 
+    /**
+     * Metodo que devuelve un booleano, en funcion de si los campos estan
+     * informados o en caso contrario devuelve false y muestra los errores
+     * mediante showFieldErrors()
+     *
+     * @return boolean
+     */
     private boolean fieldsInformed() {
 
         if (!tfName.getText().equalsIgnoreCase("")
@@ -390,6 +526,12 @@ public class EmployeeFormController implements Initializable {
         }
     }
 
+    /**
+     * Metodo que devuelve true si hay un campo informado, en el caso contrario
+     * devuelve false
+     *
+     * @return boolean
+     */
     private boolean oneFieldInformed() {
 
         return !tfName.getText().equalsIgnoreCase("")
@@ -399,26 +541,52 @@ public class EmployeeFormController implements Initializable {
                 || !tfSalary.getText().equalsIgnoreCase("");
     }
 
+    /**
+     * Metodo que devuelve un booleano. True si todos los campos son validos y
+     * false si hay alguno que no lo sea
+     *
+     * @return boolean
+     */
     private boolean validFields() {
         return tfNameIsValid && tfEmailIsValid && tfLoginIsValid && tfSalaryIsValid;
     }
 
+    /**
+     * Metodo que devuelve un booleano. True si tfName cumple el pattern
+     *
+     */
     private boolean validateTfName(String user) {
         return Pattern.matches("[a-zA-ZáéíóúÁÉÍÓÚ]{2,}[\\s[a-zA-ZáéíóúÁÉÍÓÚ]{2,}]*", user);
     }
 
+    /**
+     * Metodo que devuelve un booleano. True si tfEmail cumple el pattern
+     *
+     */
     private boolean validateTfEmail(String email) {
         return Pattern.matches("\\b[a-zA-Z0-9_+-]+(?:.[a-zA-Z0-9_+-]+)*@(?:[a-zA-Z0-9-]+.)+[a-zA-Z]{2,6}\\b", email);
     }
 
+    /**
+     * Metodo que devuelve un booleano. True si tfLogin cumple el pattern
+     *
+     */
     private boolean validateTfLogin(String login) {
         return Pattern.matches("[a-zA-Z_][a-zA-Z0-9_]{1,254}", login);
     }
 
+    /**
+     * Metodo que devuelve un booleano. True si tfSalary cumple el pattern
+     *
+     */
     private boolean validateTfFSalary(String salary) {
         return Pattern.matches("^(?:([0-9]{4,6}))((?:[.])(?:[0-9]{1,2}))?", salary);
     }
 
+    /**
+     * Metodo que llama a todos los metos isValid para validar si los campos son
+     * correctos
+     */
     private void validateFields() {
         tfEmailIsValid = validateTfEmail(tfEmail.getText());
         tfNameIsValid = validateTfName(tfName.getText());
@@ -430,6 +598,10 @@ public class EmployeeFormController implements Initializable {
 
     }
 
+    /**
+     * Metodo que llama a todos los metos showlblError que mostraran errores si
+     * los campos no son correctos
+     */
     private void showFieldErrors() {
         if (!tfNameIsValid) {
             showlblErrorNameMessages(tfName.getText());
@@ -451,6 +623,12 @@ public class EmployeeFormController implements Initializable {
 
     }
 
+    /**
+     * Este metodo muestra los posibles errores de el campo tfName en
+     * lblErrorName
+     *
+     * @param name
+     */
     private void showlblErrorNameMessages(String name) {
         switch (name.trim().length()) {
             case 0:
@@ -587,14 +765,34 @@ public class EmployeeFormController implements Initializable {
      */
     @FXML
     private void hpClicked(ActionEvent event) {
-        if (oneFieldInformed()) {
-            //Informar que se descartaran los cambios
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Se descartarán los cambios\n"
-                    + "Esta operación no se puede deshacer.",
-                    ButtonType.OK, ButtonType.CANCEL);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
+        try {
+            if (oneFieldInformed()) {
+                //Informar que se descartaran los cambios
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                        "Se descartarán los cambios\n"
+                        + "Esta operación no se puede deshacer.",
+                        ButtonType.OK, ButtonType.CANCEL);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    try {
+                        //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+                        FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+                        Parent root;
+                        root = (Parent) employee.load();
+                        employeeFormPane.getScene().getWindow().hide();
+                        //Creamos una nueva escena para la ventana SignIn
+                        //cargamos el controlador de la ventana
+                        EmployeeController controller = employee.getController();
+                        controller.setStage(new Stage());
+                        controller.setEmployeeManager(employeesManager);
+                        controller.initStage(root);
+                    } catch (IOException ex) {
+                        Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    alert.close();
+                }
+            } else {
                 try {
                     //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
                     FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
@@ -610,26 +808,13 @@ public class EmployeeFormController implements Initializable {
                 } catch (IOException ex) {
                     Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else {
-                alert.close();
             }
-        } else {
-            try {
-                //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-                FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
-                Parent root;
-                root = (Parent) employee.load();
-                employeeFormPane.getScene().getWindow().hide();
-                //Creamos una nueva escena para la ventana SignIn
-                //cargamos el controlador de la ventana
-                EmployeeController controller = employee.getController();
-                controller.setStage(new Stage());
-                controller.setEmployeeManager(employeesManager);
-                controller.initStage(root);
-            } catch (IOException ex) {
-                Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (Exception ex) {
+            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error volviendo a la ventana employee");
+            errorAlert.showAndWait();
         }
     }
-
 }

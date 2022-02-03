@@ -28,6 +28,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javax.naming.OperationNotSupportedException;
 import transferObjects.User;
+import exception.*;
 
 /**
  * @author ibai arriola
@@ -105,7 +106,7 @@ public class SignInController {
                 controller.initStage(root);
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "El usuario o la contraseña no son correctos",
+                        "Usuario o contraseña incorrectos",
                         ButtonType.OK);
                 alert.showAndWait();
             }
@@ -116,6 +117,11 @@ public class SignInController {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error iniciando sesion");
+            errorAlert.showAndWait();
+
         }
 
     }

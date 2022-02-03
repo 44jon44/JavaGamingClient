@@ -8,12 +8,14 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -23,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.naming.OperationNotSupportedException;
+import exception.*;
 
 /**
  * FXML Controller class
@@ -32,6 +35,9 @@ import javax.naming.OperationNotSupportedException;
 public class HbMenuAdmController {
 
     private static final Logger LOG = Logger.getLogger(HbMenuAdmController.class.getName());
+    /**
+     * Interfaz de metos para la clase Employee
+     */
     private EmployeeManager employeesManager;
     @FXML
     private HBox hbMenuAdm;
@@ -68,24 +74,33 @@ public class HbMenuAdmController {
 
     public void initStage(Parent root) throws IOException {
         LOG.info("Init Stage del menú hbMenuAdm");
-        //llamar al método que abre la ventana de empleado
-        miManageUsers.setOnAction(this::employeesClicked);
-        //llamar al método que abre la ventana de juegos
-        miManageGames.setOnAction(this::gamesClicked);
-        //llamar al método que abre la ventana de compras
-        miManagePurchases.setOnAction(this::purchasesClicked);
-        //llamar al método que abre la ventana del formulario
-        miPrint.setOnAction(this::printClicked);
-        //llamar al método que abre la ventana para cambiar la contraseña
-        miChangePasswd.setOnAction(this::passwordClicked);
-        //metodo que cierr la aplicacion
-        closeApp.setOnAction(this::closeAppClicked);
-        //metodo que cierra sesion
-        logOut.setOnAction(this::logOutClicked);
+        try {
+            //llamar al método que abre la ventana de empleado
+            miManageUsers.setOnAction(this::employeesClicked);
+            //llamar al método que abre la ventana de juegos
+            miManageGames.setOnAction(this::gamesClicked);
+            //llamar al método que abre la ventana de compras
+            miManagePurchases.setOnAction(this::purchasesClicked);
+            //llamar al método que abre la ventana del formulario
+            miPrint.setOnAction(this::printClicked);
+            //llamar al método que abre la ventana para cambiar la contraseña
+            miChangePasswd.setOnAction(this::passwordClicked);
+            //metodo que cierr la aplicacion
+            closeApp.setOnAction(this::closeAppClicked);
+            //metodo que cierra sesion
+            logOut.setOnAction(this::logOutClicked);
+        } catch (Exception ex) {
+            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error abriendo el MenuHbMenuAdmController");
+            errorAlert.showAndWait();
+        }
     }
 
     @FXML
     private void employeesClicked(ActionEvent event) {
+        LOG.info("Abriendo la ventana Employee...");
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
@@ -103,11 +118,16 @@ public class HbMenuAdmController {
 
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error abriendo la ventana employee");
+            errorAlert.showAndWait();
         }
     }
 
     @FXML
     private void gamesClicked(ActionEvent event) {
+        LOG.info("Abriendo la venta Game");
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
@@ -130,6 +150,7 @@ public class HbMenuAdmController {
 
     @FXML
     private void purchasesClicked(ActionEvent event) {
+        LOG.info("Abriendo la venta Purchase...");
         try {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
@@ -149,9 +170,6 @@ public class HbMenuAdmController {
     @FXML
     private void printClicked(ActionEvent event) {
 
-        if (tblEmployees.isVisible()) {
-            System.out.println("se ve Pajin");
-        }
     }
 
     @FXML
@@ -180,43 +198,50 @@ public class HbMenuAdmController {
 
     @FXML
     private void logOutClicked(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                "¿Esta seguro de cerrar sesion?",
-                ButtonType.OK, ButtonType.CANCEL);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            System.out.println("Entra");
-            try {
-                FXMLLoader signIn = new FXMLLoader(getClass().getResource("/view/ViewSignIn.fxml"));
-                Parent root;
-                root = (Parent) signIn.load();
-                //Creamos una nueva escena para la ventana SignIn
-                Scene employeeScene = new Scene(root);
-                //creamos un nuevo escenario para la nueva ventana
-                Stage employeeStage = (Stage) hbMenuAdm.getScene().getWindow();
-
-                SignInController controller = signIn.getController();
-                
-                controller.setUsersManager(UserManagerFactory.createUserManager("REST_WEB_CLIENT"));
-
-                //añadimos la escena en el stage
-                employeeStage.setScene(employeeScene);
-            } catch (IOException ex) {
-                Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (OperationNotSupportedException ex) {
-                Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+        LOG.info("Cerrando sesion...");
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    "¿Esta seguro de cerrar sesion?",
+                    ButtonType.OK, ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                System.out.println("Entra");
+                try {
+                    FXMLLoader signIn = new FXMLLoader(getClass().getResource("/view/ViewSignIn.fxml"));
+                    Parent root;
+                    root = (Parent) signIn.load();
+                    //Creamos una nueva escena para la ventana SignIn
+                    Scene employeeScene = new Scene(root);
+                    //creamos un nuevo escenario para la nueva ventana
+                    Stage employeeStage = (Stage) hbMenuAdm.getScene().getWindow();
+                    SignInController controller = signIn.getController();
+                    controller.setUsersManager(UserManagerFactory.createUserManager("REST_WEB_CLIENT"));
+                    //añadimos la escena en el stage
+                    employeeStage.setScene(employeeScene);
+                } catch (IOException ex) {
+                    Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (OperationNotSupportedException ex) {
+                    Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+
+        } catch (Exception ex) {
+            Alert errorAlert = new Alert(AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error cerrando sesion");
+            errorAlert.showAndWait();
         }
     }
 
     @FXML
     private void closeAppClicked(ActionEvent event) {
+        LOG.info("Cerrando la aplicacion...");
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 "¿Esta seguro de salir de la aplicacion?",
                 ButtonType.OK, ButtonType.CANCEL);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            Platform.exit();
+            //Cierra la aplicacion
             System.exit(0);
         }
     }
