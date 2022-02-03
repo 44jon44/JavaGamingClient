@@ -86,6 +86,9 @@ public class GameFormController {
 
     /**
      * Initializes the controller class.
+     *
+     * @param root
+     * @throws java.lang.Exception
      */
     public void initStage(Parent root) throws Exception {
         try {
@@ -160,7 +163,7 @@ public class GameFormController {
      * si se cambia la longitud del texto se quita el label de error y el color
      * se vuelve normal
      *
-     * @param ov el observable
+     * @param observable el observable
      * @param oldValue el valor anterior del filtro
      * @param newValue el valor acctualizado del filtro
      */
@@ -176,7 +179,7 @@ public class GameFormController {
      * valida que este campo este escrito correctamente validando la longitud ,
      * o posibles errores a la hora de escribir
      *
-     * @param ov el observable
+     * @param observable el observable
      * @param oldValue el valor anterior del filtro
      * @param newValue el valor acctualizado del filtro
      */
@@ -188,7 +191,6 @@ public class GameFormController {
             } else {
                 tfNameIsValid = validateTfName(tfGameName.getText());
                 if (!tfNameIsValid) {
-                    tfGameName.setStyle("-fx-text-inner-color: red;");
                     lblErrorGameName.setText("Nombre de juego invalido");
                 }
             }
@@ -201,7 +203,7 @@ public class GameFormController {
      * si se cambia la longitud del texto se quita el label de error y el color
      * se vuelve normal
      *
-     * @param ov el observable
+     * @param observable el observable
      * @param oldValue el valor anterior del filtro
      * @param newValue el valor acctualizado del filtro
      */
@@ -217,7 +219,7 @@ public class GameFormController {
      * valida que este campo este escrito correctamente validando la longitud ,
      * o posibles errores a la hora de escribir
      *
-     * @param ov el observable
+     * @param observable el observable
      * @param oldValue el valor anterior del filtro
      * @param newValue el valor acctualizado del filtro
      */
@@ -335,7 +337,6 @@ public class GameFormController {
                     modifyAlert();
                 }
             }
-
         } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -360,7 +361,7 @@ public class GameFormController {
     /**
      * Validamos que el nombre este bien escrito
      *
-     * @param el nombre del juego
+     * @param text el nombre del juego
      * @return un boleano
      */
     private boolean validateTfName(String text) {
@@ -371,8 +372,8 @@ public class GameFormController {
     /**
      * Validamos que el precio este bien escrito
      *
-     * @param el precio del juego
-     * @return un boleano
+     * @param price
+     * @return boolean
      */
     private boolean validateTfPrice(String price) {
         //valida el campo precios que no pueda meter letras.
@@ -383,7 +384,7 @@ public class GameFormController {
      * Limpiamos los campos del formulario
      */
     private void cleanTextFields() {
-        //limpiamos el campo name
+        //limpiamos el campo
         tfGameName.setText("");
         //limpiamosel campo price
         tfGamePrice.setText("");

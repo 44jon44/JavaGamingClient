@@ -17,10 +17,10 @@ import transferObjects.Game;
 public interface GameManager {
 
     /**
-     * Este método devuelve una colección de {@link GameBean}, que contiene
+     * Este método devuelve una colección de {@link Game}, que contiene
      * todos los juegos.
      *
-     * @return Collection La colección con todos los datos {@link GameBean} de
+     * @return Collection La colección con todos los datos {@link Game} de
      * los juegos.
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
@@ -35,14 +35,17 @@ public interface GameManager {
      * existir lanza la exception
      *
      * @param name el nombre del objeto Game
+     * @return 
      * @throws exception.GameExistExpception si exise el juego
      */
+
     public Collection<Game> isNameExisting(String name) throws  GameExistExpception;
+
 
     /**
      * Este metodo crea un juego nuevo.
      *
-     * @param Game el objeto que va ser añadido.
+     * @param game el objeto que va ser añadido.
      * @throws BusinessLogicException If there is any error while processing.
      */
     public void createGame(Game game) throws   Exception;
@@ -50,7 +53,7 @@ public interface GameManager {
     /**
      * Este método actualiza los datos de un UserBean existente para el usuario.
      *
-     * @param user El objeto UserBean a actualizar.
+     * @param game El objeto Game a actualizar.
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
     public void updateGame(Game game) throws  Exception;
@@ -58,7 +61,7 @@ public interface GameManager {
     /**
      * Este método elimina los datos de un usuario existente.
      *
-     * @param user El objeto UserBean que se va a eliminar.
+     * @param idgame  el id del juego que se va anadir
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
     public void deleteGame(Integer idgame) throws  Exception;

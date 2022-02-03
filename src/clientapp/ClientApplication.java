@@ -5,6 +5,7 @@
  */
 package clientapp;
 
+import controller.PurchaseController;
 import businessLogic.EmployeeManager;
 import controller.SignInController;
 import factories.EmployeeManagerFactory;
@@ -48,6 +49,7 @@ public class ClientApplication extends Application {
         //Finalmente  mostramos nuestra ventana
         signInStage.show();
     }
+    
     public static void main(String[] args) {
         launch(args);
     }

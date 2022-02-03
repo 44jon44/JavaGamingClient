@@ -152,7 +152,7 @@ public class RSACipherClient {
      * Este método devuelve la clave pública almacenada en un fichero a partir
      * de la ruta relativa del mismo.
      *
-     * @param filePath Path relativo del fichero que contiene la clave.
+     * @param key
      * @return PublicKey Clava privada almacenada en un fichero.
      * @throws IOException Excepción que se lanza si no existe el fichero.
      * @throws NoSuchAlgorithmException Excepcion que se lanza si el algoritmo

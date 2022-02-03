@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
-
 /**
  * entidad cliente  que es extiende de la entidad user
  * @author Alex Hurtado
@@ -16,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Client extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     /**
      * Fecha en la que se ha dado de alta el cliente.
      */
@@ -24,7 +23,6 @@ public class Client extends User implements Serializable {
     /**
      * lista de compras reliazada por el cliente
      */
-   
     private Set<Purchase> purchases;
 
     
@@ -45,12 +43,12 @@ public class Client extends User implements Serializable {
         this.purchases = purchases;
     }
 
-  
 /**
  * @return retorna los datos de un cliente
  */
     @Override
     public String toString() {
-        return "Client{" + super.toString() + "signUpDate=" + signUpDate + '}';
+        //return "Client{" + super.toString() + "signUpDate=" + signUpDate + '}';
+        return super.getFullName();
     }
 }

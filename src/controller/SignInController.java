@@ -6,6 +6,7 @@
 package controller;
 
 import businessLogic.EmployeeManager;
+
 import businessLogic.UserManager;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -37,7 +38,6 @@ public class SignInController {
 
     private EmployeeManager employeesManager;
     private UserManager usersManager;
-
     // un logger que nos informara mediante la terminal
     private static final Logger LOG = Logger.getLogger(SignInController.class.getName());
     //declaramos los componentes de la ventana  que manipularemos a continuacion
@@ -86,6 +86,24 @@ public class SignInController {
      * @param event el evento de activacion del boton
      */
     @FXML
+//    private void signIN(ActionEvent event) {
+//        try {
+//            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+//            FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+//            Parent root;
+//            root = (Parent) employee.load();
+//            panelSignIN.getScene().getWindow().hide();
+//            //Creamos una nueva escena para la ventana SignIn
+//            //cargamos el controlador de la ventana
+//            EmployeeController controller = employee.getController();
+//            controller.setStage(new Stage());
+//            controller.setEmployeeManager(employeesManager);
+//            controller.initStage(root);
+//
+//        } catch (IOException ex) {
+//            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     private void signIN(ActionEvent event) {
 
         try {
@@ -121,11 +139,8 @@ public class SignInController {
             errorAlert.setHeaderText("Error");
             errorAlert.setContentText("Error iniciando sesion");
             errorAlert.showAndWait();
-
         }
-
     }
-
     /**
      * Abre una ventana modal de signUP que que el usuario se pueda registrar
      *

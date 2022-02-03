@@ -5,31 +5,31 @@
  */
 package factories;
 
-import businessLogic.GameManager;
-import businessLogic.GameManagerImplementation;
+import businessLogic.ClientManagerImplementation;
 import javax.naming.OperationNotSupportedException;
+import businessLogic.ClientManager;
 
 /**
  *
- * @author jonma
+ * @author Alex Hurtado
  */
-public class GameManagerFactory {
-      public static final String REST_WEB_CLIENT_TYPE = "REST_WEB_CLIENT";
+public class ClientManagerFactory {
+    public static final String REST_WEB_CLIENT_TYPE = "REST_WEB_CLIENT";
 
-    public static GameManager createGameManager(String type) throws OperationNotSupportedException {
+    public static ClientManager createClientManager(String type) throws OperationNotSupportedException {
         //The object to be returned
-        GameManager gameManager = null;
+        ClientManager clientManager = null;
         //Evaluate type parameter
         switch (type) {
             //If rest web client type is asked for, use DwellingManagerImplementation.
             case REST_WEB_CLIENT_TYPE:
                 //If rest web client type is asked for, use DwellingManagerImplementation
-                gameManager = new GameManagerImplementation();
+                clientManager = new ClientManagerImplementation();
                 break;
             default:
                 throw new OperationNotSupportedException("Users manager type not supported.");
         }
 
-        return gameManager;
+        return clientManager;
     }
 }
