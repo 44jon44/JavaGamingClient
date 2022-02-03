@@ -139,6 +139,7 @@ public class EmployeeController {
     public void initStage1(Parent root) {
         LOG.info("InitStage de la ventana EmployeeController...");
         try {
+            //controladores de los eventos ActionEvent de los botones
             btnAdd.setOnAction(this::create);
             btnDelete.setOnAction(this::delete);
             btnModify.setOnAction(this::modify);
@@ -146,26 +147,30 @@ public class EmployeeController {
             btnReport.setOnAction(this::print);
             //lblError se inicializa vacio
             lblError.setText("");
-            //Digitos maximos para tfValue
+            //Se enfoca el tfValue
             tfValue.requestFocus();
+            //Metodo que controla cuando el texto de tfValue cambia
             tfValue.textProperty().addListener(this::tfValueTextChanged);
             //Se deshabilitan los botones btnDelete y bntModify
             btnDelete.setDisable(true);
             btnModify.setDisable(true);
-
+            //Se alinean los valores de la tabla
             tcSalary.setStyle("-fx-alignment: CENTER-RIGHT;");
             tcName.setStyle("-fx-alignment: CENTER;");
             tcEmail.setStyle("-fx-alignment: CENTER;");
             tcLogin.setStyle("-fx-alignment: CENTER;");
             tcHiringDate.setStyle("-fx-alignment: CENTER;");
-
+            //Se deselecciona fila de la tabla en caso de que haya alguna 
+            //selecionada
             tblEmployees.getSelectionModel().clearSelection();
             tblEmployees.refresh();
-
+            //Se cargan datos en la tabla
             ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
             if (emps.isEmpty()) {
+                //En caso de que no se encuentre nada
                 lblError.setText("No se han encontrado empleados");
             }
+            //Se cargan los datos en la tabla
             tblEmployees.setItems(emps);
 
             //Cargamos los metodos de filtrado en la combo box
@@ -173,9 +178,10 @@ public class EmployeeController {
             observableList.add("Nombre");
             observableList.add("Salario");
             observableList.add("Mostrar todos los empleados");
+            //Se cargan las opciones en la comboBox
             cmbFilter.setItems(observableList);
             cmbFilter.getSelectionModel().selectFirst();
-
+            //Se cargan las propiedades de las columnas
             tcName.setCellValueFactory(
                     new PropertyValueFactory<>("fullName"));
             tcEmail.setCellValueFactory(
@@ -186,12 +192,12 @@ public class EmployeeController {
                     new PropertyValueFactory<>("salary"));
             tcLogin.setCellValueFactory(
                     new PropertyValueFactory<>("login"));
-
+            //Se controla cuando se cambia la seleccion de una fila
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
 
         } catch (Exception ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-            
+            //Mostramos un error
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Error");
             errorAlert.setContentText("Error abriendo la ventana employee");
@@ -226,26 +232,30 @@ public class EmployeeController {
             btnReport.setOnAction(this::print);
             //lblError se inicializa vacio
             lblError.setText("");
-            //Digitos maximos para tfValue
+            //Se enfoca en el tfValue
             tfValue.requestFocus();
             tfValue.textProperty().addListener(this::tfValueTextChanged);
             //Se deshabilitan los botones btnDelete y bntModify
             btnDelete.setDisable(true);
             btnModify.setDisable(true);
-
+            //Se alinean los valores de la tabla
             tcSalary.setStyle("-fx-alignment: CENTER-RIGHT;");
             tcName.setStyle("-fx-alignment: CENTER;");
             tcEmail.setStyle("-fx-alignment: CENTER;");
             tcLogin.setStyle("-fx-alignment: CENTER;");
             tcHiringDate.setStyle("-fx-alignment: CENTER;");
-
+            //Se deselecciona fila de la tabla en caso de que haya alguna 
+            //selecionada
             tblEmployees.getSelectionModel().clearSelection();
+            //Se refresca la tabla
             tblEmployees.refresh();
-
+            //Se buscan empleados en la capa de logica
             ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
             if (emps.isEmpty()) {
+                //Si no se encuentra ningun empleado
                 lblError.setText("No se han encontrado empleados");
             }
+            //Se cargan los elementos en la tabla
             tblEmployees.setItems(emps);
 
             //Cargamos los metodos de filtrado en la combo box
@@ -253,9 +263,11 @@ public class EmployeeController {
             observableList.add("Nombre");
             observableList.add("Salario");
             observableList.add("Mostrar todos los empleados");
+            //Se cargan las opciones en la comboBox
             cmbFilter.setItems(observableList);
+            //Se selecciona la primera opcion
             cmbFilter.getSelectionModel().selectFirst();
-
+            //Se cargan los PropertyValueFactory de las columnas de la tabla
             tcName.setCellValueFactory(
                     new PropertyValueFactory<>("fullName"));
             tcEmail.setCellValueFactory(
@@ -266,11 +278,12 @@ public class EmployeeController {
                     new PropertyValueFactory<>("salary"));
             tcLogin.setCellValueFactory(
                     new PropertyValueFactory<>("login"));
-
+            //Controla cuando se cambia la seleccion de fila de la tabla
             tblEmployees.getSelectionModel().selectedItemProperty().addListener(this::handleUsersTableSelectionChanged);
-
+            //Se muestra el stage 
             stage.showAndWait();
         } catch (Exception ex) {
+            //En caso de error al abrir la ventan employee
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Error");
@@ -285,7 +298,7 @@ public class EmployeeController {
      * @param event
      */
     private void create(ActionEvent event) {
-        LOG.info("Creando empleado...");
+        
         try {
             //getResource tienes que anadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
@@ -324,11 +337,11 @@ public class EmployeeController {
      */
     @FXML
     private void modify(ActionEvent event) {
-        LOG.info("Modificando...");
+        
         try {
             Employee emp = ((Employee) tblEmployees.getSelectionModel().getSelectedItem());
 
-            //getResource tienes que aÃ±adir la ruta de la ventana que quieres iniciar.
+            //getResource tienes que anadir la ruta de la ventana que quieres iniciar.
             FXMLLoader employeeForm = new FXMLLoader(getClass().getResource("/view/employeeForm.fxml"));
             Parent root = (Parent) employeeForm.load();
             //Creamos una nueva escena para la ventana SignIn
@@ -367,30 +380,32 @@ public class EmployeeController {
         LOG.info("Borrando...");
         try {
             Employee emp;
+            //se recoge el Employee de la tabla en una variable
             emp = ((Employee) tblEmployees.getSelectionModel().getSelectedItem());
+            //Se pide la confirmacion de borrado al usuario mediante un alert
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     "¿Borrar la fila seleccionada?\n"
                     + "Esta operación no se puede deshacer.",
                     ButtonType.OK, ButtonType.CANCEL);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
+                //En caso de confirmacion, se envia el Employee a la capa de logica
                 EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").deleteEmployee(emp);
-
+                //Se elimina el Employee de la tabala
                 tblEmployees.getItems().remove(emp);
                 tblEmployees.refresh();
+                //Los btnDelete y btnModify se deshabilitan
                 btnDelete.setDisable(true);
                 btnModify.setDisable(true);
-
+                //Se quita la seleccion de la tabla
                 tblEmployees.getSelectionModel().clearSelection();
                 tblEmployees.refresh();
 
-                Alert alert1 = new Alert(Alert.AlertType.INFORMATION,
-                        "¿Borrar la fila seleccionada?\n"
-                        + "Esta operación no se puede deshacer.",
-                        ButtonType.OK, ButtonType.CANCEL);
+                
             }
 
         } catch (Exception ex) {
+            //En caso de error se informa al usurio
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
 
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -411,69 +426,81 @@ public class EmployeeController {
         LOG.info("Buscando...");
         boolean validFloat;
         try {
+            //Al label error se le cambia el texto a vacio
             lblError.setText("");
             if (tfValue.getText().equalsIgnoreCase("") && cmbFilter.getValue() != null) {
                 if (!cmbFilter.getValue().toString().equals("Mostrar todos los empleados")) {
+                    //En caso de que no se haya seleccionado Mostrar todos los empleados 
+                    //y el tfValue no tenga texto
                     lblError.setText("Debes de introducir un valor en campo value");
                 }
             }
 
-            if (cmbFilter.getValue().toString().equals("Salario")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+            if (cmbFilter.getValue().toString().equals("Salario")
                     && !tfValue.getText().equalsIgnoreCase("")) {
-
+                //En caso de que no se haya seleccionado Salario
+                //y el tfValue este informado
                 Pattern p = Pattern.compile("^(?:([0-9]{1,5}))((?:[.])(?:[0-9]{1,2}))?");
                 Matcher m = p.matcher(tfValue.getText().trim());
                 validFloat = m.matches();
 
-                try {
-                    if (validFloat) {
-                        ObservableList<Employee> empsS = FXCollections.observableArrayList(employeesManager.employeesBySalary(tfValue.getText()));
-                        if (empsS.isEmpty()) {
-                            lblError.setText("No se han encontrado empleados");
-                        }
-                        tblEmployees.setItems(empsS);
-                    } else {
-                        lblError.setText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"
-                        );
-                    }
-                } catch (Exception ex) {
-                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-            if (cmbFilter.getValue().toString().equals("Nombre")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-                    && !tfValue.getText().equalsIgnoreCase("")) {
-                try {
-                    ObservableList<Employee> empsN = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesByName(tfValue.getText()));
-                    if (empsN.isEmpty()) {
-                        lblError.setText("No se han encontrado empleados:");
-                    }
-                    tblEmployees.setItems(empsN);
-
-                } catch (Exception ex) {
-                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            }
-            if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-                    && tfValue.getText().equalsIgnoreCase("")) {
-                try {
-                    ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
-                    if (emps.isEmpty()) {
-
+                if (validFloat) {
+                    //En caso de que el salario sea valido
+                    ObservableList<Employee> empsS = FXCollections.observableArrayList(employeesManager.employeesBySalary(tfValue.getText()));
+                    if (empsS.isEmpty()) {
+                        //Si no se ha encontrado ninguno se informa al usuario 
                         lblError.setText("No se han encontrado empleados");
                     }
-                    tblEmployees.setItems(emps);
-                } catch (Exception ex) {
-                    Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+                    //Si hay resultados, se cargan los datos en la tabla
+                    tblEmployees.setItems(empsS);
+                } else {
+                    //Si no es un campo valido, se informa al usuario
+                    lblError.setText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"
+                    );
                 }
+
+            }
+
+            if (cmbFilter.getValue().toString().equals("Nombre")
+                    && !tfValue.getText().equalsIgnoreCase("")) {
+                //Se buscan los empleados por nombre en caso de que se haya seleccionado nombre
+                // y el campo tfValue este informado
+                ObservableList<Employee> empsN = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").employeesByName(tfValue.getText()));
+                if (empsN.isEmpty()) {
+                    //Si no se han encontrados empleados se informa al usuario
+                    lblError.setText("No se han encontrado empleados:");
+                }
+                //Se cargan los datos en la tabla
+                tblEmployees.setItems(empsN);
+
+            }
+            if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")
+                    && tfValue.getText().equalsIgnoreCase("")) {
+                 //Se buscan todos los empleados  en caso de que se haya 
+                 //seleccionado mostar todos los empleados
+                // y el campo tfValue  no este informado
+                ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
+                if (emps.isEmpty()) {
+                    //en caso de que nos e hayan encontrado empleados
+                    //se informa al usuario
+                    lblError.setText("No se han encontrado empleados");
+                }
+                 //Se cargan los datos en la tabla
+                tblEmployees.setItems(emps);
+               
             }
             if (cmbFilter.getValue().toString().equals("Mostrar todos los empleados")
                     && !tfValue.getText().equalsIgnoreCase("")) {
+                //En caso de que se haya 
+                 //seleccionado mostar todos los empleados
+                // y el campo tfValue este informado
+                //se informara al usuario
                 lblError.setText("El campo value debe de estar vacio");
             }
 
             tfValue.setText("");
+
+            
         } catch (Exception ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -496,13 +523,13 @@ public class EmployeeController {
     private void handleUsersTableSelectionChanged(ObservableValue observable,
             Object oldValue,
             Object newValue) {
-        //If there is a row selected, move row data to corresponding fields in the
-        //window and enable create, modify and delete buttons
+        //Si se selecciona una fila, se habiltan btnModify y btnDelete 
         if (newValue != null) {
 
             btnDelete.setDisable(false);
             btnModify.setDisable(false);
-        } else {
+        } //Si se deselecciona una fila, se deshabiltan btnModify y btnDelete
+        else {
             btnDelete.setDisable(true);
             btnModify.setDisable(true);
         }
@@ -510,7 +537,7 @@ public class EmployeeController {
     }
 
     /**
-     * Este metodo carga la interfaz de logica EmployeeManager
+     * Este metodo carga la interfaz de logica EmployeesManager
      *
      * @param employeesManager
      */
@@ -552,19 +579,22 @@ public class EmployeeController {
             JasperReport report
                     = JasperCompileManager.compileReport(getClass()
                             .getResourceAsStream("/report/EmployeeReport.jrxml"));
+            //Datos para el informe: una coleccion de empleados basado en una
+            //implementacion de JRDataSource 
 
             JRBeanCollectionDataSource dataItems
                     = new JRBeanCollectionDataSource((Collection<Employee>) this.tblEmployees.getItems());
-
+            //mapa que se pasara al informe
             Map<String, Object> parameters = new HashMap<>();
-
+            //Llena el informe con datos 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-
+            //Crea la venta del informe. El valor false hace que la ventana
+            //anterior no se cierre
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
         } catch (JRException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
-
+            //Si hay un error se informa al usuario
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Error");
             errorAlert.setContentText("Error generando el informe");
