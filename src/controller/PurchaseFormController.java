@@ -32,6 +32,10 @@ import businessLogic.PurchaseManager;
 import factories.ClientManagerFactory;
 import factories.GameManagerFactory;
 import factories.PurchaseManagerFactory;
+import java.util.Optional;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Pane;
 import javax.naming.OperationNotSupportedException;
 
 /**
@@ -39,18 +43,18 @@ import javax.naming.OperationNotSupportedException;
  *
  * @author ibai Arriola
  */
-public class PurchaseFormController{
+public class PurchaseFormController {
 
     private static final Logger LOG = Logger.getLogger(PurchaseFormController.class.getName());
-    
+
     private final static String TYPE = "REST_WEB_CLIENT";
-    
+
     private ClientManager clientsManager;
-    
+
     private ObservableList<Client> clientsObservableList;
-    
+
     private GameManager gamesManager;
-            
+
     private PurchaseManager purchasesManager;
     @FXML
     private Button btnSave;
@@ -75,19 +79,21 @@ public class PurchaseFormController{
     @FXML
     private Label lblErrorGame;
     @FXML
+    private Pane purchaseFormPane;
+    @FXML
     private HBox hbMenuAdm;
     private Stage stage;
-    
-    public void setStage(Stage stage){
+
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     private Purchase purchaseToModify;
-    
+
     public void setPurchaseToModify(Purchase purchaseToModify) {
         this.purchaseToModify = purchaseToModify;
     }
-    
+
     public void initStage(Parent root) {
         try {
             Scene purchaseFormScene = new Scene(root);
@@ -97,6 +103,7 @@ public class PurchaseFormController{
             clientsManager = ClientManagerFactory.createClientManager(TYPE);
             gamesManager = GameManagerFactory.createGameManager(TYPE);
             //hiperlink
+            //hlBack.setDisable(true);
             hlBack.setOnAction(this::back);
             //labels error
             lblErrorClient.setText("");
@@ -105,7 +112,7 @@ public class PurchaseFormController{
             btnDelete.setOnAction(this::hadleDelete);
             btnSave.setOnAction(this::handleSave);
             //si es una alta
-            if(purchaseToModify != null){
+            if (purchaseToModify != null) {
                 cbClient.setValue(purchaseToModify.getClient());
                 cbClient.setDisable(true);
                 cbGameName.setValue(purchaseToModify.getGame().getName());
@@ -122,50 +129,59 @@ public class PurchaseFormController{
                 dpPurchaseDate.setEditable(false);
             }
         } catch (OperationNotSupportedException ex) {
-           LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
-        
-        
+
     }
 
     public void back(ActionEvent event) {
-        try {
-            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
-            Parent root;
-            root = (Parent) purchase.load();
-            hbMenuAdm.getScene().getWindow().hide();
-            PurchaseController controller = purchase.getController();
-            controller.setStage(stage);
-            controller.initStageBack(root);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+        //Informar que se descartaran los cambios
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Se descartarán los cambios\n"
+                + "Esta operación no se puede deshacer.",
+                ButtonType.OK, ButtonType.CANCEL);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+
+            try {
+                //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+                FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
+                Parent root;
+                root = (Parent) purchase.load();
+                PurchaseController controller = purchase.getController();
+                controller.setStage(stage);
+                controller.initStage(root);
+            } catch (IOException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        } else {
+            alert.close();
         }
+
     }
 
     private void loadCbClients() {
-        try
-        {
+        try {
             Collection clients;
             clients = clientsManager.findAllClients();
             clientsObservableList = FXCollections.observableArrayList(clients);
             cbClient.setItems(clientsObservableList);
             LOG.log(Level.INFO, "Clientes cargados: {0}", clientsObservableList.size());
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void hadleDelete(ActionEvent event) {
-        
+
     }
-    
+
     @FXML
     private void handleSave(ActionEvent event) {
-        
+
     }
 }

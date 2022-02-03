@@ -50,6 +50,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import transferObjects.Employee;
 import exception.*;
+import groovy.xml.Entity;
 
 /**
  * FXML Controller class
@@ -62,7 +63,11 @@ public class EmployeeController {
 
     private EmployeeManager employeesManager;
 
-    List<String> list = new ArrayList<String>();
+    private List<String> list = new ArrayList<String>();
+    
+    private ObservableList<Employee> emps;
+    
+    private Collection<Employee> empsCollection;
     @FXML
     private Pane employeePane;
 
@@ -165,13 +170,16 @@ public class EmployeeController {
             tblEmployees.getSelectionModel().clearSelection();
             tblEmployees.refresh();
             //Se cargan datos en la tabla
-            ObservableList<Employee> emps = FXCollections.observableArrayList(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees());
-            if (emps.isEmpty()) {
-                //En caso de que no se encuentre nada
-                lblError.setText("No se han encontrado empleados");
+            empsCollection = EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").getAllEmployees();
+            if(empsCollection != null){
+                emps = FXCollections.observableArrayList(empsCollection);
+                if (emps.isEmpty()) {
+                    //En caso de que no se encuentre nada
+                    lblError.setText("No se han encontrado empleados");
+                }
+                //Se cargan los datos en la tabla
+                tblEmployees.setItems(emps);
             }
-            //Se cargan los datos en la tabla
-            tblEmployees.setItems(emps);
 
             //Cargamos los metodos de filtrado en la combo box
             ObservableList<String> observableList = FXCollections.observableList(list);

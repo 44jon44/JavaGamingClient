@@ -53,7 +53,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception creating user, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error creating user:\n" + ex.getMessage());
+            throw new BusinessLogicException("Error creating user:\n");
         }
     }
 
@@ -73,7 +73,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception updating user, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error updating user:\n" + ex.getMessage());
+            throw new BusinessLogicException("Error updating user:\n");
         }
     }
 
@@ -92,7 +92,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception deleting user, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error deleting user:\n" + ex.getMessage());
+            throw new BusinessLogicException("Error deleting user:\n");
         }
     }
 
@@ -117,7 +117,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception checking login exixtence, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error finding user:\n" + ex.getMessage());
+            throw new BusinessLogicException("Error finding user:\n");
         }
     }
 
@@ -137,7 +137,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Exception deleting user, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error finding user by salary:\n" + ex.getMessage());
+            throw new BusinessLogicException("Error finding user by salary:\n");
         }
         return employees;
     }
@@ -153,7 +153,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "EMployeeManager: Exception finding employee by fullName, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error deleting user:\n" + ex.getMessage());
+            throw new BusinessLogicException("Error deleting user:\n");
         }
         return employees;
     }
@@ -177,7 +177,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
             LOGGER.log(Level.SEVERE,
                     "UsersManager: Excepcon buscando todos los empleados, {0}",
                     ex.getMessage());
-            throw new BusinessLogicException("Error finding all users:\n" + ex.getMessage());
+            //throw new BusinessLogicException("Error finding all users:\n");
         }
         return employees;
     }

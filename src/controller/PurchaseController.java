@@ -44,6 +44,7 @@ import transferObjects.Purchase;
 import businessLogic.ClientManager;
 import java.text.SimpleDateFormat;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Alert;
 
 /**
  * FXML Controller class
@@ -114,30 +115,23 @@ public class PurchaseController {
     public void setSelectedPurchase(Purchase selectedPurchase) {
         this.selectedPurchase = selectedPurchase;
     }
-
-    public void initStageOriginal(Parent root) {
-        Scene purchaseScene = new Scene(root);
-        stage.setScene(purchaseScene);
-        btnAddPurchase.setOnAction(this::handleAddPurchase);
-        btnModifyPurchase.setDisable(true);
-        btnDeletePurchase.setDisable(true);
+    
+    public void initStage(Parent root) throws Exception{
+        LOG.info("InitStage de la ventana purchase...");
+        try{
+            Scene purchaseScene = new Scene(root);
+            stage.setScene(purchaseScene);
+            loadViewState();
+        }catch(Exception e){
+            LOG.log(Level.SEVERE,"Se ha producido un error en el servidor",e);
+            //Mostramos un error
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Error abriendo la ventana purchase");
+            errorAlert.showAndWait();
+        }
     }
     
-    public void initStage(Parent root) {
-        Scene purchaseScene = new Scene(root);
-        stage.setScene(purchaseScene);
-        stage.setResizable(false);
-        stage.initModality(Modality.NONE);
-        loadViewState();
-        stage.showAndWait();
-    }
-    
-    public void initStageBack(Parent root) {
-        Scene purchaseScene = new Scene(root);
-        stage.setScene(purchaseScene);
-        loadViewState();
-        stage.showAndWait();
-    }
 
     public void handlePurchaseSelected(ObservableValue ov, Object oldValue, Object newValue) {
         if (newValue != null) {
@@ -206,7 +200,7 @@ public class PurchaseController {
                 LOG.info("Compra borrada");
             }
             }catch(Exception e){
-                LOG.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, "Error al borrar compra", e);
             }
     }
 
@@ -219,12 +213,14 @@ public class PurchaseController {
         {
             Collection purchases;
             purchases = purchasesManager.getAllPurchasess();
-            purchasesObservableList = FXCollections.observableArrayList(purchases);
-            tvPurchases.setItems(purchasesObservableList);
-            LOG.log(Level.INFO, "Juegos cargados: {0}", purchasesObservableList.size());
+            if(purchases != null){
+                purchasesObservableList = FXCollections.observableArrayList(purchases);
+                tvPurchases.setItems(purchasesObservableList);
+            }
+            LOG.log(Level.INFO, "Juegos cargados: {0}", ((purchasesObservableList != null)?purchasesObservableList.size():0));
         } catch (Exception ex)
         {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "Se ha producido un error al cargar juegos.", ex);
         }
     }
 
@@ -233,12 +229,14 @@ public class PurchaseController {
         {
             Collection clients;
             clients = clientsManager.findAllClients();
-            clientsObservableList = FXCollections.observableArrayList(clients);
-            cbClients.setItems(clientsObservableList);
-            LOG.log(Level.INFO, "Clientes cargados: {0}", clientsObservableList.size());
+            if(clients !=  null){
+                clientsObservableList = FXCollections.observableArrayList(clients);
+                cbClients.setItems(clientsObservableList);
+            }
+            LOG.log(Level.INFO, "Clientes cargados: {0}", ((clientsObservableList != null)?clientsObservableList.size():0));
         } catch (Exception ex)
         {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, "Se ha producido un error al cargar los clientes", ex);
         }
     }
 
@@ -257,6 +255,8 @@ public class PurchaseController {
             btnDeletePurchase.setDisable(true);
             btnSearch.setOnAction(this::handleSearch);
             btnClearSeach.setOnAction(this::handleClearSearch);
+            //label error
+            lblError.setText("");
             //DatePicker
             dpPurchaseDate.setEditable(false);
             dpPurchaseDate.setConverter(new StringConverter<LocalDate>() {

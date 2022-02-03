@@ -5,7 +5,9 @@
  */
 package businessLogic;
 
+import exception.BusinessLogicException;
 import java.util.Collection;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
@@ -40,30 +42,56 @@ public class PurchaseManagerImplementation implements PurchaseManager{
 
     @Override
     public Collection<Purchase> getAllPurchasess() throws Exception {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        Collection<Purchase> purchases = webClient.findAll(
+        Collection<Purchase> purchases = null;
+        try{
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        purchases = webClient.findAll(
         new GenericType<Collection<Purchase>>(){});
         //purchases.stream().forEach(p -> p.setClient(webClient2.findClientById(Client.class, String.valueOf(p.getIdPurchase().getIdClient()))));
+        
+        }catch(Exception e){
+           LOG.log(Level.SEVERE,"PurchaseManager: Exception getting all purchases, {0}",e.getMessage());
+        }
         return purchases;
     }
     
     @Override
     public Purchase findPurchaseById(String idClient, String idGame) throws Exception {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        Purchase purchase;
-        purchase = webClient.findPurchaseById(Purchase.class, idClient, idGame);
+        Purchase purchase = null;
+        try{
+            purchase = webClient.findPurchaseById(Purchase.class, idClient, idGame);
+        }catch(Exception e){
+            LOG.log(Level.SEVERE,
+                    "PurchaseManager: Exception finding purchase by id, {0}",
+                    e.getMessage());
+            }
         return purchase;
     }
 
     @Override
     public Collection<Purchase> findPurchasesByPurchaseDate(String purchaseDate) throws Exception {
-        Collection<Purchase> purchases = webClient.findPurchasesByPurchaseDate(new GenericType<Collection<Purchase>>(){}, purchaseDate);
+        Collection<Purchase> purchases = null;
+        try{
+            purchases= webClient.findPurchasesByPurchaseDate(new GenericType<Collection<Purchase>>(){}, purchaseDate);
+        }catch(Exception e){
+            LOG.log(Level.SEVERE,
+                    "PurchaseManager: Exception finding purchases by purchase date, {0}",
+                    e.getMessage());
+            }
         return purchases;
     }
 
     @Override
     public Collection<Purchase> findPurchasesByPrice(String price) throws Exception {
-        Collection<Purchase> purchases = webClient.findPurchasesByPrice(new GenericType<Collection<Purchase>>(){}, price);
+        Collection<Purchase> purchases = null;
+        try{
+            purchases = webClient.findPurchasesByPrice(new GenericType<Collection<Purchase>>(){}, price);
+        }catch(Exception e){
+            LOG.log(Level.SEVERE,
+                    "PurchaseManager: Exception finding purchases by price, {0}",
+                    e.getMessage());
+            }
         return purchases;
     }
 
@@ -79,7 +107,14 @@ public class PurchaseManagerImplementation implements PurchaseManager{
 
     @Override
     public Collection<Purchase> findRange(String from, String to) throws Exception {
-        Collection<Purchase> purchases = webClient.findRange(new GenericType<Collection<Purchase>>(){}, from, to);
+        Collection<Purchase> purchases = null;
+        try{
+            purchases = webClient.findRange(new GenericType<Collection<Purchase>>(){}, from, to);
+        }catch(Exception e){
+            LOG.log(Level.SEVERE,
+                    "PurchaseManager: Exception finding purchases in a range, {0}",
+                    e.getMessage());
+           }
         return purchases;
     }
 
@@ -95,7 +130,17 @@ public class PurchaseManagerImplementation implements PurchaseManager{
 
     @Override
     public Collection<Purchase> findPurchasesByClientId(String idClient) throws Exception {
-        return webClient.findPurchasesByClientId(new GenericType<Collection<Purchase>>(){},idClient);
+        Collection<Purchase> purchases = null;
+        
+        try{
+           purchases =  webClient.findPurchasesByClientId(new GenericType<Collection<Purchase>>(){},idClient);
+    
+        }catch(Exception e){
+            LOG.log(Level.SEVERE,
+                    "PurchaseManager: Exception finding purchases by client id, {0}",
+                    e.getMessage());
+        }
+        return purchases;
     }
 
     @Override
@@ -105,6 +150,12 @@ public class PurchaseManagerImplementation implements PurchaseManager{
 
     @Override
     public void deletePurchase(String idClient, String idGame) throws Exception {
-        webClient.deletePurchase(idClient, idGame);
+        try{
+           webClient.deletePurchase(idClient, idGame);
+        }catch(Exception e){
+            LOG.log(Level.SEVERE,
+                    "PurchaseManager: Exception deleting purchase, {0}",
+                    e.getMessage());
+            }
     }
 }
