@@ -289,6 +289,10 @@ public class GameFormController {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         }
     }
 
@@ -341,6 +345,10 @@ public class GameFormController {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setContentText("Fallo de servidor, intentelo mas tarde");
+            Optional<ButtonType> result = alert.showAndWait();
         }
     }
 
