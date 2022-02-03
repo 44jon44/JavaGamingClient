@@ -1,7 +1,10 @@
 package controller;
 
+import businessLogic.EmployeeManager;
 import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
+import factories.EmployeeManagerFactory;
+import factories.GameManagerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -37,6 +40,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import transferObjects.Employee;
 import transferObjects.Game;
 import transferObjects.Genre;
 
@@ -89,6 +93,11 @@ public class GameController {
         this.stage = stage;
     }
 
+    /**
+     * Init stage de la ventana games
+     *
+     * @param root
+     */
     public void initStage(Parent root) {
         try {
             Scene gameScene = new Scene(root);
@@ -258,7 +267,8 @@ public class GameController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 //delete game from server side
-                gameManager.deleteGame(selectedGame.getIdGame());
+                // cargamos nuestra lista con el filtro de busqueda
+                GameManagerFactory.createGameManager("REST_WEB_CLIENT").deleteGame(selectedGame.getIdGame());
                 Alert alert2 = new Alert(Alert.AlertType.INFORMATION,
                         "juego borrado");
                 alert2.show();
@@ -289,11 +299,9 @@ public class GameController {
      * servidor
      */
     public void loadGamesOnTable() throws Exception {
-        Collection games;
-        //Obtenemos la lista de juegos.
-        games = gameManager.getAllGames();
-        gameObservableList = FXCollections.observableArrayList(games);
-        tvGames.setItems(gameObservableList);
+
+        ObservableList<Game> games = FXCollections.observableArrayList(GameManagerFactory.createGameManager("REST_WEB_CLIENT").getAllGames());
+        tvGames.setItems(games);
         LOG.info("juegos cargados" + games);
 
     }
@@ -309,7 +317,7 @@ public class GameController {
     public void selectedFilter(ObservableValue ov, String oldValue, String newValue) {
         if (newValue != null) {
             String searchFilter = cbSearchBy.getValue();
-                //si filtramos por genero
+            //si filtramos por genero
             if (searchFilter.equalsIgnoreCase("GENERO")) {
                 //cargamos el Enum de Genero
                 ObservableList<Genre> genrefilterValue = FXCollections
@@ -342,7 +350,7 @@ public class GameController {
     /**
      * nos filtra la tabla con los valores de busqueda que tengamos en las combo
      *
-     *@param event accionamos el evento del boton
+     * @param event accionamos el evento del boton
      */
     @FXML
     public void searchOnTable(ActionEvent event) {
@@ -350,14 +358,16 @@ public class GameController {
         String genre;
         Integer pegi;
         //lista de juegos donde cargaremos los juegos para la tabla
-        Collection<Game> games = null;
+
         try {
             lblGameError.setText("");
             if (searchFilter.equalsIgnoreCase("GENERO")) {
                 //obtenemos el genero selecionado en el cbSearchValue
                 genre = cbSearchValue.getValue().toString();
                 // cargamos nuestra lista con el filtro de busqueda
-                games = gameManager.getAllGamesbyGenre(genre);
+                // cargamos nuestra lista con el filtro de busqueda
+                ObservableList<Game> games = FXCollections.observableArrayList(GameManagerFactory.
+                        createGameManager("REST_WEB_CLIENT").getAllGamesbyGenre(genre));
                 if (games.isEmpty()) {
                     lblGameError.setText("No hay juegos disponibles del genero seleccionado");
                 }
@@ -367,7 +377,8 @@ public class GameController {
                 //obtenemos el pegi selecionado en el cbSearchValue
                 pegi = (Integer) cbSearchValue.getValue();
                 // cargamos nuestra lista con el filtro de busqueda
-                games = gameManager.getAllGamesbyPegi(pegi);
+                ObservableList<Game> games = FXCollections.observableArrayList(GameManagerFactory.
+                        createGameManager("REST_WEB_CLIENT").getAllGamesbyPegi(pegi));
                 if (games.isEmpty()) {
                     lblGameError.setText("No hay juegos disponibles del pegi seleccionado");
                 }
@@ -396,4 +407,7 @@ public class GameController {
         tvGames.setItems((ObservableList<Game>) games);
     }
 
+    public void setGameManager(GameManager gameManager) {
+        this.gameManager = gameManager;
+    }
 }

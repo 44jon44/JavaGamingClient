@@ -8,6 +8,7 @@ package controller;
 import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
 import exception.GameExistExpception;
+import factories.GameManagerFactory;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -258,7 +259,7 @@ public class GameFormController {
             } else {
                 //comprobamos si el juego añadido existe o no
                 List<Game> games;
-                games = (List<Game>) gameManager.isNameExisting(tfGameName.getText().trim());
+                games = (List<Game>) GameManagerFactory.createGameManager("REST_WEB_CLIENT").isNameExisting(tfGameName.getText().trim());
                 //si existe
                 if (!games.isEmpty()) {
                     LOG.info("el juego ya existe");
@@ -272,9 +273,11 @@ public class GameFormController {
                     game.setName(tfGameName.getText().trim());
                     game.setGenre(cbGameGenre.getSelectionModel().getSelectedItem().toString());
                     game.setPegi((Integer) cbGamePegi.getSelectionModel().getSelectedItem());
-                    game.setRelaseData(Date.from(dpReleaseDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                    game.setRelaseData(Date.from(dpReleaseDate.getValue()
+                            .atStartOfDay().atZone(ZoneId.systemDefault())
+                            .toInstant()));
                     game.setPrice(Float.valueOf(tfGamePrice.getText()));
-                    gameManager.createGame(game);
+                    GameManagerFactory.createGameManager("REST_WEB_CLIENT").createGame(game);
                     LOG.info("juego creado existosamente");
                     cleanTextFields();
                     createGameAlert();
@@ -307,7 +310,7 @@ public class GameFormController {
                 //si se rellena correctamente el formulario
             } else {
                 List<Game> games;
-                games = (List<Game>) gameManager.isNameExisting(tfGameName.getText().trim());
+                games = (List<Game>) GameManagerFactory.createGameManager("REST_WEB_CLIENT").isNameExisting(tfGameName.getText().trim());
                 /*
                 comprobamos si el juego añadido existe o no y tenemos en cuenta 
                 si no cambia el campo de Nombre
@@ -326,7 +329,8 @@ public class GameFormController {
                     gameModify.setPegi((Integer) cbGamePegi.getSelectionModel().getSelectedItem());
                     gameModify.setRelaseData(Date.from(dpReleaseDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
                     gameModify.setPrice(Float.valueOf(tfGamePrice.getText()));
-                    gameManager.updateGame(gameModify);
+                    GameManagerFactory.createGameManager("REST_WEB_CLIENT")
+                            .updateGame(gameModify);
                     LOG.info("juego modificado existosamente");
                     modifyAlert();
                 }

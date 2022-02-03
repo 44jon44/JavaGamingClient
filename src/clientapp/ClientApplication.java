@@ -42,6 +42,7 @@ public class ClientApplication extends Application {
         SignInController controller = ((SignInController) signIn.getController());
         controller.setEmployeesManager(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT"));
         controller.setUsersManager(UserManagerFactory.createUserManager("REST_WEB_CLIENT"));
+        
         //inicias el initStage
         controller.initStage(root);
         //Finalmente  mostramos nuestra ventana

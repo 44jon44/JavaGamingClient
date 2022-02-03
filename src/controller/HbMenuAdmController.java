@@ -3,6 +3,7 @@ package controller;
 import businessLogic.EmployeeManager;
 import businessLogic.UserManager;
 import factories.UserManagerFactory;
+import factories.GameManagerFactory;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -129,22 +130,24 @@ public class HbMenuAdmController {
     private void gamesClicked(ActionEvent event) {
         LOG.info("Abriendo la venta Game");
         try {
-            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader game = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
             root = (Parent) game.load();
-            //Creamos una nueva escena para la ventana SignIn
-            Scene GameScene = new Scene(root);
             //creamos un nuevo escenario para la nueva ventana
-            Stage gameStage = (Stage) hbMenuAdm.getScene().getWindow();
-            //definimos como modal la nueva ventana
-
-            //añadimos la escena en el stage
-            gameStage.setScene(GameScene);
-            //por defecto no podra redimensionarse
-
+            stage = (Stage) hbMenuAdm.getScene().getWindow();
+            //controlador de la vista game
+            GameController controller = game.getController();
+            
+            controller.setGameManager(GameManagerFactory.createGameManager("REST_WEB_CLIENT"));
+            
+            //establecemos el stage
+            controller.setStage(stage);
+            //lanzamos el initStage
+            controller.initStage(root);
         } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
