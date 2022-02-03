@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e9b1977f-44b2-4230-ab4e-a0c7a6721a02">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Header 1" fontSize="16" isBold="true"/>
+	<style name="Header 2" fontSize="13" isBold="true" isItalic="true"/>
+	<field name="fullName" class="java.lang.String"/>
+	<field name="login" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="hiringDate" class="java.util.Date"/>
+	<field name="salary" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement style="Header 1" x="0" y="0" width="555" height="79" uuid="67161267-608e-4d70-8d86-904d853a6c84"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[PLANTILLA]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="455" y="0" width="100" height="20" uuid="feafbbf0-0e47-4a94-8767-78a078a80121"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement x="4" y="0" width="100" height="20" uuid="6c49ca27-2a73-4486-80fc-cc332a92a0ab"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement style="Header 2" x="0" y="26" width="122" height="35" uuid="34997628-d57e-434b-87b2-dc0407c64536"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Completo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Header 2" x="122" y="26" width="141" height="35" uuid="3a88fe73-1b76-43fb-845f-94704d54dd29"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Login Usuario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Header 2" x="263" y="26" width="122" height="35" uuid="a068d7cc-adf9-47aa-b995-1d4b44d8e087"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Header 2" x="385" y="26" width="102" height="35" uuid="3b204b08-9349-4450-a6df-d8736d06d22a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Contratacion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Header 2" x="487" y="26" width="68" height="35" uuid="1b66f3e9-92d1-4516-b80d-4395e94e4043"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Salario]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="122" height="37" uuid="d8a5a01f-0804-4f26-b71c-6f6a76483bea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fullName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="122" y="0" width="141" height="37" uuid="dba56f1e-afab-4b72-9148-f53ea3dacc4e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{login}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="263" y="0" width="122" height="37" uuid="02f6d398-87a2-4729-9977-1829d0db2aa1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="385" y="0" width="102" height="37" uuid="86e08527-a106-453b-89bb-a65803ed8d2b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{hiringDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="487" y="0" width="68" height="37" uuid="a23039a5-0531-4fec-8b98-15c34760e8ef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{salary}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="30" width="100" height="20" uuid="009e3aad-1b0d-4558-8c46-77af944d5f59"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

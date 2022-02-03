@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 /**
  * entidad cliente  que es extiende de la entidad user
  * @author Alex Hurtado
@@ -19,7 +18,7 @@ public class Client extends User implements Serializable {
     /**
      * Fecha en la que se ha dado de alta el cliente.
      */
-    private Date signUpDate;
+       private Date signUpDate;
 
     /**
      * lista de compras reliazada por el cliente

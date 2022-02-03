@@ -1,5 +1,6 @@
 package businessLogic;
 
+import exception.BusinessLogicException;
 import exception.GameExistExpception;
 import java.util.Collection;
 import java.util.List;
@@ -40,7 +41,7 @@ public class GameManagerImplementation implements GameManager {
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
     @Override
-    public Collection<Game> getAllGames() throws Exception {
+    public Collection<Game> getAllGames() throws  Exception {
         Collection<Game> games = null;
         try {
             LOGGER.info("UsersManager: Finding all users from REST service (XML).");
@@ -63,7 +64,7 @@ public class GameManagerImplementation implements GameManager {
      *
      */
     @Override
-    public void createGame(Game game) throws Exception {
+    public void createGame(Game game) throws  Exception {
         try {
             LOGGER.log(Level.INFO, "UsersManager: Creating Game {0}.", game.getName());
             //Send user data to web client for creation. 
@@ -102,7 +103,7 @@ public class GameManagerImplementation implements GameManager {
      * @param game El objeto UserGame que se va a eliminar.
      */
     @Override
-    public void deleteGame(Integer idgame) throws Exception {
+    public void deleteGame(Integer idgame)  throws   Exception {
         try {
 
             webClient.remove(idgame);
@@ -121,7 +122,8 @@ public class GameManagerImplementation implements GameManager {
      * ya exista
      */
     @Override
-    public Collection<Game> isNameExisting(String name) throws GameExistExpception {
+
+    public Collection<Game> isNameExisting(String name) throws  GameExistExpception  {
         List<Game> games = null;
         try {
             LOGGER.info("UsersManager: Finding all users from REST service (XML).");
@@ -167,7 +169,7 @@ public class GameManagerImplementation implements GameManager {
      * juegos filtrados por genero.
      */
     @Override
-    public Collection<Game> getAllGamesbyPegi(Integer pegi) throws Exception {
+    public Collection<Game> getAllGamesbyPegi(Integer pegi) throws  Exception {
         List<Game> games = null;
         try {
             LOGGER.info("UsersManager: Finding all users from REST service (XML).");

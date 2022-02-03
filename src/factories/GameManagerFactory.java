@@ -5,18 +5,16 @@
  */
 package factories;
 
-import businessLogic.EmployeeManager;
-import businessLogic.EmployeeManagerImplementation;
 import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
 import javax.naming.OperationNotSupportedException;
 
 /**
  *
- * @author Alex Hurtado
+ * @author jonma
  */
 public class GameManagerFactory {
-     public static final String REST_WEB_CLIENT_TYPE = "REST_WEB_CLIENT";
+      public static final String REST_WEB_CLIENT_TYPE = "REST_WEB_CLIENT";
 
     public static GameManager createGameManager(String type) throws OperationNotSupportedException {
         //The object to be returned
@@ -31,6 +29,7 @@ public class GameManagerFactory {
             default:
                 throw new OperationNotSupportedException("Users manager type not supported.");
         }
+
         return gameManager;
     }
 }

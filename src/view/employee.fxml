@@ -10,16 +10,16 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="employeePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeController">
+<Pane fx:id="employeePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
-      <TableView id="tblEmployees" fx:id="tblEmployees" layoutX="50.0" layoutY="181.0" prefHeight="480.0" prefWidth="924.0">
+      <TableView id="tblEmployees" fx:id="tblEmployees" layoutX="24.0" layoutY="181.0" prefHeight="480.0" prefWidth="978.0">
         <columns>
-          <TableColumn id="tcName" fx:id="tcName" prefWidth="192.80001831054688" text="NOMBRE" />
-          <TableColumn id="tcEmail" fx:id="tcEmail" prefWidth="242.39999389648438" text="EMAIL" />
-            <TableColumn id="tcLogin" fx:id="tcLogin" prefWidth="219.20001220703125" text="LOGIN" />
-            <TableColumn id="tcHiringDate" fx:id="tcHiringDate" prefWidth="158.39996337890625" text="FECHA CONTRATO" />
-            <TableColumn id="tcSalary" fx:id="tcSalary" minWidth="7.2000732421875" prefWidth="127.199951171875" text="SALARIO" />
+          <TableColumn id="tcName" fx:id="tcName" prefWidth="273.59999656677246" text="NOMBRE" />
+          <TableColumn id="tcEmail" fx:id="tcEmail" prefWidth="254.39999389648438" text="EMAIL" />
+            <TableColumn id="tcLogin" fx:id="tcLogin" prefWidth="214.39996337890625" text="LOGIN" />
+            <TableColumn id="tcHiringDate" fx:id="tcHiringDate" prefWidth="148.0" text="FECHA CONTRATO" />
+            <TableColumn id="tcSalary" fx:id="tcSalary" minWidth="7.2000732421875" prefWidth="85.5999755859375" text="SALARIO" />
         </columns>
       </TableView>
       <Button fx:id="btnAdd" layoutX="57.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #2b8b57;" text="AÑADIR EMPLEADO" textFill="WHITE">
@@ -46,17 +46,18 @@
          <font>
             <Font size="14.0" />
          </font></Button>
-      <ComboBox id="cmbFilter" fx:id="cmbFilter" layoutX="140.0" layoutY="89.0" prefWidth="200.0" />
+      <ComboBox id="cmbFilter" fx:id="cmbFilter" layoutX="140.0" layoutY="89.0" prefHeight="25.0" prefWidth="250.0" />
       <Label id="lblError" fx:id="lblError" layoutX="60.0" layoutY="724.0" prefHeight="30.0" prefWidth="924.0" text="Esto es un mensaje de error" textFill="#ff3333">
          <font>
             <Font name="System Bold" size="16.0" />
          </font></Label>
-      <TextField id="tfValue" fx:id="tfValue" layoutX="470.0" layoutY="88.0" prefHeight="25.0" prefWidth="200.0" promptText="Introduce el valor de busqueda" />
+      <TextField id="tfValue" fx:id="tfValue" layoutX="470.0" layoutY="88.0" prefHeight="25.0" prefWidth="226.0" promptText="Introduce el valor de busqueda" />
       <Label id="lblTitle" fx:id="lblTitle" layoutX="60.0" layoutY="41.0" prefHeight="30.0" text="EMPLEADOS">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
       <Separator layoutY="150.0" prefHeight="3.0" prefWidth="1024.0" />
+      <Button id="btnReport" fx:id="btnReport" layoutX="868.0" layoutY="56.0" mnemonicParsing="false" text="Report" />
    </children>
 </Pane>
