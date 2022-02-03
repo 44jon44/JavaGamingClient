@@ -290,6 +290,7 @@ public class GameController {
      */
     public void loadGamesOnTable() throws Exception {
         Collection games;
+        //Obtenemos la lista de juegos.
         games = gameManager.getAllGames();
         gameObservableList = FXCollections.observableArrayList(games);
         tvGames.setItems(gameObservableList);
@@ -308,12 +309,14 @@ public class GameController {
     public void selectedFilter(ObservableValue ov, String oldValue, String newValue) {
         if (newValue != null) {
             String searchFilter = cbSearchBy.getValue();
-
+                //si filtramos por genero
             if (searchFilter.equalsIgnoreCase("GENERO")) {
+                //cargamos el Enum de Genero
                 ObservableList<Genre> genrefilterValue = FXCollections
                         .observableArrayList(Genre.values());
                 cbSearchValue.setItems(genrefilterValue);
                 cbSearchValue.getSelectionModel().selectFirst();
+                //si filtramos por Pegi
             } else {
                 ObservableList<Integer> pegiValuefilter = FXCollections
                         .observableArrayList(3, 8, 12, 16, 18);
@@ -332,6 +335,7 @@ public class GameController {
         ObservableList<Genre> genrefilterValue = FXCollections
                 .observableArrayList(Genre.values());
         cbSearchValue.setItems(genrefilterValue);
+        //selecionamos el primero que en nuestro caso es Miedo.
         cbSearchValue.getSelectionModel().selectFirst();
     }
 

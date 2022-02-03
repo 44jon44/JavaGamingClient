@@ -24,7 +24,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.print.Collation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -110,7 +109,7 @@ public class GameFormController {
             dpReleaseDate.setValue(LocalDate.now());
             dpReleaseDate.setEditable(false);
         } catch (Exception e) {
-             Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setContentText("Fallo de servidor, intentelo mas tarde");
             Optional<ButtonType> result = alert.showAndWait();
@@ -122,11 +121,13 @@ public class GameFormController {
      * carga los combos por defecto
      */
     public void defaultComboValue() {
+        //combo de genero 
         ObservableList<Genre> genrefilterValue = FXCollections.observableArrayList(Genre.values());
         cbGameGenre.setItems(genrefilterValue);
         cbGameGenre.getSelectionModel().selectFirst();
         cbGameGenre.setEditable(false);
 
+        //combo de Pegi
         ObservableList<Integer> pegiValuefilter = FXCollections.observableArrayList(18, 16, 12, 8, 3);
         cbGamePegi.setItems(pegiValuefilter);
         cbGamePegi.getSelectionModel().selectFirst();
@@ -163,6 +164,7 @@ public class GameFormController {
      * @param newValue el valor acctualizado del filtro
      */
     private void tfGameNameTextChanged(ObservableValue observable, String oldValue, String newValue) {
+        //Si cambia longitud
         if (newValue.length() != oldValue.length()) {
             lblErrorGameName.setText("");
             tfGameName.setStyle("-fx-text-inner-color: black;");
@@ -203,6 +205,7 @@ public class GameFormController {
      * @param newValue el valor acctualizado del filtro
      */
     private void tfGamePriceTextFocus(ObservableValue observable, String oldValue, String newValue) {
+        //Si cambia longitud
         if (newValue.length() != oldValue.length()) {
             lblErrorGamePrice.setText("");
             tfGamePrice.setStyle("-fx-text-inner-color: black;");
@@ -242,6 +245,7 @@ public class GameFormController {
     @FXML
     private void addGame(ActionEvent event) {
         try {
+            //Comprobar que los campos  sean validos antes de añadir.
             if (!lblErrorGameName.getText().isEmpty()
                     || !lblErrorGamePrice.getText().isEmpty()
                     || tfGameName.getText().equals("") || tfGamePrice.getText().equals("")) {
@@ -250,15 +254,19 @@ public class GameFormController {
                 alert.setTitle("Error");
                 alert.setContentText("No se han rellenado los campos correctamente");
                 Optional<ButtonType> result = alert.showAndWait();
+                //si se rellena correctamente el formulario
             } else {
+                //comprobamos si el juego añadido existe o no
                 List<Game> games;
                 games = (List<Game>) gameManager.isNameExisting(tfGameName.getText().trim());
+                //si existe
                 if (!games.isEmpty()) {
                     LOG.info("el juego ya existe");
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
                     alert.setContentText("ese juego ya existe");
                     Optional<ButtonType> result = alert.showAndWait();
+                    //si no existe y esta todo valido creamos el juego.
                 } else {
                     game = new Game();
                     game.setName(tfGameName.getText().trim());
@@ -272,7 +280,6 @@ public class GameFormController {
                     createGameAlert();
                 }
             }
-        
         } catch (GameExistExpception ex) {
             Logger.getLogger(GameFormController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -288,6 +295,7 @@ public class GameFormController {
      */
     private void modifyGame(ActionEvent event) {
         try {
+            //Comprobar que los campos  sean validos antes de añadir.
             if (!lblErrorGameName.getText().isEmpty()
                     || !lblErrorGamePrice.getText().isEmpty()
                     || tfGameName.getText().equals("") || tfGamePrice.getText().equals("")) {
@@ -296,15 +304,21 @@ public class GameFormController {
                 alert.setTitle("Error");
                 alert.setContentText("No se han rellenado los campos correctamente");
                 Optional<ButtonType> result = alert.showAndWait();
+                //si se rellena correctamente el formulario
             } else {
                 List<Game> games;
                 games = (List<Game>) gameManager.isNameExisting(tfGameName.getText().trim());
+                /*
+                comprobamos si el juego añadido existe o no y tenemos en cuenta 
+                si no cambia el campo de Nombre
+                 */
                 if (!games.isEmpty() && !games.get(0).getName().equalsIgnoreCase(gameModify.getName())) {
                     LOG.info("el juego ya existe");
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Error");
                     alert.setContentText("ese juego ya existe");
                     Optional<ButtonType> result = alert.showAndWait();
+                    //si no existe y esta todo valido modificamos el juego.
                 } else {
                     //modificamos el juego
                     gameModify.setName(tfGameName.getText().trim());
@@ -331,6 +345,7 @@ public class GameFormController {
      * @param pegi
      */
     private void showlblErrorPegiMessages(float pegi) {
+        //si cambia la longitud del campo price
         if (tfGamePrice.getText().isEmpty()) {
             lblErrorGamePrice.setText("Campo obligatorio");
         } else {
@@ -345,7 +360,7 @@ public class GameFormController {
      * @return un boleano
      */
     private boolean validateTfName(String text) {
-
+        //valida que sea alfanumerico  y tenga espacios
         return Pattern.matches("^[A-Za-z0-9? ,_-]+$", text);
     }
 
@@ -356,6 +371,7 @@ public class GameFormController {
      * @return un boleano
      */
     private boolean validateTfPrice(String price) {
+        //valida el campo precios que no pueda meter letras.
         return Pattern.matches("^(?:([0-9]{1,3}))((?:[.])(?:[0-9]{1,2}))?", price);
     }
 
@@ -363,7 +379,9 @@ public class GameFormController {
      * Limpiamos los campos del formulario
      */
     private void cleanTextFields() {
+        //limpiamos el campo name
         tfGameName.setText("");
+        //limpiamosel campo price
         tfGamePrice.setText("");
     }
 
@@ -374,8 +392,11 @@ public class GameFormController {
      * @param g el Objeto juego a modificar
      */
     void modifyGameData(Game g) {
+        //boton add se deshabilita
         btnAdd.setDisable(true);
+        //boton Modify se habilita
         btnModify.setDisable(false);
+        //recuperamos los datos del juego en nuestro formulario
         tfGameName.setText(g.getName());
         cbGameGenre.getSelectionModel().select(Genre.valueOf(g.getGenre()));
         cbGamePegi.getSelectionModel().select(g.getPegi());
@@ -390,11 +411,13 @@ public class GameFormController {
      *
      */
     private void modifyAlert() {
-
+        //informamos que el juego fue modificado antes de enviarle de nueva a la
+        //ventana anterior.
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Modificar");
         alert.setContentText("Se ha modificado correctamente el Juego");
         Optional<ButtonType> result = alert.showAndWait();
+        //devolvemos al usuario de nuevo a a la ventana game.fxml
         try {
             FXMLLoader gameForm = new FXMLLoader(getClass().getResource("/view/game.fxml"));
             Parent root;
@@ -407,6 +430,7 @@ public class GameFormController {
 
         }
     }
+
     /**
      * esta alerta informa al cliente que ha creado un juego
      */
