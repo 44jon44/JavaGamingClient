@@ -27,8 +27,16 @@ public class Employee extends User implements Serializable {
     /**
      * Salario que recibe el empleado
      */
-    private Float salary;
-    
+    private String salary;
+
+    public Employee(Date hiringDate, String salary, String login, String email, String fullName, String password) {
+        super(login, email, fullName, password);
+        this.hiringDate = hiringDate;
+        this.salary = salary;
+    }
+
+    public Employee() {
+    }
 
     /**
      * Método que devuelve la fecha en la que fue contratado el empleado
@@ -53,7 +61,7 @@ public class Employee extends User implements Serializable {
      *
      * @return hiringDate
      */
-    public Float getSalary() {
+    public String getSalary() {
         return salary;
     }
 
@@ -62,7 +70,7 @@ public class Employee extends User implements Serializable {
      *
      * @param salary
      */
-    public void setSalary(Float salary) {
+    public void setSalary(String salary) {
         this.salary = salary;
     }
 

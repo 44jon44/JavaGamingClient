@@ -5,28 +5,28 @@
  */
 package rest;
 
-import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:UserFacadeREST [user]<br>
  * USAGE:
  * <pre>
- *        UserRESTful client = new UserRESTful();
+ *        UserRESTFul client = new UserRESTFul();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
  * </pre>
  *
- * @author ibai Arriola
+ * @author jonma
  */
 public class UserRESTful {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = ResourceBundle.getBundle("rest.rest").getString("BASE_URI");
+    private static final String BASE_URI = "http://localhost:8080/JavaGamingServer/webresources";
 
     public UserRESTful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -68,8 +68,20 @@ public class UserRESTful {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
+    public <T> T checkLogin(GenericType<T> responseType, String login, String password) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("login/{0}/password/{1}", new Object[]{login, password}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findUserByLogin(GenericType<T> responseType, String login) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("login/{0}", new Object[]{login}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
     public void close() {
         client.close();
     }
-    
+
 }

@@ -5,7 +5,10 @@
  */
 package clientapp;
 
+import businessLogic.EmployeeManager;
 import controller.SignInController;
+import factories.EmployeeManagerFactory;
+import factories.UserManagerFactory;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -37,6 +40,8 @@ public class ClientApplication extends Application {
         signInStage.setResizable(false);
         //un llamamiento a la clase SignIncontroler
         SignInController controller = ((SignInController) signIn.getController());
+        controller.setEmployeesManager(EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT"));
+        controller.setUsersManager(UserManagerFactory.createUserManager("REST_WEB_CLIENT"));
         //inicias el initStage
         controller.initStage(root);
         //Finalmente  mostramos nuestra ventana

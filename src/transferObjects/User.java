@@ -19,7 +19,7 @@ import model.UserStatus;
 @XmlRootElement(name="user")
 public class User implements Serializable {
 
-    private int idUser;
+    private Integer idUser;
     private String login;
     private String email;
     private String fullName;
@@ -32,6 +32,7 @@ public class User implements Serializable {
      * Constructor vacio de la clase User
      */
     public User() {
+        this.idUser=null;
     }
     
     /**
@@ -60,11 +61,11 @@ public class User implements Serializable {
     
     //getters y setters de la clase User
     
-    public int getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(Integer idUser) {
         this.idUser = idUser;
     }
 

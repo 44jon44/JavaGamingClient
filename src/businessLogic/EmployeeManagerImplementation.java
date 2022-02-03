@@ -106,7 +106,9 @@ public class EmployeeManagerImplementation implements EmployeeManager {
     public void isLoginExisting(String login) throws Exception {
         try {
             if (this.webClient.find(Employee.class, login) != null) {
+                System.out.println("Encontrado");
                 throw new LoginExistException();
+                
             }
         } catch (NotFoundException ex) {
             //If there is a NotFoundException 404,that is,
@@ -125,7 +127,7 @@ public class EmployeeManagerImplementation implements EmployeeManager {
      * @throws Exception
      */
     @Override
-    public Collection<Employee> employeesBySalary(Float salary) throws Exception {
+    public Collection<Employee> employeesBySalary(String salary) throws Exception {
         List<Employee> employees = null;
         try {
             LOGGER.log(Level.INFO, "EmployeeManager: buscando empleados con el salario: {0}.", salary);

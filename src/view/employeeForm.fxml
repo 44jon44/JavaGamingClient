@@ -36,16 +36,16 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <TextField id="tfName" fx:id="tfName" layoutX="272.0" layoutY="189.0" prefHeight="25.0" prefWidth="486.0" promptText="Example" />
-      <TextField id="tfEmail" fx:id="tfEmail" layoutX="272.0" layoutY="252.0" prefHeight="25.0" prefWidth="486.0" promptText="example@example.com" />
-      <TextField id="tfLogin" fx:id="tfLogin" layoutX="272.0" layoutY="312.0" prefHeight="25.0" prefWidth="486.0" promptText="example" />
-      <TextField id="tfSalary" fx:id="tfSalary" layoutX="272.0" layoutY="443.0" prefHeight="25.0" prefWidth="486.0" promptText="1000" />
-      <DatePicker id="dpHiringDate" fx:id="dpHiringDate" layoutX="272.0" layoutY="384.0" prefHeight="25.0" prefWidth="486.0" promptText="dd/mm/yyyy" />
-      <Label fx:id="lblErrorName" layoutX="773.0" layoutY="185.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label fx:id="lblErrorEmail" layoutX="773.0" layoutY="247.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label fx:id="lblErrorLogin" layoutX="773.0" layoutY="308.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label fx:id="lblErrorHiringDate" layoutX="773.0" layoutY="380.0" prefHeight="34.0" prefWidth="136.0" />
-      <Label fx:id="lblErrorSalary" layoutX="779.0" layoutY="439.0" prefHeight="34.0" prefWidth="136.0" />
+      <TextField id="tfName" fx:id="tfName" layoutX="272.0" layoutY="189.0" prefHeight="25.0" prefWidth="440.0" promptText="Example" />
+      <TextField id="tfEmail" fx:id="tfEmail" layoutX="272.0" layoutY="252.0" prefHeight="25.0" prefWidth="440.0" promptText="example@example.com" />
+      <TextField id="tfLogin" fx:id="tfLogin" layoutX="272.0" layoutY="312.0" prefHeight="25.0" prefWidth="440.0" promptText="example" />
+      <TextField id="tfSalary" fx:id="tfSalary" layoutX="272.0" layoutY="443.0" prefHeight="25.0" prefWidth="440.0" promptText="1000" />
+      <DatePicker id="dpHiringDate" fx:id="dpHiringDate" layoutX="272.0" layoutY="384.0" prefHeight="25.0" prefWidth="440.0" promptText="dd/mm/yyyy" />
+      <Label fx:id="lblErrorName" layoutX="725.0" layoutY="185.0" prefHeight="58.0" prefWidth="279.0" />
+      <Label fx:id="lblErrorEmail" layoutX="725.0" layoutY="247.0" prefHeight="58.0" prefWidth="279.0" />
+      <Label fx:id="lblErrorLogin" layoutX="725.0" layoutY="308.0" prefHeight="58.0" prefWidth="279.0" />
+      <Label fx:id="lblErrorHiringDate" layoutX="730.0" layoutY="380.0" prefHeight="58.0" prefWidth="279.0" />
+      <Label fx:id="lblErrorSalary" layoutX="724.0" layoutY="439.0" prefHeight="58.0" prefWidth="279.0" />
       <Button fx:id="btnSave" layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Guardar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
@@ -60,4 +60,3 @@
          </font></Hyperlink>
    </children>
 </Pane>
-
