@@ -24,6 +24,10 @@
 				<reportElement x="455" y="0" width="100" height="20" uuid="feafbbf0-0e47-4a94-8767-78a078a80121"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<textField pattern="h.mm a">
+				<reportElement x="4" y="0" width="100" height="20" uuid="6c49ca27-2a73-4486-80fc-cc332a92a0ab"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

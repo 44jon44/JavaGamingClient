@@ -54,6 +54,7 @@ public class EmployeeFormController {
     private boolean dpHiringDateIsValid = false;
     private boolean tfSalaryIsValid = false;
     private boolean exists = false;
+    //booleano que indica si el campo Login ha cambiado
     boolean loginChanged = false;
     //Logger del controlador de la ventana "ViewSignIn"
     private static final Logger LOG = Logger.getLogger(EmployeeFormController.class.getName());
@@ -135,12 +136,13 @@ public class EmployeeFormController {
      * @param root El objeto padre representado el nodo raiz de la vista grafica
      */
     void initStage(Parent root) {
+        //Inicializamos los label de error sin texto
         lblErrorName.setText("");
         lblErrorEmail.setText("");
         lblErrorLogin.setText("");
         lblErrorHiringDate.setText("");
         lblErrorSalary.setText("");
-
+        //Metodos de control del cambio de texto y cambio de foco
         tfName.focusedProperty().addListener(this::tfNameFocusChanged);
         tfName.textProperty().addListener(this::tfNameTextChanged);
         tfEmail.focusedProperty().addListener(this::tfEmailFocusChanged);
@@ -149,13 +151,12 @@ public class EmployeeFormController {
         tfLogin.textProperty().addListener(this::tfLoginTextChanged);
         tfSalary.focusedProperty().addListener(this::tfSalaryFocusChanged);
         tfSalary.textProperty().addListener(this::tfSalaryTextChanged);
-
         dpHiringDate.focusedProperty().addListener(this::dpHiringDateFocusChanged);
-
+        //Controla el ActionEvent del boton que borra los datos
         btnDelete.setOnAction(this::clean);
-
+        //Controla el ActionEvent del boton que vuelve a la ventana employee
         hpReturn.setOnAction(this::hpClicked);
-
+        //No se permite introducir texto a mano en el datePicker
         dpHiringDate.setEditable(false);
 
         tfName.requestFocus();
@@ -186,14 +187,19 @@ public class EmployeeFormController {
      */
     @FXML
     private void modify(ActionEvent event) {
+        LOG.info("Modificando...");
         boolean exist = false;
         try {
+
             try {
+                //En caso de que el tfLogin no sea null se busca si existe
                 if (tfLogin.getText().length() != 0) {
                     System.out.println("Dentro");
                     UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
                 }
             } catch (BusinessLogicException ex) {
+                //Si se encuentra se cambia el valor de exist a false y se muestra 
+                //un alert de informacion
                 exist = true;
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,
@@ -203,20 +209,21 @@ public class EmployeeFormController {
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println(exist);
+
+            //Se comprueba que no exista y los campos sean validos
             validateFields();
             if (!exist && validFields()) {
 
                 try {
-
+                    //Se crea el empleadoAModificar
                     employeeModify.setFullName(tfName.getText().trim());
                     employeeModify.setLogin(tfLogin.getText().trim());
                     employeeModify.setEmail(tfEmail.getText().trim());
                     employeeModify.setHiringDate(Date.from(dpHiringDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
                     employeeModify.setSalary(tfSalary.getText().trim());
-
+                    //Se envia al empleado a modificar a la capa de logica
                     EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").updateEmployee(employeeModify);
-
+                    //Se le informa al usuario de que se ha creado corrrectamente
                     Alert alert = new Alert(Alert.AlertType.INFORMATION,
                             "El usuario se ha modificado correctamente",
                             ButtonType.OK);
@@ -227,6 +234,8 @@ public class EmployeeFormController {
                 }
             }
             if (!exists && !validFields()) {
+                //En caso de que no exisata y haya algun campo incorrecto,
+                //se informa al usuario
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,
                         "Algun campo no es correcto",
                         ButtonType.OK);
@@ -235,6 +244,7 @@ public class EmployeeFormController {
 
         } catch (Exception ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+            //En caso de error se informa al usuario
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("Error");
             errorAlert.setContentText("Error abriendo modificando empleado");
@@ -252,7 +262,7 @@ public class EmployeeFormController {
     @FXML
     private void tfNameFocusChanged(ObservableValue observable, Boolean oldValue, Boolean newValue) {
 
-        LOG.info("Dentro de tfUser FocusChanged");
+        LOG.info("Dentro de tfName FocusChanged");
         if (oldValue) {//foco perdido 
             tfNameIsValid = validateTfName(tfName.getText());
             if (!tfNameIsValid) {
@@ -440,13 +450,17 @@ public class EmployeeFormController {
      */
     @FXML
     private void save(ActionEvent event) {
+        LOG.info("Modificando...");
         try {
             try {
+                //Se compueba que el tfLogin este informado
                 if (tfLogin.getText().length() != 0) {
-                    System.out.println("Dentro");
+                    //Se buscan ususarios que tenga ese login
                     UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
                 }
             } catch (BusinessLogicException ex) {
+                //Si se encuentran users con ese login, se muestra
+                //una alert de informacion
                 exists = true;
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,
                         "El login ya existe",
@@ -455,32 +469,32 @@ public class EmployeeFormController {
             } catch (Exception ex) {
                 Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+            //Se validan los campos
             validateFields();
+
             if (!exists && validFields()) {
-
+                //En caso de que no exista el Login y los campos sean validos
                 try {
-
+                    //Se recoge la fecha de Hoy
                     LocalDate localDate = dpHiringDate.getValue();
                     Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
-                    System.out.println(date);
-
+                    //Se crea el objeto empleado que se va a anadir
                     Employee emp = new Employee();
+                    //Se le inroducen los datos del empleado mediante setters
                     emp.setIdUser(null);
                     emp.setFullName(tfName.getText());
                     emp.setEmail(tfEmail.getText());
                     emp.setLogin(tfLogin.getText());
                     emp.setHiringDate(date);
-                    emp.setPassword("56127fecb4c2c943ead237281290f7634513551a30a6c07af0e9c03668e7fb93");
+                    emp.setPassword("b4c2ae29e1d128a493449c85c1efc0cb0721b6a248c77c25223c457b0fa25e59");
                     emp.setPrivilege(UserPrivilege.EMPLOYEE);
                     emp.setStatus(UserStatus.ENABLED);
                     emp.setSalary(tfSalary.getText());
-
                     emp.setPrivilege(UserPrivilege.EMPLOYEE);
                     emp.setStatus(UserStatus.ENABLED);
-
+                    //Se envia a la capa de logica para que cree un empleado
                     EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
-
+                    //Se informa al usuario de que el usuario se ha creado correctamente
                     Alert alert = new Alert(Alert.AlertType.INFORMATION,
                             "El usuario se ha añadido correctamente",
                             ButtonType.OK);
@@ -603,6 +617,7 @@ public class EmployeeFormController {
      * los campos no son correctos
      */
     private void showFieldErrors() {
+
         if (!tfNameIsValid) {
             showlblErrorNameMessages(tfName.getText());
         }
@@ -630,14 +645,19 @@ public class EmployeeFormController {
      * @param name
      */
     private void showlblErrorNameMessages(String name) {
+        //Se comprueba cual es el error del campo tfName en funcion de la
+        //longitud del campo
         switch (name.trim().length()) {
             case 0:
+                //longitud=0
                 lblErrorName.setText("Campo obligatorio");
                 break;
             case 1:
+                //longitud=0
                 lblErrorName.setText("Longitud minima de 2 caracteres");
                 break;
             default:
+                //Tiene caracteres no vlaidos
                 lblErrorName.setText("El nombre solo puede contener\n letras y espacios");
                 break;
         }
