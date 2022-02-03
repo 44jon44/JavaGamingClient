@@ -33,10 +33,10 @@ public class GameManagerImplementation implements GameManager {
     }
 
     /**
-     * Este método devuelve una Colección de {@link GameBean}, que contiene
+     * Este método devuelve una Colección de {@link Game}, que contiene
      * todos los datos de los juegos.
      *
-     * @return Collection La colección con todos los datos {@link GameBean} de
+     * @return Collection La colección con todos los datos {@link Game} de
      * los juegos.
      * @throws BusinessLogicException Si hay algún error durante el proceso.
      */
@@ -81,8 +81,9 @@ public class GameManagerImplementation implements GameManager {
      * Este método añade un Game recién creado. Esto se hace enviando una
      * solicitud POST a un servicio web RESTful.
      *
-     * @param Game El objeto Game a añadir.
      *
+     * @param game
+     * @throws java.lang.Exception
      */
     @Override
     public void updateGame(Game game) throws Exception {
@@ -100,7 +101,8 @@ public class GameManagerImplementation implements GameManager {
      * Este método elimina los datos de un juego existente. Esto se hace
      * enviando una solicitud DELETE a un servicio web RESTful.
      *
-     * @param game El objeto UserGame que se va a eliminar.
+     * @param idgame el id del juego
+     * @throws java.lang.Exception
      */
     @Override
     public void deleteGame(Integer idgame)  throws   Exception {
