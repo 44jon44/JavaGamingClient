@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import javax.naming.OperationNotSupportedException;
 import transferObjects.User;
 import exception.*;
+import java.util.Collection;
 
 /**
  * @author ibai arriola
@@ -38,6 +39,8 @@ public class SignInController {
 
     private EmployeeManager employeesManager;
     private UserManager usersManager;
+    private ObservableList<User> users;
+    private Collection<User> usersCollection;
     // un logger que nos informara mediante la terminal
     private static final Logger LOG = Logger.getLogger(SignInController.class.getName());
     //declaramos los componentes de la ventana  que manipularemos a continuacion
@@ -110,28 +113,35 @@ public class SignInController {
     private void signIN(ActionEvent event) {
 
         try {
-            ObservableList<User> users = FXCollections.observableArrayList(usersManager.checkLogin(tfUser.getText().trim(), tfPassword.getText().trim()));
-            if (!users.isEmpty()) {
-                System.out.println(users.size());
+            usersCollection = usersManager.checkLogin(tfUser.getText().trim(), tfPassword.getText().trim());
+            if(usersCollection !=null){
+                users= FXCollections.observableArrayList(usersCollection);
+                if (!users.isEmpty()) {
+                    System.out.println(users.size());
 
-                //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-                FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
-                Parent root;
-                root = (Parent) employee.load();
-                panelSignIN.getScene().getWindow().hide();
-                //Creamos una nueva escena para la ventana SignIn
-                //cargamos el controlador de la ventana
-                EmployeeController controller = employee.getController();
-                controller.setStage(new Stage());
-                controller.setEmployeeManager(employeesManager);
-                controller.initStage(root);
-            } else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "Usuario o contraseña incorrectos",
-                        ButtonType.OK);
-                alert.showAndWait();
-            }
-
+                    //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+                    FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+                    Parent root;
+                    root = (Parent) employee.load();
+                    panelSignIN.getScene().getWindow().hide();
+                    //Creamos una nueva escena para la ventana SignIn
+                    //cargamos el controlador de la ventana
+                    EmployeeController controller = employee.getController();
+                    controller.setStage(new Stage());
+                    controller.setEmployeeManager(employeesManager);
+                    controller.initStage(root);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "Usuario o contraseña incorrectos",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                }
+            }else{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "Error al hacer el login",
+                            ButtonType.OK);
+                    alert.showAndWait();
+            }        
         } catch (IOException ex) {
             Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (OperationNotSupportedException ex) {
