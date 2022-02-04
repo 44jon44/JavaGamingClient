@@ -154,24 +154,28 @@ public class HbMenuAdmController {
     @FXML
     private void purchasesClicked(ActionEvent event) {
         LOG.info("Abriendo la venta Purchase...");
-        try {
-            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-            FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
-            Parent root;
-            root = (Parent) purchase.load();
-
-            //Creamos una nueva escena para la ventana SignIn
-            Scene PurchaseScene = new Scene(root);
-            Stage purchaseStage = (Stage) hbMenuAdm.getScene().getWindow();
-            //creamos un nuevo escenario para la nueva ventana
-            PurchaseController controller = purchase.getController();
-            //añadimos la escena en el stage
-            controller.initStage(root);
-            purchaseStage.setScene(PurchaseScene);
-
-        } catch (IOException ex) {
-            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+//            FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
+//            Parent root;
+//            root = (Parent) purchase.load();
+//
+//            //Creamos una nueva escena para la ventana SignIn
+//            Scene PurchaseScene = new Scene(root);
+//            Stage purchaseStage = (Stage) hbMenuAdm.getScene().getWindow();
+//            //creamos un nuevo escenario para la nueva ventana
+//            PurchaseController controller = purchase.getController();
+//            //añadimos la escena en el stage
+//            controller.initStage(root);
+//            purchaseStage.setScene(PurchaseScene);
+//
+//        } catch (IOException ex) {
+//            Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setHeaderText("Error");
+        errorAlert.setContentText("No se ha implementado correctamente");
+        errorAlert.showAndWait();
     }
 
     @FXML
