@@ -40,10 +40,7 @@ import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import static org.testfx.matcher.control.ButtonMatchers.isCancelButton;
 import static org.testfx.matcher.control.ButtonMatchers.isDefaultButton;
-import static org.testfx.matcher.control.ComboBoxMatchers.hasSelectedItem;
 import org.testfx.matcher.control.LabeledMatchers;
-import org.testfx.matcher.control.TextInputControlMatchers;
-import static org.testfx.matcher.control.TextInputControlMatchers.hasText;
 import transferObjects.Employee;
 
 /**
@@ -87,10 +84,12 @@ public class EmployeeControllerIT extends ApplicationTest {
 
     public EmployeeControllerIT() {
     }
-/**
- * Metodo  que la aplicacion para testear
- * @throws TimeoutException 
- */
+
+    /**
+     * Metodo que la aplicacion para testear
+     *
+     * @throws TimeoutException
+     */
     @BeforeClass
     public static void inicio() throws TimeoutException {
         FxToolkit.registerPrimaryStage();
@@ -103,9 +102,9 @@ public class EmployeeControllerIT extends ApplicationTest {
     @Test
     public void testA_initialInteraction() {
         clickOn("#tfUser");
-        write("1");
+        write("admin");
         clickOn("#tfPassword");
-        write("1");
+        write("Abcd*1234");
         clickOn("#btnSignIN");
         verifyThat("#employeePane", isVisible());
 
@@ -147,11 +146,14 @@ public class EmployeeControllerIT extends ApplicationTest {
      * Test que compueba la cancelacion de borrado
      */
     @Test
-    @Ignore
+    //@Ignore
     public void testD_cancelarBorrado() {
         int rowCount = table.getItems().size();
         assertNotEquals("La tabla no tiene Datos: no se puede testear.",
                 rowCount, 0);
+        Node row = lookup(".table-row-cell").nth(0).query();
+        assertNotNull("Row is null: table has not that row. ", row);
+        clickOn(row);
         clickOn("#btnDelete");
         verifyThat("¿Borrar la fila seleccionada?\n"
                 + "Esta operación no se puede deshacer.",
@@ -169,6 +171,10 @@ public class EmployeeControllerIT extends ApplicationTest {
         int rowCount = table.getItems().size();
         assertNotEquals("La tabla no tiene Datos: no se puede testear.",
                 rowCount, 0);
+        
+        Node row = lookup(".table-row-cell").nth(0).query();
+        assertNotNull("Row is null: table has not that row. ", row);
+        clickOn(row);
         clickOn("#btnDelete");
         verifyThat("¿Borrar la fila seleccionada?\n"
                 + "Esta operación no se puede deshacer.",
@@ -219,13 +225,19 @@ public class EmployeeControllerIT extends ApplicationTest {
      * Test que compueba que se crea un empleado correctamente
      */
     @Test
-    @Ignore
+    //@Ignore
     public void testG_createUser() {
 
         //get row count
         int rowCount = table.getItems().size();
-        //get an existing login from random generator
-        String login = "username" + new Random().nextInt() + 2133213213;
+        int genRandom = 0;
+        //Generamos un login nuevo positivo. Los numeros negativos introducen un
+        //'-'
+        
+
+            genRandom = new Random().nextInt(100000);
+        
+        String login = "username" + genRandom;
         //write that login on text field
         clickOn("#btnAdd");
         dpHiringDate = (DatePicker) lookup("#dpHiringDate").query();
@@ -251,8 +263,9 @@ public class EmployeeControllerIT extends ApplicationTest {
         press(KeyCode.DOWN).release(KeyCode.DOWN);
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         clickOn("#btnFind");
-        
+
         table.refresh();
+        
         int size2;
         size2 = table.getItems().size();
         assertEquals("The row has not been added!!!", rowCount + 1, size2);
@@ -266,7 +279,7 @@ public class EmployeeControllerIT extends ApplicationTest {
      * Test que compueba que salte un error cuando un login exista al modificar
      */
     @Test
-    @Ignore
+    //@Ignore
     public void testH_usuarioExisteAlModificar() {
 
         int rowCount = table.getItems().size();
@@ -311,8 +324,9 @@ public class EmployeeControllerIT extends ApplicationTest {
      * Test que compueba que se modifica correctamente
      */
     @Test
-    @Ignore
+    //@Ignore
     public void testK_modifyUser() {
+        int genRandom = 0;
         dpHiringDate = (DatePicker) lookup("#dpHiringDate").query();
         //get row count
         int rowCount = table.getItems().size();
@@ -336,7 +350,9 @@ public class EmployeeControllerIT extends ApplicationTest {
         TextField tfSalary = lookup("#tfSalary").query();
         dpHiringDate = (DatePicker) lookup("#dpHiringDate").query();
 
-        tfLogin.setText(prevEmp.getLogin() + new Random().nextInt());
+        //Generamos un login nuevo positivo. Los numeros negativos introducen un
+        //'-'        
+        tfLogin.setText(prevEmp.getLogin() + genRandom);
 
         modEm.setFullName(tfName.getText());
         modEm.setEmail(tfEmail.getText());
@@ -349,6 +365,10 @@ public class EmployeeControllerIT extends ApplicationTest {
 
         clickOn("#btnSave");
         clickOn(isDefaultButton());
+        
+        clickOn("#hpReturn");
+        clickOn(isDefaultButton());
+        
         Employee emp2 = (Employee) table.getItems().get(rowCount - 1);
 
         assertEquals("The user has not been modified!!!",
@@ -356,6 +376,8 @@ public class EmployeeControllerIT extends ApplicationTest {
                 emp2.getFullName());
         assertEquals("The user has not been modified!!!",
                 modEm.getEmail(),
+                
+                
                 emp2.getEmail());
         assertEquals("The user has not been modified!!!",
                 modEm.getLogin(),
@@ -367,7 +389,6 @@ public class EmployeeControllerIT extends ApplicationTest {
                 modEm.getSalary(),
                 emp2.getSalary());
         
-
     }
 
     /**
@@ -404,7 +425,6 @@ public class EmployeeControllerIT extends ApplicationTest {
 //        clickOn("#tfEmail");
 //        push(KeyCode.CONTROL, KeyCode.A);
 //        eraseText(1);
-
         clickOn("#tfLogin");
         write(OVERSIZED_TEXT);
         clickOn("#tfEmail");
@@ -498,8 +518,6 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn("#tfEmail");
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
-        
-        
 
         clickOn("#tfEmail");
         write("jon@@gmail.com");
@@ -668,7 +686,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         verifyThat("#lblError", LabeledMatchers.hasText("Debes de introducir un valor en campo value"));
 
         clickOn("#tfValue");
-        write("10000");//No existe el valor
+        write("50");//No existe el valor
         clickOn("#btnFind");
         verifyThat("#lblError", LabeledMatchers.hasText("No se han encontrado empleados"));
 
