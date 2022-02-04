@@ -191,12 +191,17 @@ public class EmployeeFormController {
         LOG.info("Modificando...");
         boolean exist = false;
         try {
-
+            //Recuperamos el empleado por id
             try {
                 //En caso de que el tfLogin no sea null se busca si existe
                 if (tfLogin.getText().length() != 0) {
                     System.out.println("Dentro");
-                    UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
+                    if(!tfLogin.getText().equals(employeeModify.getLogin())){
+                        UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
+                    }else{
+                        employeeModify.setLogin(tfLogin.getText());
+                    }
+                    
                 }
             } catch (BusinessLogicException ex) {
                 //Si se encuentra se cambia el valor de exist a false y se muestra 

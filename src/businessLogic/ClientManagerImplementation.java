@@ -6,8 +6,8 @@
 package businessLogic;
 
 import java.util.Collection;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import rest.ClientRESTful;
 import transferObjects.Client;
@@ -29,8 +29,15 @@ public class ClientManagerImplementation implements ClientManager{
     @Override
     public Client findClientById(String idClient) throws Exception {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        Client client;
-        client = webClient.findClientById(Client.class, idClient);
+        Client client = null;
+        try {
+            LOG.log(Level.INFO, "ClientManager: find client by id: {0}.", idClient);
+            client = webClient.findClientById(Client.class, idClient);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE,
+                    "ClientManager: Error finding client by id, {0}",
+                    ex.getMessage());
+            }
         return client;
     }
 
@@ -41,8 +48,15 @@ public class ClientManagerImplementation implements ClientManager{
 
     @Override
     public Client findClientByEmail(String email) throws Exception {
-        Client client;
-        client = webClient.findClientByEmail(Client.class, email);
+        Client client = null;     
+        try {
+            LOG.log(Level.INFO, "ClientManager: find client by email: {0}.", email);
+            client = webClient.findClientByEmail(Client.class, email);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE,
+                    "ClientManager: Error finding client by email, {0}",
+                    ex.getMessage());
+            }
         return client;
     }
 
@@ -57,34 +71,22 @@ public class ClientManagerImplementation implements ClientManager{
     }
 
     @Override
-    public Collection<Client> findRange(String from, String to) throws Exception {
-        Collection<Client> clients = webClient.findRange(new GenericType<Collection<Client>>(){}, from, to);
-        return clients;
-    }
-
-    @Override
-    public Client findClientByLogin(String login) throws Exception {
-        Client client;
-        client = webClient.findClientByLogin(Client.class, login);
-        return client;
-    }
-
-    @Override
     public void create(Client client) throws Exception {
         webClient.create(client);
     }
 
     @Override
-    public Client findClientByFullName(String fullName) throws Exception {
-        Client client;
-        client = webClient.findClientByFullName(Client.class, fullName);
-        return client;
-    }
-
-    @Override
     public Collection<Client> findAllClients() throws Exception {
-        Collection<Client> clients;
-        clients = webClient.findAll(new GenericType<Collection<Client>>(){});
+        Collection<Client> clients = null;
+        
+        try {
+            LOG.log(Level.INFO, "ClientManager: find all clients: {0}.");
+           clients = webClient.findAll(new GenericType<Collection<Client>>(){});
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE,
+                    "ClientManager: Error finding all clients, {0}",
+                    ex.getMessage());
+            }
         return clients;
     }
 

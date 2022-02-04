@@ -59,6 +59,8 @@ public class SignInController {
     //un hyperlink que llama a la ventana modal viewSingUP
     @FXML
     private Hyperlink hyperSignUP;
+    @FXML
+    private Hyperlink hpResetPass;
 
     //getter y setter del state SingIN
     public Stage getSignInStage() {
@@ -78,6 +80,7 @@ public class SignInController {
         btnSignIN.setOnAction(this::signIN);
         //llamar al metodo de  resgistrarse cuando pulsas el hyperEnlace
         hyperSignUP.setOnAction(this::signUp);
+        hpResetPass.setOnAction(this::resetPass);
     }
 
     /**
@@ -141,6 +144,7 @@ public class SignInController {
             errorAlert.showAndWait();
         }
     }
+
     /**
      * Abre una ventana modal de signUP que que el usuario se pueda registrar
      *
@@ -195,4 +199,33 @@ public class SignInController {
         this.usersManager = usersManager;
     }
 
+    @FXML
+    private void resetPass(ActionEvent event) {
+
+        try {
+            //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+            FXMLLoader restore = new FXMLLoader(getClass().getResource("/view/RestorePassword.fxml"));
+            Parent root;
+            root = (Parent) restore.load();
+            //Creamos una nueva escena para la ventana SignIn
+            Scene restoreScene = new Scene(root);
+            //creamos un nuevo escenario para la nueva ventana
+            Stage restoreStage = new Stage();
+            //definimos como modal la nueva ventana
+            //logout.initModality(Modality.APPLICATION_MODAL);
+            //añadimos la escena en el stage
+            restoreStage.setScene(restoreScene);
+            //por defecto no podra redimensionarse
+            restoreStage.setResizable(false);
+            //cargamos el controlador de la ventana
+            SignUpController controller = restore.getController();
+            controller.initStage(root);
+            //mostramos la ventana modal mientras la actual se queda esperando
+            restoreStage.show();
+            //cerramos la ventana
+            panelSignIN.getScene().getWindow().hide();
+        } catch (IOException ex) {
+            Logger.getLogger(SignInController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

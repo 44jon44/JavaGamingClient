@@ -447,12 +447,13 @@ public class EmployeeController {
                 if (validFloat) {
                     //En caso de que el salario sea valido
                     ObservableList<Employee> empsS = FXCollections.observableArrayList(employeesManager.employeesBySalary(tfValue.getText()));
-                    if (empsS.isEmpty()) {
+                    if (empsS.size()==0) {
                         //Si no se ha encontrado ninguno se informa al usuario 
                         lblError.setText("No se han encontrado empleados");
                     }
                     //Si hay resultados, se cargan los datos en la tabla
                     tblEmployees.setItems(empsS);
+                    
                 } else {
                     //Si no es un campo valido, se informa al usuario
                     lblError.setText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"

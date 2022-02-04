@@ -26,14 +26,8 @@ public interface ClientManager {
 
     public Client find(String id) throws Exception;
 
-    public Collection<Client> findRange(String from, String to) throws Exception;
-
-    public Client findClientByLogin(String login) throws Exception;
-
     public void create(Client client) throws Exception;
     
-    public Client findClientByFullName(String fullName) throws Exception;
-
     public Collection<Client> findAllClients() throws Exception;
 
     public void remove(String id) throws Exception;

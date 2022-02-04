@@ -137,9 +137,9 @@ public class HbMenuAdmController {
             stage = (Stage) hbMenuAdm.getScene().getWindow();
             //controlador de la vista game
             GameController controller = game.getController();
-
+            
             controller.setGameManager(GameManagerFactory.createGameManager("REST_WEB_CLIENT"));
-
+            
             //establecemos el stage
             controller.setStage(stage);
             //lanzamos el initStage
@@ -159,18 +159,15 @@ public class HbMenuAdmController {
             FXMLLoader purchase = new FXMLLoader(getClass().getResource("/view/purchase.fxml"));
             Parent root;
             root = (Parent) purchase.load();
-
-            //Creamos una nueva escena para la ventana SignIn
-            Scene PurchaseScene = new Scene(root);
-            Stage purchaseStage = (Stage) hbMenuAdm.getScene().getWindow();
-            //creamos un nuevo escenario para la nueva ventana
+            stage = (Stage) hbMenuAdm.getScene().getWindow();
+            //controlador puchase
             PurchaseController controller = purchase.getController();
-            //añadimos la escena en el stage
+            controller.setStage(stage);
             controller.initStage(root);
-            purchaseStage.setScene(PurchaseScene);
-
         } catch (IOException ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 
