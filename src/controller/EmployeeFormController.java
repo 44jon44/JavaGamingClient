@@ -779,7 +779,7 @@ public class EmployeeFormController {
             tfSalary.setText("");
             dpHiringDate.setValue(null);
         } else {
-            alert.close();
+            alert.close(); 
         }
     }
 
