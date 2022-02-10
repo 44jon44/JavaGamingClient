@@ -40,7 +40,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.naming.OperationNotSupportedException;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -49,7 +48,6 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import transferObjects.Employee;
-import exception.*;
 
 /**
  * FXML Controller class
@@ -358,7 +356,8 @@ public class EmployeeController {
             //cargamos el controlador de la ventana
             EmployeeFormController controller = (EmployeeFormController) employeeForm.getController();
             controller.initStage(root);
-            controller.initStageModify();
+            controller.initStageModify(emp.getLogin());
+            
             controller.empToModify(emp);
             controller = employeeForm.getController();
             controller.initStage(root);
@@ -447,12 +446,13 @@ public class EmployeeController {
                 if (validFloat) {
                     //En caso de que el salario sea valido
                     ObservableList<Employee> empsS = FXCollections.observableArrayList(employeesManager.employeesBySalary(tfValue.getText()));
-                    if (empsS.isEmpty()) {
+                    if (empsS.size()==0) {
                         //Si no se ha encontrado ninguno se informa al usuario 
                         lblError.setText("No se han encontrado empleados");
                     }
                     //Si hay resultados, se cargan los datos en la tabla
                     tblEmployees.setItems(empsS);
+                    
                 } else {
                     //Si no es un campo valido, se informa al usuario
                     lblError.setText("El valor del campo value no es valido. Introduce un numero entre 0 y 99999. Ej: 123.23"
