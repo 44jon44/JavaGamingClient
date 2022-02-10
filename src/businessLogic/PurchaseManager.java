@@ -22,6 +22,8 @@ public interface PurchaseManager {
     public Collection<Purchase> findPurchasesByPurchaseDate(String purchaseDate) throws Exception;
 
     public Collection<Purchase> findPurchasesByPrice(String price) throws Exception;
+    
+    public Collection<Purchase> findPurchasesByPriceRange(String minPrice, String maxPrice) throws Exception;
 
     public void edit(Object requestEntity, String id) throws Exception;
 

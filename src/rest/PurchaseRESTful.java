@@ -137,5 +137,11 @@ public class PurchaseRESTful {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("find/idClient/{0}/{1}/{2}/{3}", new Object[]{idClient, purchaseDate, minPrice, maxPrice}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }   
+    } 
+    
+    public <T> T findPurchasesByPriceRange(GenericType<T> responseType,String minPrice, String maxPrice) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("find/price/{0}/{1}", new Object[]{minPrice, maxPrice}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
 }

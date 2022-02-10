@@ -61,6 +61,8 @@ public class PurchaseController {
     private final static String TYPE = "REST_WEB_CLIENT";
 
     private PurchaseManager purchasesManager;
+    
+    private Collection purchases;
 
     private ObservableList<Purchase> purchasesObservableList;
 
@@ -132,7 +134,7 @@ public class PurchaseController {
     public void setSelectedPurchase(Purchase selectedPurchase) {
         this.selectedPurchase = selectedPurchase;
     }
-    
+
     public void initStage(Parent root) throws Exception{
         LOG.info("InitStage de la ventana purchase...");
         try{
@@ -163,11 +165,10 @@ public class PurchaseController {
     
     public void handleDateSelected(ObservableValue ov, Object oldValue, Object newValue) {
         ZoneId defaultZoneId = ZoneId.systemDefault();
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         if (newValue != null) {
             purchaseDate = Date.from(dpPurchaseDate.getValue().atStartOfDay(defaultZoneId).toInstant());
             dateSelected = true;
-            LOG.log(Level.INFO, "purchaseDate: {0}", formatter.format(purchaseDate));
+            LOG.log(Level.INFO, "purchaseDate: {0}", dateFormatter.format(purchaseDate));
             LOG.log(Level.INFO, "dateSelected: {0}", dateSelected);
         }else{
             purchaseDate = null;
@@ -268,25 +269,63 @@ public class PurchaseController {
 
     @FXML
     private void handleSearch(ActionEvent event) {
-        LOG.log(Level.SEVERE, "Buscando...");
-        
-        
-        if(clientSelected){
-            idClient = cbClients.getValue().getIdUser();
+        LOG.log(Level.INFO, "Buscando...");                    
+        if(clientSelected && dateSelected && priceSelected){
+            try {
+                purchases = purchasesManager.findPurchasesByClientAndPurDateAndPriceRange(String.valueOf(idClient), dateFormatter.format(purchaseDate), String.valueOf(minPrice), String.valueOf(maxPrice));
+                loadPurchasesData(purchases);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        }else if(dateSelected && priceSelected){
+            try {
+                purchases = purchasesManager.findPurchasesByPurDateAndPriceRange(dateFormatter.format(purchaseDate), String.valueOf(minPrice), String.valueOf(maxPrice));
+                loadPurchasesData(purchases);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        }else if(clientSelected && priceSelected){
+            try {
+                purchases = purchasesManager.findPurchasesByClientAndPriceRange(String.valueOf(idClient), String.valueOf(minPrice), String.valueOf(maxPrice));
+                loadPurchasesData(purchases);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        }else if(clientSelected && dateSelected){
+            try {
+                purchases = purchasesManager.findPurchasesByClientAndPurchaseDate(String.valueOf(idClient), dateFormatter.format(purchaseDate));
+                loadPurchasesData(purchases);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        }else if(clientSelected){
+            try {
+                purchases = purchasesManager.findPurchasesByClientId(String.valueOf(idClient));
+                loadPurchasesData(purchases);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        } else if(dateSelected){
+            try {
+                purchases = purchasesManager.findPurchasesByPurchaseDate(dateFormatter.format(purchaseDate));
+                loadPurchasesData(purchases);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        } else if(priceSelected){
+            try {
+                purchases = purchasesManager.findPurchasesByPriceRange(String.valueOf(minPrice), String.valueOf(maxPrice));
+                loadPurchasesData(purchases);
+            } catch (Exception ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+        }else{
+            //Informamos de que no se ha seleccionado ningún criterio de búsqueda
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("Error");
+            errorAlert.setContentText("Debes elegir un criterio de búsqueda.");
+            errorAlert.showAndWait();
         }
-        
-        if(dateSelected){
-            
-        } 
-        if(priceSelected){}
-        
-        if(clientSelected && dateSelected){}
-            
-        if(clientSelected && priceSelected){}
-         
-        if(dateSelected && priceSelected){}
-        
-        if(clientSelected && dateSelected && priceSelected){}
     }
 
     @FXML
@@ -307,12 +346,25 @@ public class PurchaseController {
     public void setPurchaseManager(PurchaseManager puchasesManager) {
         this.purchasesManager = puchasesManager;
     }
-
+    
     private void loadPurchasesData() {
         try
         {
-            Collection purchases;
             purchases = purchasesManager.getAllPurchasess();
+            if(purchases != null){
+                purchasesObservableList = FXCollections.observableArrayList(purchases);
+                tvPurchases.setItems(purchasesObservableList);
+            }
+            LOG.log(Level.INFO, "Juegos cargados: {0}", ((purchasesObservableList != null)?purchasesObservableList.size():0));
+        } catch (Exception ex)
+        {
+            LOG.log(Level.SEVERE, "Se ha producido un error al cargar juegos.", ex);
+        }
+    }
+
+    private void loadPurchasesData(Collection purchases) {
+        try
+        {
             if(purchases != null){
                 purchasesObservableList = FXCollections.observableArrayList(purchases);
                 tvPurchases.setItems(purchasesObservableList);
