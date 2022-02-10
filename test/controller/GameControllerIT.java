@@ -6,6 +6,7 @@
 package controller;
 
 import businessLogic.GameManager;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
@@ -40,6 +41,7 @@ import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import static org.testfx.matcher.control.ButtonMatchers.isDefaultButton;
 import org.testfx.matcher.control.LabeledMatchers;
+import transferObjects.Employee;
 import transferObjects.Game;
 import transferObjects.Genre;
 
@@ -110,6 +112,8 @@ public class GameControllerIT extends ApplicationTest {
 
     private Button btnAdd;
 
+    private Button btnReport;
+
     private Button btnModify;
 
     private Label lblErrorGamePrice;
@@ -118,6 +122,7 @@ public class GameControllerIT extends ApplicationTest {
 
     private Label lblErrorGameName;
     private Pane gameFormPane;
+    private final TableView table = lookup("#tvGames").queryTableView();
 
     @BeforeClass
     public static void inicio() throws TimeoutException {
@@ -140,12 +145,13 @@ public class GameControllerIT extends ApplicationTest {
         clickOn("Opciones");
         clickOn("Gestionar juegos");
         verifyThat("#btnAddGame", isEnabled());
+        verifyThat("#btnReport", isEnabled());
         verifyThat("#btnSearch", isEnabled());
         verifyThat("#btnModifyGame", isDisabled());
         verifyThat("#btnDeleteGame", isDisabled());
         System.out.println("controller.GameControllerIT."
                 + "testA_initialInteraction()");
-        tvGames = lookup("#tvGames").queryTableView();
+
         cbGameGenre = lookup("#cbGameGenre").queryComboBox();
         cbGamePegi = lookup("#cbGamePegi").queryComboBox();
 
@@ -155,8 +161,12 @@ public class GameControllerIT extends ApplicationTest {
      * Este test prueba que se añada un objeto Game Verificando el Alert que
      * obtiene el Usuario al crear un Objeto.
      */
-    @Test
+    // @Test
     public void testB_CreateGame() {
+
+        int rowCount = table.getItems().size();
+        int genRandom = 0;
+
         clickOn("#btnAddGame");
         verifyThat("#gameFormPane", isVisible());
         String game = "GAME" + new Random().nextInt();
@@ -170,13 +180,22 @@ public class GameControllerIT extends ApplicationTest {
         clickOn(isDefaultButton());
         clickOn("#hlBack");
 
+        table.refresh();
+
+        int size2;
+        size2 = table.getItems().size();
+        assertEquals("The row has not been added!!!", rowCount + 1, size2);
+        List<Game> games = table.getItems();
+        assertEquals("The user has not been added!!!",
+                games.stream().filter(u -> u.getName().equals(game)).count(), 1);
+
     }
 
     /**
      * Este test comprueba que los botones borrar y modificar se habiliten
      * solamente cuando se seleccione una columna en la tabla.
      */
-    @Test
+    //@Test
     public void testC_VerifyEnableButtons() {
         Node value = lookup(".table-row-cell").nth(0).query();
         clickOn(value);
@@ -190,6 +209,9 @@ public class GameControllerIT extends ApplicationTest {
      */
     @Test
     public void testD_CreateGameExist() {
+        int rowCount = table.getItems().size();
+        assertNotEquals("Table has no data: Cannot test.",
+                rowCount, 0);
         clickOn("#btnAddGame");
         verifyThat("#gameFormPane", isVisible());
         clickOn("#tfGameName");
@@ -201,7 +223,7 @@ public class GameControllerIT extends ApplicationTest {
                 NodeMatchers.isVisible());
         clickOn(isDefaultButton());
         clickOn("#hlBack");
-
+        assertEquals("A row has been added!!!", rowCount, table.getItems().size());
     }
 
     /**
@@ -210,8 +232,7 @@ public class GameControllerIT extends ApplicationTest {
      */
     @Test
     public void testE_CalcelDelate() {
-        tvGames = lookup("#tvGames").queryTableView();
-        int rowCount = tvGames.getItems().size();
+        int rowCount = table.getItems().size();
         assertNotEquals("Table has no data: Cannot test.",
                 rowCount, 0);
         Node value = lookup(".table-row-cell").nth(0).query();
@@ -220,14 +241,14 @@ public class GameControllerIT extends ApplicationTest {
         clickOn("Cancelar");
         verifyThat("operación cancelada", NodeMatchers.isVisible());
         clickOn(isDefaultButton());
-        // assertEquals("A row has been deleted!!!", rowCount, tvGames.getItems().size());
+        assertEquals("A row has been added!!!", rowCount, table.getItems().size());
     }
 
     /**
      * Este test comprueba cuando le das al boton de añadir y tengas algun campo
      * mal salte el Alert que informe del error.
      */
-    @Test
+    // @Test
     public void testF_GameFormError() {
         clickOn("#btnAddGame");
         verifyThat("#gameFormPane", isVisible());
@@ -249,7 +270,7 @@ public class GameControllerIT extends ApplicationTest {
      * Este test comprueba que al cambiar el foco de algun campo que sea
      * obligatorio lo indice.
      */
-    @Test
+    // @Test
     public void testG_GameNecesaryFields() {
         clickOn("#btnAddGame");
         verifyThat("#gameFormPane", isVisible());
@@ -272,7 +293,7 @@ public class GameControllerIT extends ApplicationTest {
      * Este test comprueba que no se pueda añadir una longitud mas grande a un
      * atributo que en la base de datos
      */
-    @Test
+    // @Test
     public void testH_MaxLengh() {
         clickOn("#btnAddGame");
         verifyThat("#gameFormPane", isVisible());
@@ -293,7 +314,7 @@ public class GameControllerIT extends ApplicationTest {
     /**
      * Comprueba que el se modifique correctamente un objeto Game
      */
-    @Test
+    // @Test
     public void testI_Modify() {
 
         Node value = lookup(".table-row-cell").nth(0).query();
@@ -310,8 +331,11 @@ public class GameControllerIT extends ApplicationTest {
 
     }
 
-    @Test
+     @Test
     public void testJ_ModifyExist() {
+        int rowCount = table.getItems().size();
+        assertNotEquals("Table has no data: Cannot test.",
+                rowCount, 0);
         Node value = lookup(".table-row-cell").nth(0).query();
         clickOn(value);
         clickOn("#btnModifyGame");
@@ -323,6 +347,7 @@ public class GameControllerIT extends ApplicationTest {
                 NodeMatchers.isVisible());
         clickOn(isDefaultButton());
         clickOn("#hlBack");
+        assertEquals("A row has been added!!!", rowCount, table.getItems().size());
     }
 
     /**
@@ -331,8 +356,7 @@ public class GameControllerIT extends ApplicationTest {
      *
      * Este test comprueba cuando se borra un juego.
      */
-    @Test
-
+    //@Test
     public void testK_DeleteGame() {
         tvGames = lookup("#tvGames").queryTableView();
         int rowCount = tvGames.getItems().size();
@@ -355,7 +379,7 @@ public class GameControllerIT extends ApplicationTest {
      * Este test comprueba que si damos un filtro que no encuentra sale un
      * error.
      */
-    @Test
+    // @Test
     public void testN_ProbarFiltro1() {
         clickOn("#cbSearchBy");
         type(KeyCode.DOWN);
@@ -375,7 +399,7 @@ public class GameControllerIT extends ApplicationTest {
      * Este test comprueba que si damos un filtro que no encuentra sale un
      * error.
      */
-    @Test
+    // @Test
     public void testM_ProbarFiltro2() {
         clickOn("#cbSearchBy");
         type(KeyCode.UP);

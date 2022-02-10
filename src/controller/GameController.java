@@ -40,7 +40,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
-import transferObjects.Employee;
+
 import transferObjects.Game;
 import transferObjects.Genre;
 
@@ -80,6 +80,8 @@ public class GameController {
     @FXML
     private Button btnDeleteGame;
     @FXML
+    private Button btnAlltable;
+    @FXML
     private Button btnReport;
     @FXML
     private Label lblGameError;
@@ -99,11 +101,13 @@ public class GameController {
      * @param root
      */
     public void initStage(Parent root) {
-        try {
+        try
+        {
             Scene gameScene = new Scene(root);
             stage.setScene(gameScene);
             btnAddGame.setOnAction(this::createGame);
             btnDeleteGame.setOnAction(this::deleteGame);
+            btnAlltable.setOnAction(this::tablegame);
             btnModifyGame.setOnAction(this::modifyGame);
             btnReport.setOnAction(this::reportTable);
             //lblError se inicializa vacio
@@ -138,16 +142,20 @@ public class GameController {
             tcGameReleaseDate.setStyle("-fx-alignment: CENTER;");
             /////////////////////////////////////////////////////
             tvGames.getSelectionModel().selectedItemProperty()
-                    .addListener((ov, oldValue, newValue) -> {
-                        if (newValue != null) {
+                    .addListener((ov, oldValue, newValue) ->
+                    {
+                        if (newValue != null)
+                        {
                             btnDeleteGame.setDisable(false);
                             btnModifyGame.setDisable(false);
-                        } else {
+                        } else
+                        {
                             btnDeleteGame.setDisable(true);
                             btnModifyGame.setDisable(true);
                         }
                     });
-        } catch (Exception ex) {
+        } catch (Exception ex)
+        {
             LOG.log(Level.SEVERE,
                     "Error al iniciar la ventana Game",
                     ex.getMessage());
@@ -164,7 +172,8 @@ public class GameController {
      * @param event accionamos el evento del boton
      */
     private void createGame(ActionEvent event) {
-        try {
+        try
+        {
             //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
             FXMLLoader gameForm = new FXMLLoader(getClass()
                     .getResource("/view/gameForm.fxml"));
@@ -173,9 +182,11 @@ public class GameController {
             GameFormController controller = gameForm.getController();
             controller.setStage(stage);
             controller.initStage(root);
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             LOG.log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch (Exception ex)
+        {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setContentText("Fallo de servidor, intentelo mas tarde");
@@ -189,7 +200,8 @@ public class GameController {
      * @param event accionamos el evento del boton
      */
     private void modifyGame(ActionEvent event) {
-        try {
+        try
+        {
             Game selectedGame = ((Game) tvGames.getSelectionModel()
                     .getSelectedItem());
 
@@ -203,11 +215,18 @@ public class GameController {
             controller.initStage(root);
             controller.modifyGameData((Game) tvGames.getSelectionModel().getSelectedItem());
 
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             LOG.log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch (Exception ex)
+        {
             LOG.log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void tablegame(ActionEvent event) {
+        loadGamesOnTable();
+
     }
 
     /**
@@ -216,7 +235,8 @@ public class GameController {
      * @param event accionamos el evento del boton
      */
     private void reportTable(ActionEvent event) {
-        try {
+        try
+        {
             LOG.info("Beginning printing action...");
             JasperReport report
                     = JasperCompileManager.compileReport(getClass()
@@ -233,7 +253,8 @@ public class GameController {
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
             // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        } catch (JRException ex) {
+        } catch (JRException ex)
+        {
             //If there is an error show message and
             //log it.
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -252,7 +273,8 @@ public class GameController {
      * @param event accionamos el evento del boton
      */
     private void deleteGame(ActionEvent event) {
-        try {
+        try
+        {
             LOG.info("Deleting user...");
             //Obtenemos los datos del juego seleccionado mediante el atributo selectedGame
             Game selectedGame = ((Game) tvGames.getSelectionModel()
@@ -265,7 +287,8 @@ public class GameController {
             //La ventana se hace no redimensionable
             alert.setResizable(false);
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
+            if (result.get() == ButtonType.OK)
+            {
                 //delete game from server side
                 // cargamos nuestra lista con el filtro de busqueda
                 GameManagerFactory.createGameManager("REST_WEB_CLIENT").deleteGame(selectedGame.getIdGame());
@@ -274,12 +297,14 @@ public class GameController {
                 alert2.show();
                 tvGames.getItems().remove(selectedGame);
                 tvGames.refresh();
-            } else {
+            } else
+            {
                 Alert alert3 = new Alert(Alert.AlertType.INFORMATION,
                         "operación cancelada");
                 alert3.show();
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             //If there is an error in the business logic tier show message and
             //log it.
             LOG.log(Level.SEVERE,
@@ -298,11 +323,16 @@ public class GameController {
      * En este metodo cargamos los datos de todos los juegos de la parte
      * servidor
      */
-    public void loadGamesOnTable() throws Exception {
-
-        ObservableList<Game> games = FXCollections.observableArrayList(GameManagerFactory.createGameManager("REST_WEB_CLIENT").getAllGames());
-        tvGames.setItems(games);
-        LOG.info("juegos cargados" + games);
+    public void loadGamesOnTable() {
+        try
+        {
+            ObservableList<Game> games = FXCollections.observableArrayList(GameManagerFactory.createGameManager("REST_WEB_CLIENT").getAllGames());
+            tvGames.setItems(games);
+            LOG.info("juegos cargados" + games);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
 
     }
 
@@ -315,17 +345,20 @@ public class GameController {
      */
     @FXML
     public void selectedFilter(ObservableValue ov, String oldValue, String newValue) {
-        if (newValue != null) {
+        if (newValue != null)
+        {
             String searchFilter = cbSearchBy.getValue();
             //si filtramos por genero
-            if (searchFilter.equalsIgnoreCase("GENERO")) {
+            if (searchFilter.equalsIgnoreCase("GENERO"))
+            {
                 //cargamos el Enum de Genero
                 ObservableList<Genre> genrefilterValue = FXCollections
                         .observableArrayList(Genre.values());
                 cbSearchValue.setItems(genrefilterValue);
                 cbSearchValue.getSelectionModel().selectFirst();
                 //si filtramos por Pegi
-            } else {
+            } else
+            {
                 ObservableList<Integer> pegiValuefilter = FXCollections
                         .observableArrayList(3, 8, 12, 16, 18);
                 cbSearchValue.setItems(pegiValuefilter);
@@ -359,34 +392,40 @@ public class GameController {
         Integer pegi;
         //lista de juegos donde cargaremos los juegos para la tabla
 
-        try {
+        try
+        {
             lblGameError.setText("");
-            if (searchFilter.equalsIgnoreCase("GENERO")) {
+            if (searchFilter.equalsIgnoreCase("GENERO"))
+            {
                 //obtenemos el genero selecionado en el cbSearchValue
                 genre = cbSearchValue.getValue().toString();
                 // cargamos nuestra lista con el filtro de busqueda
                 // cargamos nuestra lista con el filtro de busqueda
                 ObservableList<Game> games = FXCollections.observableArrayList(GameManagerFactory.
                         createGameManager("REST_WEB_CLIENT").getAllGamesbyGenre(genre));
-                if (games.isEmpty()) {
+                if (games.isEmpty())
+                {
                     lblGameError.setText("No hay juegos disponibles del genero seleccionado");
                 }
                 //cargamos los 
                 chargeFilters(games);
-            } else {
+            } else
+            {
                 //obtenemos el pegi selecionado en el cbSearchValue
                 pegi = (Integer) cbSearchValue.getValue();
                 // cargamos nuestra lista con el filtro de busqueda
                 ObservableList<Game> games = FXCollections.observableArrayList(GameManagerFactory.
                         createGameManager("REST_WEB_CLIENT").getAllGamesbyPegi(pegi));
-                if (games.isEmpty()) {
+                if (games.isEmpty())
+                {
                     lblGameError.setText("No hay juegos disponibles del pegi seleccionado");
                 }
                 //llamamos al metodo para que carge nuestra lista en la tabla
                 chargeFilters(games);
 
             }
-        } catch (Exception ex) {
+        } catch (Exception ex)
+        {
             LOG.info("error al  filtrar la busqueda de juegos al pulsar btbSearh");
             LOG.log(Level.SEVERE, null, ex);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

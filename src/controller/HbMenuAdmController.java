@@ -54,8 +54,8 @@ public class HbMenuAdmController {
     private MenuItem miManagePurchases;
     @FXML
     private MenuItem miChangePasswd;
-    @FXML
-    private MenuItem miPrint;
+    
+ 
     @FXML
     private MenuBar mbRight;
     @FXML
@@ -83,7 +83,6 @@ public class HbMenuAdmController {
             //llamar al método que abre la ventana de compras
             miManagePurchases.setOnAction(this::purchasesClicked);
             //llamar al método que abre la ventana del formulario
-            miPrint.setOnAction(this::printClicked);
             //llamar al método que abre la ventana para cambiar la contraseña
             miChangePasswd.setOnAction(this::passwordClicked);
             //metodo que cierr la aplicacion
@@ -178,10 +177,6 @@ public class HbMenuAdmController {
         errorAlert.showAndWait();
     }
 
-    @FXML
-    private void printClicked(ActionEvent event) {
-
-    }
 
     @FXML
     private void passwordClicked(ActionEvent event) {

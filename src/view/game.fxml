@@ -62,5 +62,10 @@
             <Font size="14.0" />
          </font>
       </Button>
+      <Button fx:id="btnAlltable" layoutX="608.0" layoutY="45.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" text="TABLA COMPLETA">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </Pane>
