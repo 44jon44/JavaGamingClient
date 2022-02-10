@@ -1,9 +1,7 @@
 package controller;
 
-import businessLogic.EmployeeManager;
 import businessLogic.GameManager;
 import businessLogic.GameManagerImplementation;
-import factories.EmployeeManagerFactory;
 import factories.GameManagerFactory;
 
 import java.io.IOException;

@@ -41,7 +41,6 @@ import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import static org.testfx.matcher.control.ButtonMatchers.isDefaultButton;
 import org.testfx.matcher.control.LabeledMatchers;
-import transferObjects.Employee;
 import transferObjects.Game;
 import transferObjects.Genre;
 
@@ -161,7 +160,7 @@ public class GameControllerIT extends ApplicationTest {
      * Este test prueba que se añada un objeto Game Verificando el Alert que
      * obtiene el Usuario al crear un Objeto.
      */
-    // @Test
+    @Test
     public void testB_CreateGame() {
 
         int rowCount = table.getItems().size();
@@ -179,16 +178,14 @@ public class GameControllerIT extends ApplicationTest {
                 NodeMatchers.isVisible());
         clickOn(isDefaultButton());
         clickOn("#hlBack");
-
         table.refresh();
-
-        int size2;
-        size2 = table.getItems().size();
-        assertEquals("The row has not been added!!!", rowCount + 1, size2);
+        
+        int rowCount2 = table.getItems().size();
+        assertEquals("The row has not been added!!!", rowCount + 1, rowCount2);
+        //look for user in table data model
         List<Game> games = table.getItems();
-        assertEquals("The user has not been added!!!",
+        assertEquals("The game has not been added!!!",
                 games.stream().filter(u -> u.getName().equals(game)).count(), 1);
-
     }
 
     /**
@@ -207,7 +204,7 @@ public class GameControllerIT extends ApplicationTest {
     /**
      * este test prueba cuando creas un juego que ya existe.
      */
-    @Test
+    // @Test
     public void testD_CreateGameExist() {
         int rowCount = table.getItems().size();
         assertNotEquals("Table has no data: Cannot test.",
@@ -230,7 +227,7 @@ public class GameControllerIT extends ApplicationTest {
      * Este test comprueba que al borrar un juego y en la confirmación le das
      * cancelar no borre el juego.
      */
-    @Test
+    //  @Test
     public void testE_CalcelDelate() {
         int rowCount = table.getItems().size();
         assertNotEquals("Table has no data: Cannot test.",
@@ -316,22 +313,32 @@ public class GameControllerIT extends ApplicationTest {
      */
     // @Test
     public void testI_Modify() {
-
+        int rowCount = table.getItems().size();
+        assertNotEquals("La tabla no tiene datos. Nose puede testear",
+                rowCount, 0);
         Node value = lookup(".table-row-cell").nth(0).query();
         clickOn(value);
         clickOn("#btnModifyGame");
+
+        Game modifyGame = new Game();
+        TextField tfName = lookup("#tfGameName").query();
+        modifyGame.setName(tfName.getText());
         doubleClickOn("#tfGameName");
         eraseText(1);
         String game = "GAME" + new Random().nextInt();
         write(game);
+
         clickOn("#btnModify");
         verifyThat("Se ha modificado correctamente el Juego",
                 NodeMatchers.isVisible());
         clickOn(isDefaultButton());
 
+        Game game2 = (Game) table.getItems().get(rowCount - 1);
+        assertNotEquals(modifyGame.getName(), game2.getName());
+
     }
 
-     @Test
+    // @Test
     public void testJ_ModifyExist() {
         int rowCount = table.getItems().size();
         assertNotEquals("Table has no data: Cannot test.",
@@ -379,18 +386,19 @@ public class GameControllerIT extends ApplicationTest {
      * Este test comprueba que si damos un filtro que no encuentra sale un
      * error.
      */
-    // @Test
+    //@Test
     public void testN_ProbarFiltro1() {
+        int rowCount = table.getItems().size();
         clickOn("#cbSearchBy");
         type(KeyCode.DOWN);
         type(KeyCode.ENTER);
         clickOn("#cbSearchValue");
-        type(KeyCode.DOWN);
         type(KeyCode.ENTER);
         clickOn("#btnSearch");
         verifyThat("#lblGameError", LabeledMatchers.
                 hasText("No hay juegos disponibles del pegi seleccionado"));
 
+        assertEquals("se han encontrado juegos de ese filtro!!!", 0, table.getItems().size());
     }
 
     /**
@@ -399,8 +407,9 @@ public class GameControllerIT extends ApplicationTest {
      * Este test comprueba que si damos un filtro que no encuentra sale un
      * error.
      */
-    // @Test
+    //  @Test
     public void testM_ProbarFiltro2() {
+        int rowCount = table.getItems().size();
         clickOn("#cbSearchBy");
         type(KeyCode.UP);
         type(KeyCode.ENTER);
@@ -410,6 +419,8 @@ public class GameControllerIT extends ApplicationTest {
         clickOn("#btnSearch");
         verifyThat("#lblGameError", LabeledMatchers.
                 hasText("No hay juegos disponibles del genero seleccionado"));
+
+        assertEquals("se han encontrado juegos de ese filtro!!!", 0, table.getItems().size());
 
     }
 
