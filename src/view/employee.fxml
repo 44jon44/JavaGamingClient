@@ -47,7 +47,7 @@
             <Font size="14.0" />
          </font></Button>
       <ComboBox id="cmbFilter" fx:id="cmbFilter" layoutX="140.0" layoutY="89.0" prefHeight="25.0" prefWidth="250.0" />
-      <Label id="lblError" fx:id="lblError" layoutX="60.0" layoutY="724.0" prefHeight="30.0" prefWidth="924.0" text="Esto es un mensaje de error" textFill="#ff3333">
+      <Label id="lblError" fx:id="lblError" layoutX="60.0" layoutY="724.0" prefHeight="30.0" prefWidth="924.0" text="Esto es un mensaje de error" textFill="RED">
          <font>
             <Font name="System Bold" size="16.0" />
          </font></Label>

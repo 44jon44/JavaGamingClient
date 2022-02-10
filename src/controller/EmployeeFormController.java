@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -47,6 +46,7 @@ public class EmployeeFormController {
     private EmployeeManager employeesManager;
 
     private Employee employeeModify;
+    private String prevLogin;
 
     //booleanos que indican si los campos son válidos tras las comprobaciones oportunas
     private boolean tfNameIsValid = false;
@@ -129,7 +129,6 @@ public class EmployeeFormController {
      */
     @FXML
     private Pane employeeFormPane;
-    private String prevLogin;
 
     /**
      * Metodo para inicializar el stage EmployeeFormController Stage
@@ -175,9 +174,10 @@ public class EmployeeFormController {
     /**
      * Inicializa la ventana cuando anteriormente se ha seleccionado anadir
      */
-    void initStageModify() {
+    void initStageModify(String login) {
         btnSave.setOnAction(this::modify);
 
+        prevLogin = login;
     }
 
     /**
@@ -191,26 +191,26 @@ public class EmployeeFormController {
         LOG.info("Modificando...");
         boolean exist = false;
         try {
+            if (!tfLogin.getText().equalsIgnoreCase("")) {
+                try {
+                    //En caso de que el tfLogin no sea null se busca si existe
+                    if (!tfLogin.getText().equalsIgnoreCase(prevLogin)) {
+                        System.out.println("Dentro");
+                        UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
+                    }
+                } catch (BusinessLogicException ex) {
+                    //Si se encuentra se cambia el valor de exist a false y se muestra 
+                    //un alert de informacion
+                    exist = true;
 
-            try {
-                //En caso de que el tfLogin no sea null se busca si existe
-                if (tfLogin.getText().length() != 0) {
-                    System.out.println("Dentro");
-                    UserManagerFactory.createUserManager("REST_WEB_CLIENT").checkLoginExists(tfLogin.getText());
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El login ya existe",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } catch (Exception ex) {
+                    Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (BusinessLogicException ex) {
-                //Si se encuentra se cambia el valor de exist a false y se muestra 
-                //un alert de informacion
-                exist = true;
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "El login ya existe",
-                        ButtonType.OK);
-                alert.showAndWait();
-            } catch (Exception ex) {
-                Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             //Se comprueba que no exista y los campos sean validos
             validateFields();
             if (!exist && validFields()) {
@@ -235,12 +235,43 @@ public class EmployeeFormController {
                 }
             }
             if (!exists && !validFields()) {
-                //En caso de que no exisata y haya algun campo incorrecto,
-                //se informa al usuario
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "Algun campo no es correcto",
-                        ButtonType.OK);
-                alert.showAndWait();
+                if (!tfNameIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El campo nombre no es correcto",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!tfEmailIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El campo email no es correcto",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!tfLoginIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El campo login no es correcto",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!tfSalaryIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El campo salario no es correcto",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!dpHiringDateIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "la fecha de contratacion esta vacia",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                }
+
             }
 
         } catch (Exception ex) {
@@ -267,11 +298,12 @@ public class EmployeeFormController {
         if (oldValue) {//foco perdido 
             tfNameIsValid = validateTfName(tfName.getText());
             if (!tfNameIsValid) {
+                tfName.setStyle("-fx-text-inner-color: red;");
                 showlblErrorNameMessages(tfName.getText());
             }
             if (tfName.getText().trim().length() > 255) {
                 lblErrorName.setText("Longitud maxima de 255 caracteres");
-            }
+            } 
 
         } else if (newValue) {//foco ganado
 
@@ -319,6 +351,7 @@ public class EmployeeFormController {
                 lblErrorHiringDate.setText("Campo obligatorio");
             } else {
                 dpHiringDate.setStyle("-fx-text-inner-color: black;");
+                lblErrorHiringDate.setText("");
             }
         } else if (newValue) {//foco ganado
 
@@ -451,7 +484,7 @@ public class EmployeeFormController {
      */
     @FXML
     private void save(ActionEvent event) {
-        LOG.info("Modificando...");
+        LOG.info("Añadiendo...");
         try {
             try {
                 //Se compueba que el tfLogin este informado
@@ -491,8 +524,6 @@ public class EmployeeFormController {
                     emp.setPrivilege(UserPrivilege.EMPLOYEE);
                     emp.setStatus(UserStatus.ENABLED);
                     emp.setSalary(tfSalary.getText());
-                    emp.setPrivilege(UserPrivilege.EMPLOYEE);
-                    emp.setStatus(UserStatus.ENABLED);
                     //Se envia a la capa de logica para que cree un empleado
                     EmployeeManagerFactory.createEmployeeManager("REST_WEB_CLIENT").createEmployee(emp);
                     //Se informa al usuario de que el usuario se ha creado correctamente
@@ -506,10 +537,44 @@ public class EmployeeFormController {
                 }
             }
             if (!exists && !validFields()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                        "Algun campo no es correcto",
-                        ButtonType.OK);
-                alert.showAndWait();
+
+                if (!tfNameIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El campo nombre no es correcto",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!tfEmailIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El campo email no es correcto",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!tfLoginIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El campo login no es correcto",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!tfSalaryIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "El campo salario no es correcto",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                } else if (!dpHiringDateIsValid) {
+                    //En caso de que no exisata y haya algun campo incorrecto,
+                    //se informa al usuario
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                            "la fecha de contratacion esta vacia",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                }
+
             }
         } catch (Exception ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
@@ -563,7 +628,7 @@ public class EmployeeFormController {
      * @return boolean
      */
     private boolean validFields() {
-        return tfNameIsValid && tfEmailIsValid && tfLoginIsValid && tfSalaryIsValid;
+        return tfNameIsValid && tfEmailIsValid && tfLoginIsValid && tfSalaryIsValid && dpHiringDateIsValid;
     }
 
     /**
@@ -620,9 +685,11 @@ public class EmployeeFormController {
     private void showFieldErrors() {
 
         if (!tfNameIsValid) {
+
             showlblErrorNameMessages(tfName.getText());
         }
         if (!tfEmailIsValid) {
+
             showlblErrorEmailMessages(tfEmail.getText());
         }
         if (!tfLoginIsValid) {
@@ -654,7 +721,7 @@ public class EmployeeFormController {
                 lblErrorName.setText("Campo obligatorio");
                 break;
             case 1:
-                //longitud=0
+                //longitud=1
                 lblErrorName.setText("Longitud minima de 2 caracteres");
                 break;
             default:
@@ -674,7 +741,9 @@ public class EmployeeFormController {
         if (email.trim().length() == 0) {
             lblErrorEmail.setText("Campo obligatorio");
         } else {
-            lblErrorEmail.setText("Email invalido");
+            lblErrorEmail.setText("Formato incorrecto. "
+                    + "Formato válido:\n"
+                    + "ejemplo@ejemplo.com");
         }
         if (email.trim().length() > 255) {
             lblErrorEmail.setText("Longitud maxima de 255 caracteres");
@@ -748,7 +817,7 @@ public class EmployeeFormController {
         tfLogin.setText(emp.getLogin());
         dpHiringDate.setValue(emp.getHiringDate().toInstant()
                 .atZone(ZoneId.systemDefault()).toLocalDate());
-        tfSalary.setText(emp.getSalary().toString());
+        tfSalary.setText(emp.getSalary());
 
         employeeModify = emp;
 
@@ -761,21 +830,34 @@ public class EmployeeFormController {
      */
     @FXML
     private void clean(ActionEvent event) {
-
+        vaciarLblError();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 "Se vaciarán los campos\n"
                 + "Esta operación no se puede deshacer.",
                 ButtonType.OK, ButtonType.CANCEL);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            vaciarLblError();
             tfName.setText("");
             tfEmail.setText("");
             tfLogin.setText("");
             tfSalary.setText("");
             dpHiringDate.setValue(null);
+            vaciarLblError();
         } else {
-            alert.close(); 
+            vaciarLblError();
+            alert.close();
+            vaciarLblError();
         }
+
+    }
+
+    private void vaciarLblError() {
+        lblErrorName.setText("");
+        lblErrorEmail.setText("");
+        lblErrorLogin.setText("");
+        lblErrorHiringDate.setText("");
+        lblErrorSalary.setText("");
     }
 
     /**
@@ -787,48 +869,22 @@ public class EmployeeFormController {
     @FXML
     private void hpClicked(ActionEvent event) {
         try {
-            if (oneFieldInformed()) {
-                //Informar que se descartaran los cambios
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                        "Se descartarán los cambios\n"
-                        + "Esta operación no se puede deshacer.",
-                        ButtonType.OK, ButtonType.CANCEL);
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    try {
-                        //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-                        FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
-                        Parent root;
-                        root = (Parent) employee.load();
-                        employeeFormPane.getScene().getWindow().hide();
-                        //Creamos una nueva escena para la ventana SignIn
-                        //cargamos el controlador de la ventana
-                        EmployeeController controller = employee.getController();
-                        controller.setStage(new Stage());
-                        controller.setEmployeeManager(employeesManager);
-                        controller.initStage(root);
-                    } catch (IOException ex) {
-                        Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    alert.close();
-                }
-            } else {
-                try {
-                    //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
-                    FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
-                    Parent root;
-                    root = (Parent) employee.load();
-                    employeeFormPane.getScene().getWindow().hide();
-                    //Creamos una nueva escena para la ventana SignIn
-                    //cargamos el controlador de la ventana
-                    EmployeeController controller = employee.getController();
-                    controller.setStage(new Stage());
-                    controller.setEmployeeManager(employeesManager);
-                    controller.initStage(root);
-                } catch (IOException ex) {
-                    Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
+            try {
+                //getResource tienes que añadir la ruta de la ventana que quieres iniciar.
+                FXMLLoader employee = new FXMLLoader(getClass().getResource("/view/employee.fxml"));
+                Parent root;
+                root = (Parent) employee.load();
+                employeeFormPane.getScene().getWindow().hide();
+                //Creamos una nueva escena para la ventana SignIn
+                //cargamos el controlador de la ventana
+                EmployeeController controller = employee.getController();
+                controller.setStage(new Stage());
+                controller.setEmployeeManager(employeesManager);
+                controller.initStage(root);
+            } catch (IOException ex) {
+                Logger.getLogger(EmployeeFormController.class.getName()).log(Level.SEVERE, null, ex);
+
             }
         } catch (Exception ex) {
             Logger.getLogger(HbMenuAdmController.class.getName()).log(Level.SEVERE, null, ex);
@@ -838,4 +894,5 @@ public class EmployeeFormController {
             errorAlert.showAndWait();
         }
     }
+
 }

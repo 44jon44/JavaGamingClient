@@ -16,8 +16,6 @@
                   <MenuItem fx:id="miManageGames" mnemonicParsing="false" onAction="#gamesClicked" text="Gestionar juegos" />
                   <MenuItem fx:id="miManagePurchases" mnemonicParsing="false" onAction="#purchasesClicked" text="Gestionar compras" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem id="btnPrint" fx:id="btnPrint" mnemonicParsing="false" onAction="#printClicked" text="Imprimir" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="miChangePasswd" mnemonicParsing="false" onAction="#passwordClicked" text="Cambiar contraseña" />
             </items>
           </Menu>

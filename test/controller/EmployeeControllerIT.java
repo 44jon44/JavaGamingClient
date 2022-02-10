@@ -118,10 +118,28 @@ public class EmployeeControllerIT extends ApplicationTest {
     public void testB_initialState() {
 
         verifyThat("#tfValue", (TextField t) -> t.isFocused());
+        verifyThat("#tfValue", isVisible());
+
+        verifyThat("#lblError", isVisible());
         verifyThat("#lblError", LabeledMatchers.hasText(""));
+
         verifyThat("#btnAdd", isEnabled());
+        verifyThat("#btnAdd", isVisible());
+
         verifyThat("#btnModify", isDisabled());
+        verifyThat("#btnAdd", isVisible());
+
         verifyThat("#btnDelete", isDisabled());
+        verifyThat("#btnDelete", isVisible());
+
+        verifyThat("#btnFind", isEnabled());
+        verifyThat("#btnFind", isVisible());
+
+        verifyThat("#btnReport", isEnabled())
+                ;
+        verifyThat("#btnReport", isVisible());
+
+        verifyThat("#tblEmployees", isVisible());
 
     }
 
@@ -132,6 +150,8 @@ public class EmployeeControllerIT extends ApplicationTest {
     @Test
     //@Ignore
     public void testC_createModifyDeleteEnabledChange() {
+        
+        
         tblEmployees = lookup("#tblEmployees").queryTableView();
         assertNotEquals("Table has no data: Cannot test.",
                 tblEmployees.getItems().size(), 0);
@@ -140,6 +160,16 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn(row);
         verifyThat("#btnDelete", isEnabled());
         verifyThat("#btnModify", isEnabled());
+          
+        press(KeyCode.CONTROL);
+        clickOn(row);
+
+        release(KeyCode.CONTROL);
+        
+        verifyThat("#btnDelete", isDisabled());
+        verifyThat("#btnModify", isDisabled());
+        
+        
     }
 
     /**
@@ -171,7 +201,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         int rowCount = table.getItems().size();
         assertNotEquals("La tabla no tiene Datos: no se puede testear.",
                 rowCount, 0);
-        
+
         Node row = lookup(".table-row-cell").nth(0).query();
         assertNotNull("Row is null: table has not that row. ", row);
         clickOn(row);
@@ -217,7 +247,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         assertEquals("A row has been added!!!", rowCount, table.getItems().size());
 
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
+       
 
     }
 
@@ -225,7 +255,7 @@ public class EmployeeControllerIT extends ApplicationTest {
      * Test que compueba que se crea un empleado correctamente
      */
     @Test
-    //@Ignore
+    @Ignore
     public void testG_createUser() {
 
         //get row count
@@ -233,10 +263,9 @@ public class EmployeeControllerIT extends ApplicationTest {
         int genRandom = 0;
         //Generamos un login nuevo positivo. Los numeros negativos introducen un
         //'-'
-        
 
-            genRandom = new Random().nextInt(100000);
-        
+        genRandom = new Random().nextInt(100000);
+
         String login = "username" + genRandom;
         //write that login on text field
         clickOn("#btnAdd");
@@ -256,7 +285,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn(isDefaultButton());
 
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
+        
 
         clickOn("#cmbFilter");
         press(KeyCode.DOWN).release(KeyCode.DOWN);
@@ -265,7 +294,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn("#btnFind");
 
         table.refresh();
-        
+
         int size2;
         size2 = table.getItems().size();
         assertEquals("The row has not been added!!!", rowCount + 1, size2);
@@ -316,7 +345,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         assertEquals("A row has been added!!!", rowCount, table.getItems().size());
 
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
+        
 
     }
 
@@ -365,10 +394,10 @@ public class EmployeeControllerIT extends ApplicationTest {
 
         clickOn("#btnSave");
         clickOn(isDefaultButton());
-        
+
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
-        
+       
+
         Employee emp2 = (Employee) table.getItems().get(rowCount - 1);
 
         assertEquals("The user has not been modified!!!",
@@ -376,8 +405,6 @@ public class EmployeeControllerIT extends ApplicationTest {
                 emp2.getFullName());
         assertEquals("The user has not been modified!!!",
                 modEm.getEmail(),
-                
-                
                 emp2.getEmail());
         assertEquals("The user has not been modified!!!",
                 modEm.getLogin(),
@@ -388,7 +415,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         assertEquals("The user has not been modified!!!",
                 modEm.getSalary(),
                 emp2.getSalary());
-        
+
     }
 
     /**
@@ -396,7 +423,7 @@ public class EmployeeControllerIT extends ApplicationTest {
      * de los permitidos en la bbdd
      */
     @Test
-    //@Ignore
+    @Ignore
     public void testL_MaximaLongitud() {
         clickOn("#tfValue");
         write(OVERSIZED_TEXT);
@@ -447,7 +474,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         verifyThat("#lblErrorSalary", LabeledMatchers.hasText("El salario debe de ser \n menor que 1000000"));
 
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
+        
     }
 
     /**
@@ -499,7 +526,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         eraseText(1);
 
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
+        
     }
 
     /**
@@ -522,7 +549,9 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn("#tfEmail");
         write("jon@@gmail.com");
         clickOn("#tfName");
-        verifyThat("#lblErrorEmail", LabeledMatchers.hasText("Email invalido"));
+        verifyThat("#lblErrorEmail", LabeledMatchers.hasText("Formato incorrecto. "
+                + "Formato válido:\n"
+                + "ejemplo@ejemplo.com"));
         clickOn("#tfEmail");
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
@@ -530,7 +559,9 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn("#tfEmail");
         write("jon@gmail.c");
         clickOn("#tfName");
-        verifyThat("#lblErrorEmail", LabeledMatchers.hasText("Email invalido"));
+        verifyThat("#lblErrorEmail", LabeledMatchers.hasText("Formato incorrecto. "
+                + "Formato válido:\n"
+                + "ejemplo@ejemplo.com"));
         clickOn("#tfEmail");
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
@@ -538,13 +569,15 @@ public class EmployeeControllerIT extends ApplicationTest {
         clickOn("#tfEmail");
         write("jongmail.com");
         clickOn("#tfName");
-        verifyThat("#lblErrorEmail", LabeledMatchers.hasText("Email invalido"));
+        verifyThat("#lblErrorEmail", LabeledMatchers.hasText("Formato incorrecto. "
+                + "Formato válido:\n"
+                + "ejemplo@ejemplo.com"));
         clickOn("#tfEmail");
         push(KeyCode.CONTROL, KeyCode.A);
         eraseText(1);
 
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
+        
     }
 
     /**
@@ -598,7 +631,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         eraseText(1);
 
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
+        
     }
 
     /**
@@ -615,7 +648,7 @@ public class EmployeeControllerIT extends ApplicationTest {
         verifyThat("#lblErrorHiringDate", LabeledMatchers.hasText("Campo obligatorio"));
 
         clickOn("#hpReturn");
-        clickOn(isDefaultButton());
+        
 
     }
 
@@ -677,7 +710,7 @@ public class EmployeeControllerIT extends ApplicationTest {
      * en cmbFilter
      */
     @Test
-    //@Ignore
+    @Ignore
     public void testT_ErroresComboSalario() {
         clickOn("#cmbFilter");
         press(KeyCode.DOWN).release(KeyCode.DOWN);
@@ -707,7 +740,7 @@ public class EmployeeControllerIT extends ApplicationTest {
      * todos los empleados en cmbFilter
      */
     @Test
-    //@Ignore
+    @Ignore
     public void testU_ErroresComboTodosEmpleados() {
 
         clickOn("#cmbFilter");

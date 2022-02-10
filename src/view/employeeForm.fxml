@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="employeeFormPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeFormController">
+<Pane fx:id="employeeFormPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeFormController">
    <children>
 	 <fx:include fx:id="hbMenuAdm" source="hbMenuAdm.fxml" />
       <Label id="lblName" fx:id="lblName" layoutX="287.0" layoutY="154.0" text="Nombre:">
@@ -40,17 +40,17 @@
       <TextField id="tfEmail" fx:id="tfEmail" layoutX="272.0" layoutY="252.0" prefHeight="25.0" prefWidth="440.0" promptText="example@example.com" />
       <TextField id="tfLogin" fx:id="tfLogin" layoutX="272.0" layoutY="312.0" prefHeight="25.0" prefWidth="440.0" promptText="example" />
       <TextField id="tfSalary" fx:id="tfSalary" layoutX="272.0" layoutY="443.0" prefHeight="25.0" prefWidth="440.0" promptText="1000" />
-      <DatePicker id="dpHiringDate" fx:id="dpHiringDate" layoutX="272.0" layoutY="384.0" prefHeight="25.0" prefWidth="440.0" promptText="dd/mm/yyyy" />
-      <Label fx:id="lblErrorName" layoutX="725.0" layoutY="185.0" prefHeight="58.0" prefWidth="279.0" />
-      <Label fx:id="lblErrorEmail" layoutX="725.0" layoutY="247.0" prefHeight="58.0" prefWidth="279.0" />
-      <Label fx:id="lblErrorLogin" layoutX="725.0" layoutY="308.0" prefHeight="58.0" prefWidth="279.0" />
-      <Label fx:id="lblErrorHiringDate" layoutX="730.0" layoutY="380.0" prefHeight="58.0" prefWidth="279.0" />
-      <Label fx:id="lblErrorSalary" layoutX="724.0" layoutY="439.0" prefHeight="58.0" prefWidth="279.0" />
+      <DatePicker id="dpHiringDate" fx:id="dpHiringDate" layoutX="272.0" layoutY="384.0" prefHeight="25.0" prefWidth="440.0" promptText="dd/mm/aaaa" />
+      <Label fx:id="lblErrorName" layoutX="725.0" layoutY="185.0" prefHeight="58.0" prefWidth="279.0" textFill="RED" />
+      <Label fx:id="lblErrorEmail" layoutX="725.0" layoutY="247.0" prefHeight="66.0" prefWidth="279.0" textFill="RED" />
+      <Label fx:id="lblErrorLogin" layoutX="725.0" layoutY="308.0" prefHeight="58.0" prefWidth="279.0" textFill="RED" />
+      <Label fx:id="lblErrorHiringDate" layoutX="730.0" layoutY="380.0" prefHeight="58.0" prefWidth="279.0" textFill="RED" />
+      <Label fx:id="lblErrorSalary" layoutX="724.0" layoutY="439.0" prefHeight="58.0" prefWidth="279.0" textFill="RED" />
       <Button fx:id="btnSave" layoutX="280.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #4169e1;" text="Guardar" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Button>
-      <Button fx:id="btnDelete" layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #ff3333;" text="Borrar" textFill="WHITE">
+      <Button fx:id="btnDelete" layoutX="611.0" layoutY="547.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="147.0" style="-fx-background-color: #ff3333;" text="Vaciar campos" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font></Button>
