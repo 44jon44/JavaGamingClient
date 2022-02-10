@@ -102,5 +102,40 @@ public class PurchaseRESTful {
     public void close() {
         client.close();
     }
-    
+
+    public <T> T findPurchasesByPurDateAndPriceRange(GenericType<T> responseType, String purchaseDate, String minPrice, String maxPrice) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("find/{0}/{1}/{2}", new Object[]{purchaseDate, minPrice, maxPrice}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T updatePurchase(Class<T> responseType, String idClient, String idGame, String purchaseDate) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("updatePurchase/{0}/{1}/{2}", new Object[]{idClient, idGame, purchaseDate}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findPurchasesByClientAndPurchaseDate(GenericType<T> responseType, String idClient, String purchaseDate) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("find/{0}/{1}", new Object[]{idClient, purchaseDate}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findPurchasesByClientAndPriceRange(GenericType<T> responseType, String idClient, String minPrice, String maxPrice) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("findPurchases/{0}/{1}/{2}", new Object[]{idClient, minPrice, maxPrice}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T createPurchase(Class<T> responseType, String idClient, String idGame, String purchaseDate) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("createPurchase/{0}/{1}/{2}", new Object[]{idClient, idGame, purchaseDate}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findPurchasesByClientAndPurDateAndPriceRange(GenericType<T> responseType, String idClient, String purchaseDate, String minPrice, String maxPrice) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("find/idClient/{0}/{1}/{2}/{3}", new Object[]{idClient, purchaseDate, minPrice, maxPrice}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }   
 }

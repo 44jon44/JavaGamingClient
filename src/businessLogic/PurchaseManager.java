@@ -41,4 +41,16 @@ public interface PurchaseManager {
     
     public void close();
     
+    public Collection<Purchase> findPurchasesByPurDateAndPriceRange(String purchaseDate, String minPrice, String maxPrice) throws Exception;
+
+    public Purchase updatePurchase(String idClient, String idGame, String purchaseDate) throws Exception;
+
+    public Collection<Purchase> findPurchasesByClientAndPurchaseDate(String idClient, String purchaseDate) throws Exception;
+
+    public Collection<Purchase> findPurchasesByClientAndPriceRange(String idClient, String minPrice, String maxPrice) throws Exception;
+
+    public Purchase createPurchase(String idClient, String idGame, String purchaseDate) throws Exception;
+
+    public Collection<Purchase> findPurchasesByClientAndPurDateAndPriceRange(String idClient, String purchaseDate, String minPrice, String maxPrice) throws Exception;
+
 }

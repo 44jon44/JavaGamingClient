@@ -42,7 +42,10 @@ import transferObjects.Client;
 import transferObjects.Game;
 import transferObjects.Purchase;
 import businessLogic.ClientManager;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Alert;
 
@@ -67,6 +70,20 @@ public class PurchaseController {
     
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     
+    //booleanos para saber qué criterio de búsqueda se ha seleccionado
+    private Boolean clientSelected = false;
+    
+    private Boolean dateSelected = false;
+    
+    private Boolean priceSelected = false;
+    //valores de la búsqueda
+    private Integer idClient = 0;
+        
+    private Date purchaseDate = null;
+        
+    private Float minPrice = 0f;
+        
+    private Float maxPrice = 0f;
     @FXML
     private Pane purchasePane;
     @FXML
@@ -143,6 +160,68 @@ public class PurchaseController {
             btnDeletePurchase.setDisable(true);
         }
     }
+    
+    public void handleDateSelected(ObservableValue ov, Object oldValue, Object newValue) {
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        if (newValue != null) {
+            purchaseDate = Date.from(dpPurchaseDate.getValue().atStartOfDay(defaultZoneId).toInstant());
+            dateSelected = true;
+            LOG.log(Level.INFO, "purchaseDate: {0}", formatter.format(purchaseDate));
+            LOG.log(Level.INFO, "dateSelected: {0}", dateSelected);
+        }else{
+            purchaseDate = null;
+            dateSelected = false;
+        }
+    }
+    
+    public void handleClientSelected(ObservableValue ov, Object oldValue, Object newValue) {
+        if (newValue != null) {
+            idClient = cbClients.getValue().getIdUser();
+            clientSelected = true;
+            LOG.log(Level.INFO, "clientSelected: {0}", clientSelected);
+        }else{
+            idClient = 0;
+            clientSelected = false;
+        }
+    }
+    
+    public void handlePriceSelected(ObservableValue ov, Object oldValue, Object newValue) {
+        int op = -1;
+        if (newValue != null) {
+            op = cbPrice.getSelectionModel().getSelectedIndex();
+            switch(op){
+                case 0:
+                    minPrice = 0f;
+                    maxPrice = 29.99f;
+                    break;
+                case 1:
+                    minPrice = 30f;
+                    maxPrice = 40f;
+                    break;
+                case 2:
+                    minPrice = 40f;
+                    maxPrice = 50f;
+                    break;
+                case 3:
+                    minPrice = 50f;
+                    maxPrice = 60f;
+                    break;
+                case 4:
+                    minPrice = 60.01f;
+                    maxPrice = 500f;
+                    break;
+            }
+            LOG.log(Level.INFO, "op: {0}", op);
+            LOG.log(Level.INFO, "minPrice: {0}", minPrice);
+            LOG.log(Level.INFO, "maxPrice: {0}", maxPrice);
+            priceSelected = true;
+            LOG.log(Level.INFO, "priceSelected: {0}", priceSelected);
+        }else{
+            priceSelected = false;
+        }
+    }
+     
     @FXML
     private void handleAddPurchase(ActionEvent event) {
         try {
@@ -181,12 +260,33 @@ public class PurchaseController {
         cbClients.valueProperty().set(null);
         cbPrice.valueProperty().set(null);
         dpPurchaseDate.getEditor().clear();
+        clientSelected = false;
+        dateSelected = false;
+        priceSelected = false;
         loadPurchasesData();
     }
 
     @FXML
     private void handleSearch(ActionEvent event) {
-        LOG.log(Level.SEVERE, "Método 'BUSCAR' no implementado");
+        LOG.log(Level.SEVERE, "Buscando...");
+        
+        
+        if(clientSelected){
+            idClient = cbClients.getValue().getIdUser();
+        }
+        
+        if(dateSelected){
+            
+        } 
+        if(priceSelected){}
+        
+        if(clientSelected && dateSelected){}
+            
+        if(clientSelected && priceSelected){}
+         
+        if(dateSelected && priceSelected){}
+        
+        if(clientSelected && dateSelected && priceSelected){}
     }
 
     @FXML
@@ -285,10 +385,13 @@ public class PurchaseController {
                     }
                 }
             });
+            dpPurchaseDate.valueProperty().addListener(this::handleDateSelected);
             //ComboBox
             clientsManager = ClientManagerFactory.createClientManager(TYPE);
             loadClientsData();
+            cbClients.valueProperty().addListener(this::handleClientSelected);
             loadPricesData();
+            cbPrice.valueProperty().addListener(this::handlePriceSelected);
             //TableView
             //tcPurchaseDate.setCellValueFactory(new PropertyValueFactory<>("purchaseDate"));
             tcPurchaseDate.setCellValueFactory(cell -> new SimpleStringProperty(dateFormatter.format(cell.getValue().getPurchaseDate())));

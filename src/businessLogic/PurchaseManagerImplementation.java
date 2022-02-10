@@ -158,4 +158,34 @@ public class PurchaseManagerImplementation implements PurchaseManager{
                     e.getMessage());
             }
     }
+
+    @Override
+    public Collection<Purchase> findPurchasesByPurDateAndPriceRange(String purchaseDate, String minPrice, String maxPrice) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Purchase updatePurchase(String idClient, String idGame, String purchaseDate) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<Purchase> findPurchasesByClientAndPurchaseDate(String idClient, String purchaseDate) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<Purchase> findPurchasesByClientAndPriceRange(String idClient, String minPrice, String maxPrice) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Purchase createPurchase(String idClient, String idGame, String purchaseDate) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<Purchase> findPurchasesByClientAndPurDateAndPriceRange(String idClient, String purchaseDate, String minPrice, String maxPrice) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
